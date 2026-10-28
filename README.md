@@ -18,6 +18,10 @@
 
 <p align="center"><b>Play online: <a href="https://furkiozknn.github.io/hamsi/">https://furkiozknn.github.io/hamsi/</a></b> (desktop and phone, no install)</p>
 
+<!-- portals:start -->
+<p align="center">Also on: <a href="https://furkiozknn.itch.io/hamsi">itch.io</a></p>
+<!-- portals:end -->
+
 ## Highlights
 
 - **A boat that handles like a boat.** The engine builds speed slowly, the rudder only bites when you are moving,
@@ -158,3 +162,5 @@ tarayıcıda oynanır. Claude Sonnet 5.5 tarafından Claude Code ile tek bir pro
 ## License
 
 MIT, see [LICENSE](LICENSE).
+
+Like the game? You can support new rounds on [Buy Me a Coffee](https://buymeacoffee.com/furkiozkann). The game stays free.
