@@ -36,7 +36,7 @@
   tow at 18:00. Prices follow the season and fall as you sell; fresh fish pays more. Buy fuel, ice, repairs and
   upgrades for the net, sonar, engine, hold, ice box and crew.
 - **Played by a bot.** `?auto` plays the whole 30-day season with the same controls and rules as a player, using only
-  sonar data. Measured: **season finished as reis, loan paid on day 26-27**, 60 fps, 21-35 draw calls.
+  sonar data. Measured: **season finished as reis, loan paid**, 60 fps, 18-56 draw calls.
 - **One file, made in code.** One `index.html` with Three.js r170 from a CDN: a wave-displaced ocean, a coast with tea
   terraces and a harbour, a boat lofted in code, and engine, waves, gulls and a kemençe-style horon tune in 7/8
   synthesised with Web Audio.
@@ -98,11 +98,29 @@ The live state is on `window.hamsi` (day, money, loan, boat, schools, net, weath
     <td width="33%"><img src="docs/02-harbour.png" alt="Fish market prices in the harbour screen"><br><sub>Fish market in the harbour</sub></td>
   </tr>
   <tr>
-    <td><img src="docs/03-sailing.png" alt="Sailing out on a clear day"><br><sub>Sailing out</sub></td>
+    <td><img src="docs/03-sailing.png" alt="Sailing out on a clear day"><br><sub>Leaving the harbour</sub></td>
     <td><img src="docs/05-storm.png" alt="A storm with rain and big waves"><br><sub>Caught in a storm</sub></td>
     <td><img src="docs/06-phone.png" alt="Hamsi on a phone with the touch controls"><br><sub>On a phone</sub></td>
   </tr>
 </table>
+
+## Redesign (2026-11)
+
+**Art direction:** moody maritime stylized. Palette: Black Sea slate `#24343F`, foam `#E6F0F2`, boat blue `#1E88E5`, tea-terrace green `#4C7A3A`, sodium harbour `#FFB74D`, with sonar green `#00E676` for the instruments. The HUD is a set of wet-weather instrument panels (dark steel, rivets, sonar-green hairlines, monospace readouts, segmented gauge bars).
+
+<p align="center"><img src="docs/redesign-before-after.png" width="100%" alt="Before and after: the same state (day 1, 06:25, clear, same camera) with the old glass HUD on the left and the new instrument-panel look on the right"></p>
+
+What changed (visuals only; physics, controls, scoring, bot, saves and the 30-day structure are untouched):
+
+- **Palette and light:** desaturated slate sea with deeper wave troughs and always-present whitecaps, overcast-leaning sky, warmer low sun, darker forest and wet-concrete quay.
+- **Environment:** two scrolling mist rings plus nine low mist banks along the coast (thicker in the morning fog and storms), houses with windows, doors and chimneys, sodium harbour lamps that glow more in mist, storms and evening.
+- **Boat and crew:** trawler with an A-frame, fish boxes, navigation lights, lit wheelhouse windows and a deck lamp that brighten in bad light, sou'wester hats on the crew, floats that bob on the net.
+- **Animation and FX:** denser, longer rain streaks, rain droplets on the "lens" during storms, a sonar ping ring leaving the hull every 3.2 s.
+- **UI:** every screen (title, HUD, harbour, summary, ending, pause, settings, map) restyled; sonar, fish finder and map redrawn in sonar green on dark; Bahnschrift / Cascadia Mono system fonts with fallbacks, no new files or requests.
+- **Mist:** tinted slate-blue and capped (fog density and mist alpha), so the sea, wave crests and coast stay readable in misty weather ([docs/07-mist.png](docs/07-mist.png)). Repeated identical toasts no longer stack.
+- **Phone:** same layout rules as before, re-checked at 500x900 with the new panels.
+
+Measured on the development laptop (Intel UHD 620, headless Chrome, 1280x720; before is the `main` build, after is this branch): 60 fps in both; draw calls 18 before and 23-24 after while sailing clear water, up to 49-56 after during netting, storms and harbour views (budget about 150). The `?auto` bot finished the 30-day season as reis with the loan paid, with 0 JavaScript errors. Not checked: a real phone, Firefox and Safari.
 
 ## Running locally
 
@@ -129,7 +147,7 @@ Everything is generated in code, so there are no asset files and no credits to l
 - **Audio:** engine chug, waves, wind, gulls, creaks, market chatter and a kemençe-style horon tune in 7/8, all
   synthesised with Web Audio.
 - **Performance:** measured on the development laptop's Intel UHD iGPU in headless Chrome at 1280x720: 60 fps with
-  21-35 draw calls and about 165k triangles (one directional light with a 1024 shadow map, pixel ratio capped at 1.5,
+  18-56 draw calls (one directional light with a 1024 shadow map, pixel ratio capped at 1.5,
   no post-processing).
 
 </details>
