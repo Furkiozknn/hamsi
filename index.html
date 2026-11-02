@@ -1164,6 +1164,24 @@ const cloudMesh = (() => {
   m.instanceMatrix.needsUpdate = true; m.frustumCulled = false; scene.add(m); return m;
 })();
 
+/* ---------- mist layers: two scrolling rings around the camera and low banks along the coast */
+function mistTexture() {
+  const c = document.createElement('canvas'); c.width = 256; c.height = 64; const x = c.getContext('2d'), r = rng(77);
+  const g = x.createLinearGradient(0, 0, 0, 64); g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(0.55, 'rgba(255,255,255,.55)'); g.addColorStop(0.72, 'rgba(255,255,255,.9)'); g.addColorStop(1, 'rgba(255,255,255,.5)');
+  x.fillStyle = g; x.fillRect(0, 0, 256, 64);
+  for (let i = 0; i < 26; i++) { const px = r() * 256, py = 26 + r() * 30, rr = 14 + r() * 26; for (const o of [-256, 0, 256]) { const q = x.createRadialGradient(px + o, py, 0, px + o, py, rr); q.addColorStop(0, 'rgba(255,255,255,.35)'); q.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = q; x.fillRect(px + o - rr, py - rr, rr * 2, rr * 2); } }
+  const t = new THREE.CanvasTexture(c); t.wrapS = THREE.RepeatWrapping; t.repeat.set(3, 1); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+const MIST_TEX = mistTexture();
+const mistRings = [[1400, 150, 0.7, 0.004], [520, 70, 0.55, -0.007]].map(([rad, h, op, sp]) => {
+  const tex = MIST_TEX.clone(); tex.needsUpdate = true;
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(rad, rad, h, 28, 1, true), new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: op, side: THREE.BackSide, depthWrite: false, fog: false }));
+  m.renderOrder = -5; m.frustumCulled = false; m.userData = { sp, op, h, tex }; scene.add(m); return m;
+});
+const mistBankMat = new THREE.SpriteMaterial({ map: SOFT, transparent: true, depthWrite: false, opacity: 0.28 });
+const mistBanks = [];
+function buildMistBanks() { const r = rng(31); for (let i = 0; i < 9; i++) { const z = -300 + i * 75 + r() * 30, sp = new THREE.Sprite(mistBankMat); sp.position.set(shoreX(z) - 22 - r() * 40, 18 + r() * 26, z); sp.scale.set(190 + r() * 110, 46 + r() * 20, 1); sp.userData.ph = r() * 6; WORLD.add(sp); mistBanks.push(sp); } }
+
 /* ---------- ocean */
 const OC = { size: 240, seg: 80 };
 const ocGeo = new THREE.PlaneGeometry(OC.size, OC.size, OC.seg, OC.seg); ocGeo.rotateX(-Math.PI / 2);
@@ -1191,11 +1209,11 @@ function updateOcean(cx, cz) {
     let nx = -gx * amp, nz = -gz * amp, nl = 1 / Math.sqrt(nx * nx + 1 + nz * nz); N[i * 3] = nx * nl; N[i * 3 + 1] = nl; N[i * 3 + 2] = nz * nl;
     const hn = h / sumA * 0.5 + 0.5; // 0..1
     const dist = wx - shoreX(wz), sh = 1 - sstep(0, 60, dist), surf = (1 - sstep(0, 5.5, dist)) * (0.5 + 0.5 * Math.sin(WAVE_T * 1.1 + wz * 0.2 + dist * 0.6));
-    const hbn = hb / (WV[2].A + WV[3].A) * 0.5 + 0.5, crest = clamp((hbn - 0.62) * 4.5, 0, 1) * clamp((hn - 0.52) * 3.2, 0, 1) * clamp((amp0 - 0.72) * 1.15, 0.0, 1.4) * edge * (1 - basinMask(wx, wz));
-    const shade = (0.8 + 0.4 * hn) * (0.93 + 0.07 * Math.sin(wx * 0.013 + wz * 0.009 + 1.0));
+    const hbn = hb / (WV[2].A + WV[3].A) * 0.5 + 0.5, crest = clamp((hbn - 0.62) * 4.5, 0, 1) * clamp((hn - 0.52) * 3.2, 0, 1) * clamp((amp0 - 0.5) * 1.25, 0.08, 1.3) * edge * (1 - basinMask(wx, wz));
+    const shade = (0.7 + 0.58 * hn) * (0.93 + 0.07 * Math.sin(wx * 0.013 + wz * 0.009 + 1.0));
     let r = waterBase.r * shade, g = waterBase.g * shade, b = waterBase.b * shade;
     r = lerp(r, shallowCol.r * shade * waterBase.r * 4, sh * 0.7); g = lerp(g, shallowCol.g * shade * (waterBase.g * 2.6), sh * 0.7); b = lerp(b, shallowCol.b * shade * (waterBase.b * 2.0), sh * 0.7);
-    const f = clamp(crest * 0.85 + surf * 0.5, 0, 1) * (G.wx.s > 0.3 ? 1.3 : 1);
+    const f = clamp(crest * 0.8 + surf * 0.5, 0, 0.85);
     C[i * 3] = lerp(r, foamCol.r, f); C[i * 3 + 1] = lerp(g, foamCol.g, f); C[i * 3 + 2] = lerp(b, foamCol.b, f);
   }
   ocGeo.attributes.position.needsUpdate = true; ocGeo.attributes.normal.needsUpdate = true; ocGeo.attributes.color.needsUpdate = true;
@@ -1258,7 +1276,7 @@ function buildWorld() {
   }
   trees.count = tc; trees.instanceMatrix.needsUpdate = true; trees.instanceColor.needsUpdate = true; WORLD.add(trees);
   // ---- houses
-  const wallG = gBox(6, 6.5, 7, 0, 0.75, 0, '#ffffff'), roofG = colorize(prism(7.8, 2.8, 8.2), '#ffffff'); roofG.translate(0, 4, 0);
+  const winC = '#34414b', wallG = mergeGeometries([gBox(6, 6.5, 7, 0, 0.75, 0, '#ffffff'), gBox(1.1, 1.2, 0.12, -1.6, 1.6, 3.5, winC), gBox(1.1, 1.2, 0.12, 1.6, 1.6, 3.5, winC), gBox(1.1, 1.2, 0.12, -1.6, 1.6, -3.5, winC), gBox(1.1, 1.2, 0.12, 1.6, 1.6, -3.5, winC), gBox(0.12, 1.2, 1.1, 3.0, 1.6, 1.7, winC), gBox(0.12, 1.2, 1.1, -3.0, 1.6, -1.7, winC), gBox(0.9, 1.9, 0.12, 0, -0.55, 3.5, '#5a4a3c'), gBox(0.9, 1.7, 0.9, 1.7, 5.4, 1.2, '#8c8a86')]), roofG = colorize(prism(7.8, 2.8, 8.2), '#ffffff'); roofG.translate(0, 4, 0);
   const NH = 110, walls = new THREE.InstancedMesh(wallG, new THREE.MeshLambertMaterial({ vertexColors: true }), NH), roofs = new THREE.InstancedMesh(roofG, new THREE.MeshLambertMaterial({ vertexColors: true }), NH); let hc = 0;
   const wallCols = ['#f0e6cf', '#e8d3a2', '#c9d9e6', '#f4f0e8', '#d9b88a', '#b9cfb4', '#efe0c0'], roofCols = ['#b8372a', '#c4442f', '#a63224', '#d1583a', '#9c2f26'];
   const centers = [-205, -150, -95, -45, 22, 60, 118, 170, 225, 270];
@@ -1276,7 +1294,7 @@ function buildWorld() {
   { const mx = -100, mz = 34, my = terrainH(mx, mz);
     const L = [gBox(12, 8, 12, 0, 2, 0, '#efe9dc'), gSph(4.6, 0, 6.2, 0, '#9fb7c2', 1, 0.85, 1, 12), gCyl(0.9, 1.0, 20, 8, 7.5, 8, 5.5, '#f4efe6'), gCyl(1.5, 1.2, 0.8, 8, 7.5, 18.4, 5.5, '#d8d2c6'), gCyl(0.1, 1.2, 4, 8, 7.5, 21, 5.5, '#9fb7c2'), gBox(13, 0.6, 13, 0, -1.7, 0, '#cfc7b6')];
     const m = lamMesh(L); m.position.set(mx, my - 0.3, mz); m.rotation.y = 0.1; WORLD.add(m); }
-  buildHarbor(r);
+  buildHarbor(r); buildMistBanks();
 }
 
 /* ---------- harbour: quay, pier, market, moles, lighthouse, lamps, moored boats */
@@ -1296,6 +1314,7 @@ function flagTexture() {
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
 }
 let lighthouseLamp = null;
+const lampMat = new THREE.MeshBasicMaterial({ color: 0xffb74d }), lampGlowMat = new THREE.SpriteMaterial({ map: SOFT, color: 0xffb74d, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0.3 }); // sodium harbour #FFB74D
 function buildHarbor(r) {
   const L = [];
   // quay edge curb + bollards + lamp posts
@@ -1322,6 +1341,8 @@ function buildHarbor(r) {
   // harbour wall behind the quay, steps
   L.push(gBox(1.0, 2.0, 90, -79, 2.4, -10, '#aeaaa0'));
   const quay = lamMesh(L); WORLD.add(quay);
+  for (let z = -48; z <= 28; z += 19) { const head = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.18, 0.9), lampMat); head.position.set(-63.7, 6.65, z); WORLD.add(head);
+    const gl = new THREE.Sprite(lampGlowMat); gl.position.set(-63.4, 6.4, z); gl.scale.set(10, 10, 1); WORLD.add(gl); }
   // market sign
   { const sg = new THREE.Mesh(new THREE.PlaneGeometry(9, 2.25), new THREE.MeshLambertMaterial({ map: signTexture(), emissive: 0x223344, emissiveMap: null })); sg.position.set(mx + 5.5, 9.2, mz); sg.rotation.y = Math.PI / 2; WORLD.add(sg);
     const sp = lamMesh([gCyl(0.1, 0.1, 2.4, 6, mx + 5.4, 8.1, mz - 3.5, '#444'), gCyl(0.1, 0.1, 2.4, 6, mx + 5.4, 8.1, mz + 3.5, '#444')]); WORLD.add(sp); }
@@ -1575,8 +1596,11 @@ function updateEnv(dt) {
     g.addColorStop(0, '#' + SKY.zen.getHexString()); g.addColorStop(0.32, '#' + SKY.tmp.copy(SKY.zen).lerp(SKY.hor, 0.55).getHexString()); g.addColorStop(0.5, '#' + SKY.hor.getHexString()); g.addColorStop(1, '#' + SKY.hor.getHexString());
     skyCtx.fillStyle = g; skyCtx.fillRect(0, 0, 2, 128); skyTex.needsUpdate = true;
   }
+  { const base = 0.34 + 0.5 * w.fogMorning + 0.3 * w.s; for (const m of mistRings) { m.position.set(camera.position.x, m.userData.h * 0.22, camera.position.z); m.material.color.copy(SKY.hor).lerp(SKY.tmp.setRGB(1, 1, 1), 0.12); m.material.opacity = m.userData.op * base; m.userData.tex.offset.x += m.userData.sp * dt; }
+    mistBankMat.color.copy(SKY.hor); mistBankMat.opacity = 0.16 + 0.34 * w.fogMorning + 0.2 * w.s; for (const b of mistBanks) b.position.y += Math.sin(VT * 0.2 + b.userData.ph) * 0.004; }
   sky.position.copy(camera.position); sunSprite.position.copy(camera.position).addScaledVector(sd, 3000); sunSprite.material.opacity = (1 - over) * 0.8; sunSprite.visible = sunSprite.material.opacity > 0.03 && sd.y > 0.02;
   const b = G.boat; sun.position.set(b.x + sd.x * 90, sd.y * 90, b.z + sd.z * 90); sun.target.position.set(b.x, 0, b.z); sun.target.updateMatrixWorld();
+  lampGlowMat.opacity = 0.18 + 0.7 * clamp(over * 0.9 + warm * 0.8 + w.fogMorning * 0.5, 0, 1);
   if (lighthouseLamp) { const on = Math.sin(VT * 2.6) > 0.1 || w.s > 0.2 ? 1 : 0.15; blinkMat.emissiveIntensity = (0.6 + 1.4 * (over + warm * 0.5)) * on; beaconMat.emissiveIntensity = 0.6 + 0.6 * Math.sin(VT * 3); }
   dockRing.visible = dockBeam.visible = (G.mode === 'play'); const pulse = 1 + Math.sin(VT * 3) * 0.06; dockRing.scale.set(pulse, 1, pulse); dockRing.material.opacity = canDock() ? 0.95 : 0.55; dockBeam.material.opacity = 0.18 + 0.08 * Math.sin(VT * 2);
 }
