@@ -13,7 +13,7 @@
 <p align="center"><b>A 3D fishing and boat-management game on the Black Sea coast: find the schools on the sonar, circle a purse-seine net around them, race home before the storm, sell the catch fresh and pay off the boat loan in a 30-day season to become reis of the harbour.</b></p>
 
 <p align="center">
-  <img src="docs/gameplay.gif" width="640" alt="Hamsi gameplay: the bot's boat closes the ring of net corks around a school of anchovy and horse mackerel, then starts hauling">
+  <img src="docs/gameplay.gif" width="640" alt="Hamsi gameplay after the redesign: the fishing boat sails out of the harbour on the Black Sea with the sonar and steel instrument panel">
 </p>
 
 <p align="center"><b>Play online: <a href="https://furkiozknn.github.io/hamsi/">https://furkiozknn.github.io/hamsi/</a></b> (desktop and phone, no install)</p>

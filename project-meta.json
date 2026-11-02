@@ -16,7 +16,7 @@
     "Canvas 2D",
     "Web Audio API"
   ],
-  "version": null,
+  "version": "2.0.0",
   "license": "MIT",
   "topics": [
     "browser-game",
@@ -27,23 +27,24 @@
     "claude-code",
     "claude-game-arena"
   ],
-  "summary": "3D Black Sea fishing and boat-management game, built by Claude Sonnet 5.5 · Karadeniz'de 3D balıkçılık ve tekne yönetimi oyunu, Claude Sonnet 5.5 yaptı",
+  "summary": "3D Black Sea fishing and boat-management game, redesigned with a dark-steel instrument UI, sonar-green accents and a misty harbour, built by Claude Sonnet 5.5 · Karadeniz'de 3D balıkçılık ve tekne yönetimi oyunu, koyu çelik gösterge arayüzü, sonar yeşili ve sisli limanla yeniden tasarlandı, Claude Sonnet 5.5 yaptı",
   "key_features": [
-    "A boat that handles like one: slow engine, a rudder that bites only when moving, waves and wind",
-    "Schools of boids on the sonar; circle a purse-seine net around them and haul",
-    "Four species with different speed, nerve and price; deeper fish escape under the net",
-    "Fog, forecast storms, a fish market with seasonal prices and upgrades for net, sonar, engine, hold, ice box and crew",
-    "The ?auto bot finished the 30-day season as reis with the loan paid on day 26-27; one index.html, everything generated in code"
+    "A boat that handles like a boat; sonar schools that swim as boids; set the purse-seine net around them and haul",
+    "Redesign: a dark-steel instrument UI with sonar-green accents, a sonar ping ring and rain droplets on the screen in storms",
+    "Redesign: a slate-tinted capped mist, harbour houses with windows and chimneys, sodium lamps, an A-frame and crew hats",
+    "A 30-day season: sell fresh at the market, refuel, add ice, pay the boat loan and buy upgrades",
+    "Measured after the redesign: 60 fps; the 30-day ?auto season finishes with 0 JS errors"
   ],
   "media": {
-    "hero": "docs/04-net.png",
+    "hero": "docs/03-sailing.png",
     "screenshots": [
       "docs/card.jpg",
-      "docs/04-net.png",
-      "docs/01-title.png",
-      "docs/02-harbour.png",
       "docs/03-sailing.png",
+      "docs/redesign-before-after.png",
+      "docs/02-harbour.png",
+      "docs/04-net.png",
       "docs/05-storm.png",
+      "docs/07-mist.png",
       "docs/06-phone.png"
     ],
     "gifs": [
@@ -76,8 +77,9 @@
     "primary_link": "https://furkiozknn.github.io/hamsi/"
   },
   "provenance": {
-    "generated_at": "2026-10-27",
+    "generated_at": "2026-10-28",
     "generator": "hand-written",
-    "rule": "mechanical fields read from the repository; editorial fields hand-written from the README and index.html; no field is generated from a guess"
+    "rule": "mechanical fields read from the repository; editorial fields hand-written from the README and index.html; no field is generated from a guess",
+    "note": "visual redesign 2026-11-02"
   }
 }
