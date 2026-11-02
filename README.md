@@ -108,7 +108,7 @@ The live state is on `window.hamsi` (day, money, loan, boat, schools, net, weath
 
 **Art direction:** moody maritime stylized. Palette: Black Sea slate `#24343F`, foam `#E6F0F2`, boat blue `#1E88E5`, tea-terrace green `#4C7A3A`, sodium harbour `#FFB74D`, with sonar green `#00E676` for the instruments. The HUD is a set of wet-weather instrument panels (dark steel, rivets, sonar-green hairlines, monospace readouts, segmented gauge bars).
 
-<p align="center"><img src="docs/redesign-before-after.png" width="100%" alt="Before and after: the same open-sea moment with the old glass HUD on the left and the new instrument-panel look on the right"></p>
+<p align="center"><img src="docs/redesign-before-after.png" width="100%" alt="Before and after: the same state (day 1, 06:25, clear, same camera) with the old glass HUD on the left and the new instrument-panel look on the right"></p>
 
 What changed (visuals only; physics, controls, scoring, bot, saves and the 30-day structure are untouched):
 
@@ -117,6 +117,7 @@ What changed (visuals only; physics, controls, scoring, bot, saves and the 30-da
 - **Boat and crew:** trawler with an A-frame, fish boxes, navigation lights, lit wheelhouse windows and a deck lamp that brighten in bad light, sou'wester hats on the crew, floats that bob on the net.
 - **Animation and FX:** denser, longer rain streaks, rain droplets on the "lens" during storms, a sonar ping ring leaving the hull every 3.2 s.
 - **UI:** every screen (title, HUD, harbour, summary, ending, pause, settings, map) restyled; sonar, fish finder and map redrawn in sonar green on dark; Bahnschrift / Cascadia Mono system fonts with fallbacks, no new files or requests.
+- **Mist:** tinted slate-blue and capped (fog density and mist alpha), so the sea, wave crests and coast stay readable in misty weather ([docs/07-mist.png](docs/07-mist.png)). Repeated identical toasts no longer stack.
 - **Phone:** same layout rules as before, re-checked at 500x900 with the new panels.
 
 Measured on the development laptop (Intel UHD 620, headless Chrome, 1280x720; before is the `main` build, after is this branch): 60 fps in both; draw calls 18 before and 23-24 after while sailing clear water, up to 49-56 after during netting, storms and harbour views (budget about 150). The `?auto` bot finished the 30-day season as reis with the loan paid, with 0 JavaScript errors. Not checked: a real phone, Firefox and Safari.
