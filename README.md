@@ -19,7 +19,7 @@
 <p align="center"><b>Play online: <a href="https://furkiozknn.github.io/hamsi/">https://furkiozknn.github.io/hamsi/</a></b> (desktop and phone, no install)</p>
 
 <!-- portals:start -->
-<p align="center">Also on: <a href="https://furkiozknn.itch.io/hamsi">itch.io</a></p>
+<p align="center">Also on: <a href="https://furkiozknn.itch.io/hamsi">itch.io</a> &middot; <a href="https://playgama.ai/play/ucyjxjsqamcub6">Playgama</a></p>
 <!-- portals:end -->
 
 ## Highlights
