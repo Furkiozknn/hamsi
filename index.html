@@ -145,7 +145,7 @@ body.touch #actions .hint{display:none}
 }
 @media (orientation:portrait){
   body.touch #sonar{top:auto;bottom:max(14px,env(safe-area-inset-bottom));left:calc(max(10px,env(safe-area-inset-left)) + 74px)}
-  body.touch #sonar canvas{width:min(262px,calc(100vw - 236px));height:auto;aspect-ratio:600/344}
+  body.touch #sonar canvas{width:min(262px,calc(100vw - 250px));height:auto;aspect-ratio:600/344} /* subtract 14px #sonar padding+border so right edge clears #tWheel */
 }
 /* screens */
 .screen{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:20;padding:12px;overflow:auto;touch-action:pan-y}
