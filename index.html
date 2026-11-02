@@ -8,12 +8,12 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%231E88E5%27/%3E%3Cpath d=%27M4 21h24l-3 6H7z%27 fill=%27%23fff%27/%3E%3Crect x=%2711%27 y=%2713%27 width=%278%27 height=%278%27 rx=%271%27 fill=%27%23fff%27/%3E%3Cpath d=%27M4 12c4-5 9-5 12 0-3 5-8 5-12 0zM16 12l4-3v6z%27 fill=%27%23BBE3FF%27/%3E%3C/svg%3E">
 <style>
 :root{
-  --accent:#1E88E5; --accent-l:#64B5F6; --accent-d:#1565C0; --ink:#f2f7fb; --dim:#a9bfcf;
-  --glass:rgba(10,30,44,.62); --glass-b:rgba(255,255,255,.15); --bad:#ff7a66; --good:#7fe3a0; --warn:#ffd25a;
-  --r:16px; --fs:15px;
+  --accent:#1E88E5; --accent-l:#64B5F6; --accent-d:#1565C0; --ink:#e6f0f2; --dim:#9db1b8; --sonar:#00E676; --steel:#24343F; --sodium:#FFB74D;
+  --glass:rgba(14,22,27,.86); --glass-b:rgba(0,230,118,.26); --bad:#ff7a66; --good:#00E676; --warn:#FFB74D;
+  --r:6px; --fs:15px; --mono:"Cascadia Mono",Consolas,"Lucida Console",monospace; --head:Bahnschrift,"Segoe UI Semibold","Segoe UI",system-ui,sans-serif;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%;overflow:hidden;background:#0d2230;color:var(--ink);
+html,body{margin:0;height:100%;overflow:hidden;background:#0c161c;color:var(--ink);
   font:700 var(--fs)/1.3 "Segoe UI","Trebuchet MS",system-ui,sans-serif;touch-action:none;user-select:none;-webkit-user-select:none}
 canvas#gl{position:fixed;inset:0;width:100%;height:100%;display:block}
 .hidden{display:none!important}
@@ -206,6 +206,62 @@ ul.feat li::before{content:"";display:inline-block;width:8px;height:8px;border-r
   .hfoot{margin:10px -16px -12px;padding:8px 16px;bottom:-12px}
   .item{padding:5px 10px}.tabs{margin:4px 0 6px}
 }
+
+/* ---- wet-weather instrument skin: dark steel, rivets, sonar-green hairlines, condensation */
+.glass{background:
+  radial-gradient(circle at 7px 7px,rgba(255,255,255,.2) 0 1.8px,transparent 2.4px) 0 0/auto auto no-repeat,
+  radial-gradient(circle at calc(100% - 7px) 7px,rgba(255,255,255,.2) 0 1.8px,transparent 2.4px) 0 0/auto auto no-repeat,
+  radial-gradient(circle at 7px calc(100% - 7px),rgba(255,255,255,.2) 0 1.8px,transparent 2.4px) 0 0/auto auto no-repeat,
+  radial-gradient(circle at calc(100% - 7px) calc(100% - 7px),rgba(255,255,255,.2) 0 1.8px,transparent 2.4px) 0 0/auto auto no-repeat,
+  radial-gradient(ellipse 60% 40% at 18% 0%,rgba(255,255,255,.07),transparent 70%),
+  linear-gradient(180deg,rgba(30,44,52,.9),rgba(11,18,22,.93));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 0 0 1px rgba(0,0,0,.4),0 8px 22px rgba(0,0,0,.45)}
+body.lowq .glass{background:linear-gradient(180deg,rgba(30,44,52,.94),rgba(11,18,22,.96))}
+body{font-family:var(--head)}
+.btn{border-radius:4px;border:1px solid rgba(0,230,118,.38);background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.03));text-transform:uppercase;letter-spacing:.07em;font-size:14px;font-weight:700;transition:transform .12s,background .2s,border-color .2s}
+.btn:hover{background:linear-gradient(180deg,rgba(0,230,118,.2),rgba(0,230,118,.06));border-color:var(--sonar)}
+.btn.primary{background:linear-gradient(180deg,#2f97f2,#1565C0);border-color:#9fd2ff;box-shadow:0 3px 0 #0b3d82,0 0 14px rgba(30,136,229,.35)}
+.btn.primary:hover{background:linear-gradient(180deg,#46a6fa,#1976d2)}
+.btn.warn{background:linear-gradient(180deg,#d4573a,#a23720);border-color:#ffb3a3;box-shadow:0 3px 0 #6e2514}
+.btn.icon{letter-spacing:0}
+.seg .btn.sel,.tabs .btn.sel{background:linear-gradient(180deg,#2f97f2,#1565C0);border-color:#9fd2ff}
+#topbar .brand{font-family:var(--head);letter-spacing:.28em;color:#e6f0f2}
+.stat small,#goal small,.hbar .meta small,#sonar .cap{font-family:var(--head);letter-spacing:.16em;color:var(--sonar);opacity:.85}
+.stat b,#gauges .spd b,#gauges output,.hbar .meta b,.kv span:nth-child(even),.item .pr,.set output{font-family:var(--mono);letter-spacing:-.01em}
+.stat b{color:#e6f0f2}
+.stat b.neg{color:var(--bad)}.stat b.pos{color:var(--sodium)}
+#wcard svg.ic{color:var(--sonar)}
+#wcard.warn,#wcard.storm{border-color:var(--sodium)}
+#goal .gb,#gauges .bar,#netbar{border-radius:2px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(0,230,118,.18)}
+#goal .gb i{background:var(--sonar)}
+#gauges .bar i{border-radius:0;background-color:var(--sonar);background-image:repeating-linear-gradient(90deg,transparent 0 6px,rgba(8,14,18,.92) 6px 8px)}
+#gauges .bar.low i{background-color:var(--bad)}
+#gauges .bar.fr i{background-image:repeating-linear-gradient(90deg,transparent 0 6px,rgba(8,14,18,.92) 6px 8px),linear-gradient(90deg,#ff7a66,#FFB74D 50%,#00E676)}
+#netbar i{background:var(--sodium)}
+#gauges svg.ic{color:var(--sonar);opacity:.8}
+#gauges .spd{border-bottom:1px solid rgba(0,230,118,.22)}
+#actions .hint{border-radius:3px;font-family:var(--mono);font-size:12.5px;color:#cfe9e0;border-color:rgba(0,230,118,.3)}
+.toast{border-radius:4px;background:var(--glass);border-color:rgba(0,230,118,.4);font-family:var(--head);letter-spacing:.03em}
+.toast.good{border-color:var(--sonar);color:#c8ffe0}.toast.info{border-color:#64B5F6}.toast.bad{border-color:var(--bad)}
+#tWheel svg{color:var(--sonar)}
+.screen.dim{background:radial-gradient(ellipse at 50% 40%,rgba(8,16,20,.5),rgba(4,9,12,.8))}
+.screen.title{background:linear-gradient(180deg,rgba(8,16,20,.15),rgba(6,12,16,.7))}
+.card h1{font-family:var(--head);font-weight:700;letter-spacing:.34em;color:#e6f0f2;text-shadow:0 0 18px rgba(0,230,118,.35),0 3px 0 rgba(0,0,0,.55);padding-left:.34em}
+.card h1::after{content:"";display:block;height:2px;margin:8px auto 0;width:64%;background:linear-gradient(90deg,transparent,var(--sonar),transparent);box-shadow:0 0 10px var(--sonar)}
+.card h2{font-family:var(--head);letter-spacing:.14em;text-transform:uppercase;font-size:22px;color:#e6f0f2}
+.card p{color:#d3e2e6}
+.foot a,.card a{color:var(--sonar);border-bottom-color:var(--sonar)}
+#logoBig{filter:drop-shadow(0 0 14px rgba(0,230,118,.25)) drop-shadow(0 5px 0 rgba(0,0,0,.4))}
+.kv,.item,ul.feat li{border-radius:3px;background:rgba(255,255,255,.045);box-shadow:inset 2px 0 0 rgba(0,230,118,.55)}
+.item .dot{border-radius:3px;background:rgba(0,230,118,.1);color:var(--sonar)}
+.dbar{border-radius:1px}.dbar i{background:var(--sonar)}
+ul.feat li::before{background:var(--sonar);border-radius:1px}
+.up{color:var(--sonar)}
+.hfoot{border-radius:0 0 6px 6px;background:rgba(10,16,20,.96);border-top:1px solid rgba(0,230,118,.3)}
+.stars svg.on{fill:var(--sodium);stroke:#ffe2b0}
+#mapc{border-radius:4px;border:1px solid rgba(0,230,118,.3);background:#0a2024}
+input[type=range]{accent-color:var(--sonar)}
+.rec{color:var(--sodium)}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important}}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
@@ -1703,7 +1759,7 @@ function refreshUI(force) {
 /* ---------- sonar */
 const sonarC = $('sonarc'), sctx = sonarC.getContext('2d');
 const ff = document.createElement('canvas'); ff.width = 230; ff.height = 304; const fctx = ff.getContext('2d'); let ffT = 0;
-function ffInit() { fctx.fillStyle = '#0d2f45'; fctx.fillRect(0, 0, ff.width, ff.height); }
+function ffInit() { fctx.fillStyle = '#0a2a2a'; fctx.fillRect(0, 0, ff.width, ff.height); }
 ffInit();
 const DEPTH_MAX = 60;
 function drawSonar(dt) {
@@ -1712,22 +1768,22 @@ function drawSonar(dt) {
   const P = (x, z) => { const dx = x - b.x, dz = z - b.z; return [cx + (dx * sx + dz * sz) * sc, cy - (dx * fx + dz * fz) * sc]; };
   sctx.clearRect(0, 0, W, H);
   sctx.save(); sctx.beginPath(); sctx.arc(cx, cy, rad, 0, TAU); sctx.clip();
-  const g = sctx.createRadialGradient(cx, cy, 10, cx, cy, rad); g.addColorStop(0, '#0f4660'); g.addColorStop(1, '#0a2a3e'); sctx.fillStyle = g; sctx.fillRect(0, 0, W, H);
+  const g = sctx.createRadialGradient(cx, cy, 10, cx, cy, rad); g.addColorStop(0, '#0d3a36'); g.addColorStop(1, '#06171b'); sctx.fillStyle = g; sctx.fillRect(0, 0, W, H);
   // land
   sctx.beginPath(); let first = true; const N = 24;
   for (let i = 0; i <= N; i++) { const z = b.z - R * 1.2 + (2.4 * R) * i / N, p = P(shoreX(z), z); if (first) { sctx.moveTo(p[0], p[1]); first = false; } else sctx.lineTo(p[0], p[1]); }
   for (let i = N; i >= 0; i--) { const z = b.z - R * 1.2 + (2.4 * R) * i / N, p = P(shoreX(z) - 900, z); sctx.lineTo(p[0], p[1]); }
-  sctx.closePath(); sctx.fillStyle = '#2f6a3c'; sctx.fill(); sctx.strokeStyle = '#8fd49a'; sctx.lineWidth = 2; sctx.stroke();
+  sctx.closePath(); sctx.fillStyle = '#233f2b'; sctx.fill(); sctx.strokeStyle = '#6fcf8a'; sctx.lineWidth = 2; sctx.stroke();
   // moles
   sctx.strokeStyle = '#c9c5b8'; sctx.lineWidth = 5; sctx.lineJoin = 'round';
   for (const m of MOLES) { sctx.beginPath(); m.forEach((q, i) => { const p = P(q[0], q[1]); i ? sctx.lineTo(p[0], p[1]) : sctx.moveTo(p[0], p[1]); }); sctx.stroke(); }
   // rings and heading line
-  sctx.strokeStyle = 'rgba(140,220,255,.28)'; sctx.lineWidth = 1.5; for (let i = 1; i <= 3; i++) { sctx.beginPath(); sctx.arc(cx, cy, rad * i / 3, 0, TAU); sctx.stroke(); }
+  sctx.strokeStyle = 'rgba(0,230,118,.3)'; sctx.lineWidth = 1.5; for (let i = 1; i <= 3; i++) { sctx.beginPath(); sctx.arc(cx, cy, rad * i / 3, 0, TAU); sctx.stroke(); }
   sctx.beginPath(); sctx.moveTo(cx - rad, cy); sctx.lineTo(cx + rad, cy); sctx.moveTo(cx, cy - rad); sctx.lineTo(cx, cy + rad); sctx.stroke();
   // sweep
   const sw = (VT * 1.6) % TAU; sctx.save(); sctx.translate(cx, cy); sctx.rotate(sw - Math.PI / 2);
   const sg = sctx.createLinearGradient(0, 0, 70, 0); sg.addColorStop(0, 'rgba(120,255,200,0)'); sg.addColorStop(1, 'rgba(120,255,200,.0)');
-  sctx.beginPath(); sctx.moveTo(0, 0); sctx.arc(0, 0, rad, -0.5, 0); sctx.closePath(); const rg = sctx.createRadialGradient(0, 0, 0, 0, 0, rad); rg.addColorStop(0, 'rgba(120,255,200,.0)'); rg.addColorStop(1, 'rgba(120,255,200,.28)'); sctx.fillStyle = rg; sctx.fill(); sctx.restore();
+  sctx.beginPath(); sctx.moveTo(0, 0); sctx.arc(0, 0, rad, -0.5, 0); sctx.closePath(); const rg = sctx.createRadialGradient(0, 0, 0, 0, 0, rad); rg.addColorStop(0, 'rgba(0,230,118,.0)'); rg.addColorStop(1, 'rgba(0,230,118,.34)'); sctx.fillStyle = rg; sctx.fill(); sctx.restore();
   // fish
   const nd = G.net.phase === 'stowed' ? UPG.net.dep[G.up.net] : G.net.depth;
   for (const s of G.schools) {
@@ -1753,26 +1809,26 @@ function drawSonar(dt) {
   // harbour bearing
   { const dxh = DOCK.x - b.x, dzh = DOCK.z - b.z, dh = Math.hypot(dxh, dzh); const p = P(DOCK.x, DOCK.z); let ex = p[0], ey = p[1];
     if (dh > R * 0.92) { const a = Math.atan2(p[1] - cy, p[0] - cx); ex = cx + Math.cos(a) * (rad - 14); ey = cy + Math.sin(a) * (rad - 14); }
-    sctx.fillStyle = '#64b5f6'; sctx.beginPath(); sctx.arc(ex, ey, 11, 0, TAU); sctx.fill(); sctx.fillStyle = '#06233a'; sctx.font = '900 16px "Segoe UI",Arial'; sctx.textAlign = 'center'; sctx.fillText('H', ex, ey + 6); }
+    sctx.fillStyle = '#FFB74D'; sctx.beginPath(); sctx.arc(ex, ey, 11, 0, TAU); sctx.fill(); sctx.fillStyle = '#1a1206'; sctx.font = '900 16px "Segoe UI",Arial'; sctx.textAlign = 'center'; sctx.fillText('H', ex, ey + 6); }
   // rim and boat
-  sctx.strokeStyle = 'rgba(170,230,255,.55)'; sctx.lineWidth = 3; sctx.beginPath(); sctx.arc(cx, cy, rad, 0, TAU); sctx.stroke();
+  sctx.strokeStyle = 'rgba(0,230,118,.7)'; sctx.lineWidth = 3; sctx.beginPath(); sctx.arc(cx, cy, rad, 0, TAU); sctx.stroke();
   sctx.fillStyle = '#fff'; sctx.beginPath(); sctx.moveTo(cx, cy - 13); sctx.lineTo(cx + 8, cy + 9); sctx.lineTo(cx - 8, cy + 9); sctx.closePath(); sctx.fill();
   // fish finder strip: scrolling history
   ffT -= dt; const colW = 3;
   if (ffT <= 0 && G.mode === 'play') {
     ffT = 0.1; fctx.drawImage(ff, -colW, 0);
-    const h = ff.height, x = ff.width - colW; const gr = fctx.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#1b5f80'); gr.addColorStop(1, '#0a2638'); fctx.fillStyle = gr; fctx.fillRect(x, 0, colW, h);
+    const h = ff.height, x = ff.width - colW; const gr = fctx.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#12504a'); gr.addColorStop(1, '#051a1d'); fctx.fillStyle = gr; fctx.fillRect(x, 0, colW, h);
     const sb = Math.min(DEPTH_MAX, seabed(b.x, b.z)); fctx.fillStyle = '#6b5a3c'; fctx.fillRect(x, sb / DEPTH_MAX * h, colW, h);
     fctx.fillStyle = '#a89468'; fctx.fillRect(x, sb / DEPTH_MAX * h, colW, 3);
     for (const s of G.schools) { const col = SPECIES[s.sp].col; for (const f of s.mem) { const d = Math.hypot(s.x + f.x - b.x, s.z + f.z - b.z); if (d < 20) { const y = clamp((s.dep + f.y) / DEPTH_MAX, 0, 1) * h; fctx.fillStyle = col; fctx.globalAlpha = 1 - d / 26; fctx.fillRect(x - 1, y - 2, colW + 1, 4); } } }
     fctx.globalAlpha = 1;
   }
-  const X0 = 366, Wd = 224, Hd = 304, Y0 = 20; sctx.fillStyle = 'rgba(5,20,32,.9)'; sctx.fillRect(X0 - 4, Y0 - 4, Wd + 8, Hd + 8);
+  const X0 = 366, Wd = 224, Hd = 304, Y0 = 20; sctx.fillStyle = 'rgba(4,14,16,.92)'; sctx.fillRect(X0 - 4, Y0 - 4, Wd + 8, Hd + 8);
   sctx.drawImage(ff, 0, 0, ff.width, ff.height, X0, Y0, Wd, Hd);
   sctx.fillStyle = 'rgba(255,255,255,.75)'; sctx.font = '600 17px "Segoe UI",Arial'; sctx.textAlign = 'left';
   for (let d = 0; d <= 60; d += 20) { const y = Y0 + d / DEPTH_MAX * Hd; sctx.fillRect(X0, y, 8, 1.5); if (d > 0 && d < 60) sctx.fillText(d + ' m', X0 + 12, y + 6); }
   const ny = Y0 + nd / DEPTH_MAX * Hd; sctx.strokeStyle = '#ffd25a'; sctx.lineWidth = 2; sctx.setLineDash([5, 4]); sctx.beginPath(); sctx.moveTo(X0, ny); sctx.lineTo(X0 + Wd, ny); sctx.stroke(); sctx.setLineDash([]);
-  sctx.fillStyle = '#9fe6ff'; sctx.font = '700 16px "Segoe UI",Arial'; sctx.textAlign = 'right'; sctx.fillText(t('fishfinder'), X0 + Wd - 4, Y0 + 16);
+  sctx.fillStyle = '#00E676'; sctx.font = '700 16px "Segoe UI",Arial'; sctx.textAlign = 'right'; sctx.fillText(t('fishfinder'), X0 + Wd - 4, Y0 + 16);
 }
 
 /* ---------- map */
@@ -1780,12 +1836,12 @@ const mapC = $('mapc'), mctx = mapC.getContext('2d');
 function drawMap() {
   const W = mapC.width, H = mapC.height, s = Math.min(W / 540, H / 620), ox = W / 2 - (170 * s), oz = H / 2; // x range -90..450 centred at x=180
   const MP = (x, z) => [W / 2 + (x - 180) * s, oz + z * s];
-  mctx.clearRect(0, 0, W, H); mctx.fillStyle = '#16546e'; mctx.fillRect(0, 0, W, H);
+  mctx.clearRect(0, 0, W, H); mctx.fillStyle = '#10343a'; mctx.fillRect(0, 0, W, H);
   mctx.beginPath(); let f = true; for (let z = -310; z <= 310; z += 10) { const p = MP(shoreX(z), z); f ? mctx.moveTo(p[0], p[1]) : mctx.lineTo(p[0], p[1]); f = false; }
-  mctx.lineTo(0, MP(0, 310)[1]); mctx.lineTo(0, MP(0, -310)[1]); mctx.closePath(); mctx.fillStyle = '#3a7d44'; mctx.fill(); mctx.strokeStyle = '#9ad8a2'; mctx.lineWidth = 2; mctx.stroke();
+  mctx.lineTo(0, MP(0, 310)[1]); mctx.lineTo(0, MP(0, -310)[1]); mctx.closePath(); mctx.fillStyle = '#2b4a31'; mctx.fill(); mctx.strokeStyle = '#6fcf8a'; mctx.lineWidth = 2; mctx.stroke();
   mctx.strokeStyle = 'rgba(255,255,255,.1)'; mctx.lineWidth = 1; for (let x = 0; x <= 400; x += 100) { const p = MP(x, 0); mctx.beginPath(); mctx.moveTo(p[0], 0); mctx.lineTo(p[0], H); mctx.stroke(); } for (let z = -300; z <= 300; z += 100) { const p = MP(0, z); mctx.beginPath(); mctx.moveTo(0, p[1]); mctx.lineTo(W, p[1]); mctx.stroke(); }
   mctx.strokeStyle = '#d6d2c4'; mctx.lineWidth = 4; for (const m of MOLES) { mctx.beginPath(); m.forEach((q, i) => { const p = MP(q[0], q[1]); i ? mctx.lineTo(p[0], p[1]) : mctx.moveTo(p[0], p[1]); }); mctx.stroke(); }
-  const hp = MP(DOCK.x, DOCK.z); mctx.fillStyle = '#64b5f6'; mctx.beginPath(); mctx.arc(hp[0], hp[1], 8, 0, TAU); mctx.fill(); mctx.fillStyle = '#fff'; mctx.font = '700 14px "Segoe UI",Arial'; mctx.fillText(t('map_harbor'), hp[0] + 12, hp[1] + 5);
+  const hp = MP(DOCK.x, DOCK.z); mctx.fillStyle = '#FFB74D'; mctx.beginPath(); mctx.arc(hp[0], hp[1], 8, 0, TAU); mctx.fill(); mctx.fillStyle = '#fff'; mctx.font = '700 14px "Segoe UI",Arial'; mctx.fillText(t('map_harbor'), hp[0] + 12, hp[1] + 5);
   const bp = MP(G.boat.x, G.boat.z); mctx.strokeStyle = 'rgba(255,255,255,.4)'; mctx.setLineDash([6, 6]); mctx.beginPath(); mctx.arc(bp[0], bp[1], sonarRange() * s, 0, TAU); mctx.stroke(); mctx.setLineDash([]);
   for (const id in G.seen) { const q = G.seen[id], age = G.time - q.t; if (age > 140) continue; const p = MP(q.x, q.z); mctx.globalAlpha = clamp(1 - age / 140, 0.25, 1); mctx.fillStyle = SPECIES[q.sp].col; mctx.beginPath(); mctx.arc(p[0], p[1], 7, 0, TAU); mctx.fill(); mctx.strokeStyle = '#06233a'; mctx.lineWidth = 2; mctx.stroke(); }
   mctx.globalAlpha = 1;
