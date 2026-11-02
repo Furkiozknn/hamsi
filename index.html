@@ -1268,22 +1268,27 @@ function updateOcean(cx, cz) {
   const ox = Math.round(cx / 3) * 3, oz = Math.round(cz / 3) * 3; ocean.position.set(ox, 0, oz); farSea.position.set(ox, 0, oz);
   const P = ocGeo.attributes.position.array, N = ocGeo.attributes.normal.array, C = ocGeo.attributes.color.array, n = P.length / 3, half = OC.size / 2, amp0 = WAVE_AMP;
   const sumA = (WV[0].A + WV[1].A + WV[2].A + WV[3].A);
+  const hi = S.quality !== 'low', wdx = Math.cos(G.wx.windDir), wdz = Math.sin(G.wx.windDir);
+  const sx = sun.position.x - ox, sy = Math.max(12, sun.position.y), sz = sun.position.z - oz, sl = 1 / Math.hypot(sx, sy, sz), sdx = sx * sl, sdy = sy * sl, sdz = sz * sl;
   for (let i = 0; i < n; i++) {
     const lx = ocBase[i * 3], lz = ocBase[i * 3 + 2], wx = ox + lx, wz = oz + lz;
     const edge = 1 - sstep(half - 28, half - 2, Math.max(Math.abs(lx), Math.abs(lz)));
-    const amp = amp0 * (1 - 0.72 * basinMask(wx, wz)) * edge;
+    const bm = basinMask(wx, wz), amp = amp0 * (1 - 0.72 * bm) * edge;
     let h = 0, gx = 0, gz = 0, hb = 0;
     for (let k = 0; k < 4; k++) { const w = WV[k], ph = w.k * (w.dx * wx + w.dz * wz) - w.w * WAVE_T + w.p, c = Math.cos(ph), sn = Math.sin(ph); h += w.A * sn; if (k > 1) hb += w.A * sn; const q = w.A * w.k * c; gx += q * w.dx; gz += q * w.dz; }
     P[i * 3 + 1] = h * amp;
     let nx = -gx * amp, nz = -gz * amp, nl = 1 / Math.sqrt(nx * nx + 1 + nz * nz); N[i * 3] = nx * nl; N[i * 3 + 1] = nl; N[i * 3 + 2] = nz * nl;
     const hn = h / sumA * 0.5 + 0.5; // 0..1
     const dist = wx - shoreX(wz), sh = 1 - sstep(0, 60, dist), surf = (1 - sstep(0, 5.5, dist)) * (0.5 + 0.5 * Math.sin(WAVE_T * 1.1 + wz * 0.2 + dist * 0.6));
-    const hbn = hb / (WV[2].A + WV[3].A) * 0.5 + 0.5, crest = clamp((hbn - 0.62) * 4.5, 0, 1) * clamp((hn - 0.52) * 3.2, 0, 1) * clamp((amp0 - 0.5) * 1.25, 0.08, 1.3) * edge * (1 - basinMask(wx, wz));
+    const hbn = hb / (WV[2].A + WV[3].A) * 0.5 + 0.5, crest = clamp((hbn - 0.62) * 4.5, 0, 1) * clamp((hn - 0.52) * 3.2, 0, 1) * clamp((amp0 - 0.5) * 1.25, 0.08, 1.3) * edge * (1 - bm);
+    // wind-aligned foam bands and sun-glint sparkle (skipped on ?low)
+    const band = hi ? Math.pow(0.5 + 0.5 * Math.sin((wx * wdz - wz * wdx) * 0.24 + Math.sin((wx * wdx + wz * wdz) * 0.045 - WAVE_T * 0.35) * 1.5), 6) * clamp((amp0 - 0.5) * 0.5, 0, 0.36) * edge * (1 - bm) : 0;
+    const glint = hi ? Math.pow(clamp(nx * nl * sdx + nl * sdy + nz * nl * sdz, 0, 1), 16) * (0.5 + 0.5 * Math.sin(wx * 1.6 + wz * 2.1 + WAVE_T * 4.5)) * (1 - G.wx.s * 0.8) * edge : 0;
     const shade = (0.7 + 0.58 * hn) * (0.93 + 0.07 * Math.sin(wx * 0.013 + wz * 0.009 + 1.0));
     let r = waterBase.r * shade, g = waterBase.g * shade, b = waterBase.b * shade;
     r = lerp(r, shallowCol.r * shade * waterBase.r * 4, sh * 0.7); g = lerp(g, shallowCol.g * shade * (waterBase.g * 2.6), sh * 0.7); b = lerp(b, shallowCol.b * shade * (waterBase.b * 2.0), sh * 0.7);
-    const f = clamp(crest * 0.8 + surf * 0.5, 0, 0.85);
-    C[i * 3] = lerp(r, foamCol.r, f); C[i * 3 + 1] = lerp(g, foamCol.g, f); C[i * 3 + 2] = lerp(b, foamCol.b, f);
+    const f = clamp(crest * 0.8 + surf * 0.5 + band, 0, 0.88), spk = glint * 0.55;
+    C[i * 3] = Math.min(1, lerp(r, foamCol.r, f) + spk); C[i * 3 + 1] = Math.min(1, lerp(g, foamCol.g, f) + spk); C[i * 3 + 2] = Math.min(1, lerp(b, foamCol.b, f) + spk * 0.9);
   }
   ocGeo.attributes.position.needsUpdate = true; ocGeo.attributes.normal.needsUpdate = true; ocGeo.attributes.color.needsUpdate = true;
 }
@@ -1329,6 +1334,7 @@ function buildTerrainMesh(x0, x1, z0, z1, step, yOff) {
   const m = new THREE.Mesh(g, new THREE.MeshLambertMaterial({ vertexColors: true })); m.frustumCulled = false; return m;
 }
 const WORLD = new THREE.Group(); scene.add(WORLD);
+let headlands = null;
 function buildWorld() {
   WORLD.add(buildTerrainMesh(-420, 10, -330, 330, 3.5, 0));
   WORLD.add(buildTerrainMesh(-1700, 40, -1700, 1700, 28, -2.2));
@@ -1363,6 +1369,15 @@ function buildWorld() {
   { const mx = -100, mz = 34, my = terrainH(mx, mz);
     const L = [gBox(12, 8, 12, 0, 2, 0, '#efe9dc'), gSph(4.6, 0, 6.2, 0, '#9fb7c2', 1, 0.85, 1, 12), gCyl(0.9, 1.0, 20, 8, 7.5, 8, 5.5, '#f4efe6'), gCyl(1.5, 1.2, 0.8, 8, 7.5, 18.4, 5.5, '#d8d2c6'), gCyl(0.1, 1.2, 4, 8, 7.5, 21, 5.5, '#9fb7c2'), gBox(13, 0.6, 13, 0, -1.7, 0, '#cfc7b6')];
     const m = lamMesh(L); m.position.set(mx, my - 0.3, mz); m.rotation.y = 0.1; WORLD.add(m); }
+  // ---- distant shoreline headland & Pontic mountain silhouettes (1 merged mesh, skipped on ?low)
+  { const HL = [];
+    for (const [x, z, rx, ry, rz, col] of [
+      [-180, -640, 390, 95, 260, '#1e353d'], [-460, -1040, 520, 165, 380, '#223a44'], [55, -1420, 450, 120, 310, '#263f4b'],
+      [-210, 650, 400, 92, 250, '#1e353d'], [-490, 1060, 540, 175, 390, '#223a44'], [75, 1450, 460, 115, 320, '#263f4b'],
+      [-1150, -520, 680, 290, 620, '#243b46'], [-1280, 480, 720, 310, 640, '#243b46'], [-1550, 0, 820, 380, 900, '#29424f'],
+    ]) HL.push(gSph(1, x, -8, z, col, rx, ry, rz, 7));
+    HL.push(gCyl(2.2, 3.0, 26, 6, 115, 18, -540, '#d8d4c8'), gCyl(2.4, 2.4, 4, 6, 115, 32, -540, '#c0392b'));
+    headlands = lamMesh(HL); headlands.frustumCulled = false; headlands.visible = S.quality !== 'low'; WORLD.add(headlands); }
   buildHarbor(r); buildMistBanks();
 }
 
@@ -1444,23 +1459,29 @@ function buildHarbor(r) {
 }
 
 function smallBoatGeo() { const hull = buildHullGeometry(); hull.scale(0.6, 0.6, 0.6); return mergeGeometries([hull, gBox(1.7, 1.3, 1.5, -0.9, 1.3, 0, '#ffffff'), gCyl(0.12, 0.12, 0.8, 6, -1.4, 2.3, 0.3, '#444444')]); }
-/* ---------- life on the sea: local fishing boats, cargo ships, school hints */
-let aiBoats = null, ships = null, hintDisc = null; const aiData = [], shipData = [];
+/* ---------- life on the sea: local fishing boats, cargo ships, school hints, marker buoys */
+let aiBoats = null, ships = null, hintDisc = null, seaBuoys = null; const aiData = [], shipData = [], buoyData = [];
 function buildSeaLife() {
-  const N = 5; aiBoats = new THREE.InstancedMesh(smallBoatGeo(), new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }), N); aiBoats.frustumCulled = false; scene.add(aiBoats);
-  const cols = ['#e5604a', '#59b05e', '#ffffff', '#f9c23c', '#35b5c4']; for (let i = 0; i < N; i++) { aiBoats.setColorAt(i, _c.set(cols[i])); aiData.push({ cx: 140 + i * 50, cz: -210 + i * 100, r: 40 + i * 9, a: i * 1.7, w: (i % 2 ? 1 : -1) * (0.06 + i * 0.004) }); } aiBoats.instanceColor.needsUpdate = true;
+  const N = 7; aiBoats = new THREE.InstancedMesh(smallBoatGeo(), new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }), N); aiBoats.frustumCulled = false; scene.add(aiBoats);
+  const cols = ['#e5604a', '#59b05e', '#ffffff', '#f9c23c', '#35b5c4', '#e88b3a', '#7ab8e6']; for (let i = 0; i < N; i++) { aiBoats.setColorAt(i, _c.set(cols[i])); aiData.push({ cx: 110 + (i % 5) * 55, cz: -230 + i * 76, r: 38 + (i % 4) * 9, a: i * 1.7, w: (i % 2 ? 1 : -1) * (0.06 + i * 0.004) }); } aiBoats.instanceColor.needsUpdate = true;
   const L = [gBox(64, 6, 12, 0, 3, 0, '#2c3e50'), gBox(64.2, 1.6, 12.2, 0, 0.9, 0, '#b03a2e'), gBox(10, 9, 11, -24, 10, 0, '#f4f4f0'), gBox(3, 4, 3, -28, 16.5, 0, '#c0392b')];
   const cc = ['#e74c3c', '#3498db', '#f1c40f', '#27ae60', '#ecf0f1', '#e67e22']; for (let i = 0; i < 8; i++) for (let j = 0; j < 3; j++) L.push(gBox(5, 2.6, 3.2, -8 + i * 5.4, 7.4 + (j > 1 ? 2.6 : 0), (j % 2 ? -1 : 1) * (j === 2 ? 0 : 3.4), cc[(i * 3 + j) % 6]));
   ships = new THREE.InstancedMesh(mergeGeometries(L.map(g => g.index ? g.toNonIndexed() : g)), new THREE.MeshLambertMaterial({ vertexColors: true }), 3); ships.frustumCulled = false; scene.add(ships);
   shipData.push({ x: 520, z: -380, d: 1.9, s: 1.6 }, { x: 610, z: 150, d: -1.3, s: 1.3 }, { x: 470, z: 420, d: 4.4, s: 1.1 });
   const hc = document.createElement('canvas'); hc.width = hc.height = 128; const hx = hc.getContext('2d'), hg = hx.createRadialGradient(64, 64, 4, 64, 64, 62); hg.addColorStop(0, 'rgba(4,28,40,.62)'); hg.addColorStop(0.55, 'rgba(4,28,40,.4)'); hg.addColorStop(1, 'rgba(4,28,40,0)'); hx.fillStyle = hg; hx.fillRect(0, 0, 128, 128);
   hintDisc = new THREE.InstancedMesh(new THREE.PlaneGeometry(2, 2).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(hc), transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }), 10); hintDisc.frustumCulled = false; hintDisc.count = 0; scene.add(hintDisc);
+  // bobbing coastal/fishing marker buoys across the fishing grounds (1 instanced mesh, skipped on ?low)
+  const bg = mergeGeometries([gSph(0.48, 0, 0.15, 0, '#e0532c'), gCyl(0.28, 0.42, 0.35, 6, 0, 0.42, 0, '#f4f6f8'), gCyl(0.04, 0.04, 2.1, 5, 0, 1.4, 0, '#d8d4c8'), gBox(0.55, 0.36, 0.04, 0.28, 2.2, 0, '#ffd25a')]);
+  seaBuoys = new THREE.InstancedMesh(bg, new THREE.MeshLambertMaterial({ vertexColors: true }), 12); seaBuoys.frustumCulled = false; scene.add(seaBuoys);
+  const br = rng(93); for (let i = 0; i < 12; i++) buoyData.push({ x: 38 + (i % 4) * 88 + br() * 28, z: -240 + Math.floor(i / 4) * 210 + (br() - 0.5) * 50, ph: i * 1.1 });
 }
 const _dm = new THREE.Object3D(); let hintT = 0;
 function updateSeaLife(dt) {
   if (!aiBoats) return;
-  for (let i = 0; i < aiData.length; i++) { const a = aiData[i]; a.a += a.w * dt; const x = a.cx + Math.cos(a.a) * a.r, z = a.cz + Math.sin(a.a) * a.r; _dm.position.set(x, waveH(x, z) + 0.1, z); _dm.rotation.set(0, -(a.a + (a.w > 0 ? Math.PI / 2 : -Math.PI / 2)), Math.sin(VT * 1.1 + i) * 0.05); _dm.scale.setScalar(1.1); _dm.updateMatrix(); aiBoats.setMatrixAt(i, _dm.matrix); }
+  const hi = S.quality !== 'low', nAi = hi ? aiData.length : 5; aiBoats.count = nAi;
+  for (let i = 0; i < nAi; i++) { const a = aiData[i]; a.a += a.w * dt; const x = a.cx + Math.cos(a.a) * a.r, z = a.cz + Math.sin(a.a) * a.r; _dm.position.set(x, waveH(x, z) + 0.1, z); _dm.rotation.set(0, -(a.a + (a.w > 0 ? Math.PI / 2 : -Math.PI / 2)), Math.sin(VT * 1.1 + i) * 0.05); _dm.scale.setScalar(1.1); _dm.updateMatrix(); aiBoats.setMatrixAt(i, _dm.matrix); }
   aiBoats.instanceMatrix.needsUpdate = true;
+  if (seaBuoys) { seaBuoys.visible = hi; if (hi) { for (let i = 0; i < buoyData.length; i++) { const b = buoyData[i]; _dm.position.set(b.x, waveH(b.x, b.z), b.z); _dm.rotation.set(Math.sin(VT * 2.1 + b.ph) * 0.14, b.ph, Math.cos(VT * 1.8 + b.ph) * 0.14); _dm.scale.setScalar(1); _dm.updateMatrix(); seaBuoys.setMatrixAt(i, _dm.matrix); } seaBuoys.instanceMatrix.needsUpdate = true; } }
   for (let i = 0; i < shipData.length; i++) { const s = shipData[i]; s.x += Math.cos(s.d) * s.s * dt; s.z += Math.sin(s.d) * s.s * dt; if (Math.abs(s.z) > 520 || s.x > 800 || s.x < 380) { s.d += Math.PI; } _dm.position.set(s.x, 0.4, s.z); _dm.rotation.set(0, -s.d, 0); _dm.scale.setScalar(1); _dm.updateMatrix(); ships.setMatrixAt(i, _dm.matrix); }
   ships.instanceMatrix.needsUpdate = true;
   // shallow schools show as dark patches with splashing fish at the surface
@@ -1496,7 +1517,7 @@ function buildHullGeometry() {
 }
 const boatGroup = new THREE.Group(); scene.add(boatGroup);
 const crewMeshes = [], flagMesh = (() => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 1.0), new THREE.MeshBasicMaterial({ map: flagTexture(), side: THREE.DoubleSide })); return m; })();
-let boatMesh = null, boatLights = null; const boatLightMat = new THREE.MeshBasicMaterial({ vertexColors: true, color: 0x222222 }), boatGlowMat = new THREE.SpriteMaterial({ map: SOFT, color: 0xffb74d, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 });
+let boatMesh = null, boatLights = null, radarMesh = null; const boatLightMat = new THREE.MeshBasicMaterial({ vertexColors: true, color: 0x222222 }), boatGlowMat = new THREE.SpriteMaterial({ map: SOFT, color: 0xffb74d, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 });
 function buildBoat() {
   const L = [buildHullGeometry()];
   // gunwale rail strips and wheelhouse
@@ -1509,14 +1530,20 @@ function buildBoat() {
   L.push(gCyl(0.8, 0.8, 1.8, 14, -3.35, 1.95, 0, '#2e6b46', { rx: Math.PI / 2 }), gCyl(1.05, 1.05, 0.14, 14, -3.35, 1.95, 1.0, '#e0791f', { rx: Math.PI / 2 }), gCyl(1.05, 1.05, 0.14, 14, -3.35, 1.95, -1.0, '#e0791f', { rx: Math.PI / 2 }));
   L.push(gBox(0.2, 1.0, 0.2, -3.35, 1.4, 1.1, '#555'), gBox(0.2, 1.0, 0.2, -3.35, 1.4, -1.1, '#555'));
   L.push(gSph(1, 3.0, 1.2, 0, '#2b5a46', 1.2, 0.45, 1.0, 8), gSph(0.28, 3.9, 1.2, 0.8, '#ff7a1c'), gSph(0.28, 3.9, 1.2, -0.8, '#ffffff'), gSph(0.28, 3.4, 1.55, 0.2, '#ff7a1c'));
-  // fenders, life ring, bow post, stern post
+  // fenders, life rings, bow anchor, coiled hawsers, wheelhouse brow & searchlight (merged, 0 extra draw calls)
   for (let i = 0; i < 4; i++) { L.push(gSph(0.22, -2 + i * 1.3, 0.55, 1.72, '#222', 1, 1.4, 1, 6), gSph(0.22, -2 + i * 1.3, 0.55, -1.72, '#222', 1, 1.4, 1, 6)); }
   L.push(gCyl(0.55, 0.55, 0.12, 12, -1.4, 2.4, 1.42, '#ffffff', { rx: Math.PI / 2 }), gCyl(0.3, 0.3, 0.14, 12, -1.4, 2.4, 1.42, '#c0392b', { rx: Math.PI / 2 }));
+  L.push(gCyl(0.55, 0.55, 0.12, 12, -1.4, 2.4, -1.42, '#ffffff', { rx: Math.PI / 2 }), gCyl(0.3, 0.3, 0.14, 12, -1.4, 2.4, -1.42, '#c0392b', { rx: Math.PI / 2 }));
+  L.push(gBox(0.38, 0.08, 2.9, 0.12, 3.08, 0, '#1565C0'), gCyl(0.16, 0.18, 0.32, 8, -0.25, 3.65, 0, '#d8d4c8', { rz: Math.PI / 2 }), gCyl(0.24, 0.28, 0.32, 8, -1.15, 3.62, 0, '#d8d4c8'));
+  L.push(gCyl(0.36, 0.4, 0.2, 8, 4.3, 1.24, 0.52, '#c8a46e'), gCyl(0.32, 0.36, 0.18, 8, 4.3, 1.24, -0.52, '#c8a46e'), gBox(0.45, 0.14, 0.14, 5.05, 0.95, 0.42, '#2b2f33'), gBox(0.45, 0.14, 0.14, 5.05, 0.95, -0.42, '#2b2f33'));
   L.push(gCyl(0.06, 0.06, 2.0, 5, -4.55, 2.0, 0, '#d8d4c8'), gCyl(0.06, 0.06, 1.6, 5, 5.3, 2.2, 0, '#d8d4c8'));
   L.push(gCyl(0.07, 0.08, 3.0, 5, -4.2, 3.0, 1.05, '#c9c5b8'), gCyl(0.07, 0.08, 3.0, 5, -4.2, 3.0, -1.05, '#c9c5b8'), gBox(0.14, 0.14, 2.3, -4.2, 4.5, 0, '#c9c5b8'), gSph(0.2, -4.2, 4.2, 0, '#e0791f'));
-  L.push(gBox(0.8, 0.5, 0.7, 0.4, 1.3, 1.0, '#e0791f'), gBox(0.8, 0.5, 0.7, 0.4, 1.3, -1.0, '#e0791f'), gBox(0.8, 0.5, 0.7, 0.4, 1.78, 1.0, '#f2c230'));
+  L.push(gBox(0.8, 0.5, 0.7, 0.4, 1.3, 1.0, '#e0791f'), gBox(0.8, 0.5, 0.7, 0.4, 1.3, -1.0, '#e0791f'), gBox(0.8, 0.5, 0.7, 0.4, 1.78, 1.0, '#f2c230'), gBox(0.8, 0.5, 0.7, 0.4, 1.78, -1.0, '#3a7ec2'));
   boatMesh = new THREE.Mesh(mergeGeometries(L.map(g => (g.index ? g.toNonIndexed() : g)), false), new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }));
   boatMesh.castShadow = true; boatGroup.add(boatMesh);
+  // spinning marine radar bar on wheelhouse roof (skipped on ?low)
+  radarMesh = lamMesh([gBox(0.22, 0.14, 1.25, 0, 0, 0, '#f6f8fa'), gBox(0.24, 0.08, 0.3, 0, -0.06, 0, '#1565C0')]);
+  radarMesh.position.set(-1.15, 3.84, 0); radarMesh.visible = S.quality !== 'low'; boatGroup.add(radarMesh);
   const W = '#ffc15a', LL = [gBox(0.06, 0.8, 1.0, 0.045, 2.6, -0.65, W), gBox(0.06, 0.8, 1.0, 0.045, 2.6, 0.65, W), gBox(1.0, 0.7, 0.06, -1.0, 2.6, 1.395, W), gBox(1.0, 0.7, 0.06, -1.0, 2.6, -1.395, W), gBox(1.0, 0.7, 0.06, -2.0, 2.6, 1.395, W), gBox(1.0, 0.7, 0.06, -2.0, 2.6, -1.395, W),
     gSph(0.2, 1.9, 6.7, 0, '#ffffff'), gSph(0.16, 1.2, 2.0, 1.55, '#ff3b30'), gSph(0.16, 1.2, 2.0, -1.55, '#2ee86a'), gSph(0.22, -3.0, 4.0, 0, '#ffd27a')];
   boatLights = new THREE.Mesh(mergeGeometries(LL.map(g => (g.index ? g.toNonIndexed() : g)), false), boatLightMat); boatGroup.add(boatLights);
@@ -1534,6 +1561,7 @@ function placeBoat(dt) {
   const b = G.boat; boatGroup.position.set(b.x, b.y + 0.12, b.z); _e.set(b.roll, -b.h, b.pitch, 'YZX'); boatGroup.rotation.copy(_e);
   const nc = G.up.crew; crewMeshes.forEach((m, i) => { m.visible = i < nc; if (m.visible) { const hauling = G.net.phase === 'haul' || G.net.phase === 'set'; const ph = VT * 4 + i * 2; m.position.y = m.userData.y0 + (hauling ? Math.abs(Math.sin(ph)) * 0.12 : 0); m.rotation.x = hauling ? Math.sin(ph) * 0.35 : 0; m.rotation.z = hauling ? 0.15 : 0; } });
   flagMesh.rotation.y = Math.PI / 2 + Math.sin(VT * 5) * 0.18; flagMesh.scale.x = 0.9 + Math.sin(VT * 7) * 0.08;
+  if (radarMesh) { radarMesh.visible = S.quality !== 'low'; if (radarMesh.visible) radarMesh.rotation.y = VT * 2.8; }
 }
 function boatWaves(dt) {
   const b = G.boat, fx = Math.cos(b.h), fz = Math.sin(b.h), sxv = -fz, szv = fx;
@@ -1542,22 +1570,23 @@ function boatWaves(dt) {
   b.pitch += (pT - b.pitch) * clamp(dt * 5, 0, 1); b.roll += (rT - b.roll) * clamp(dt * 5, 0, 1); b.y += ((hb + hs + hp + hst + hc * 2) / 6 - b.y) * clamp(dt * 7, 0, 1);
 }
 
-/* ---------- gulls (instanced) */
-const GN = 11;
+/* ---------- gulls (instanced; expanded flock on high quality, 11 on ?low) */
+const GN = 22;
 const gullBody = (() => { const g = colorize(new THREE.SphereGeometry(0.28, 6, 5).scale(1.7, 0.8, 0.8), '#f4f6f8'); const h = colorize(new THREE.SphereGeometry(0.15, 6, 5).translate(0.5, 0.08, 0), '#f4f6f8'); const bk = colorize(new THREE.ConeGeometry(0.05, 0.22, 4).rotateZ(-Math.PI / 2).translate(0.72, 0.06, 0), '#f2b21c'); return mergeGeometries([g, h, bk]); })();
 const gullWing = (() => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute([0.3, 0, 0, -0.3, 0, 0, -0.1, 0, 1.15, -0.1, 0, 1.15, 0.05, 0, 1.05, 0.3, 0, 0], 3)); g.setAttribute('color', new THREE.Float32BufferAttribute([1, 1, 1, 1, 1, 1, 0.3, 0.32, 0.36, 0.3, 0.32, 0.36, 0.3, 0.32, 0.36, 1, 1, 1], 3)); g.computeVertexNormals(); return g; })();
 const gullMat = new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide });
 const gullB = new THREE.InstancedMesh(gullBody, gullMat, GN), gullL = new THREE.InstancedMesh(gullWing, gullMat, GN), gullR = new THREE.InstancedMesh(gullWing, gullMat, GN);
 for (const m of [gullB, gullL, gullR]) { m.frustumCulled = false; scene.add(m); }
-const gulls = Array.from({ length: GN }, (_, i) => ({ x: -30 + i * 3, y: 8, z: i * 2, a: i * 0.8, r: 13 + (i % 5) * 3, h: 5 + (i % 4) * 1.6, w: 0.6 + (i % 3) * 0.12, yaw: 0, ph: i * 1.3, vx: 0, vz: 0, grp: i < 4 ? 1 : 0 }));
+const gulls = Array.from({ length: GN }, (_, i) => ({ x: -30 + i * 3, y: 8, z: i * 2, a: i * 0.8, r: 13 + (i % 5) * 3.5, h: 5 + (i % 4) * 1.8, w: 0.58 + (i % 3) * 0.12, yaw: 0, ph: i * 1.3, vx: 0, vz: 0, grp: i < 6 ? 1 : i < 15 ? 0 : 2 }));
 const _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _q2 = new THREE.Quaternion(), _v = new THREE.Vector3(), _s = new THREE.Vector3(0.55, 0.55, 0.55), _sl = new THREE.Vector3(0.55, 0.55, -0.55), _ax = new THREE.Vector3(1, 0, 0), _ay = new THREE.Vector3(0, 1, 0);
 let gullTarget = null, gullSoundT = 0;
 function updateGulls(dt) {
-  const b = G.boat; gullTarget = null;
+  const b = G.boat, nG = S.quality === 'low' ? 11 : GN; gullTarget = null;
   if (G.mode === 'play') { let best = null, bs = 0; for (const s of G.schools) { const d = Math.hypot(s.x - b.x, s.z - b.z); if (d < 160 && s.mem.length * s.kgPer > 250) { const sc = s.mem.length * s.kgPer / (d + 40); if (sc > bs) { bs = sc; best = s; } } } gullTarget = best; }
-  for (let i = 0; i < GN; i++) {
+  for (let i = 0; i < nG; i++) {
     const g = gulls[i]; g.a += g.w * dt * (i % 2 ? 1 : -1); let tx, tz, ty;
     if (g.grp === 1 && gullTarget) { tx = gullTarget.x + Math.cos(g.a * 1.3) * 13; tz = gullTarget.z + Math.sin(g.a * 1.3) * 13; ty = 11 + (i % 3) * 2; }
+    else if (g.grp === 2 && G.mode === 'play') { tx = 18 + Math.cos(g.a * 0.65 + i) * 58; tz = -8 + Math.sin(g.a * 0.65 + i) * 48; ty = g.h + 5; }
     else if (G.mode === 'play') { const bx = b.x - Math.cos(b.h) * 6, bz = b.z - Math.sin(b.h) * 6; tx = bx + Math.cos(g.a) * g.r; tz = bz + Math.sin(g.a) * g.r; ty = g.h + 3; }
     else { tx = -30 + Math.cos(g.a * 0.6 + i) * (30 + g.r * 1.5); tz = -5 + Math.sin(g.a * 0.6 + i) * (28 + g.r); ty = g.h + 6; }
     const k = 1 - Math.exp(-dt * 0.9); const px = g.x, pz = g.z; g.x += (tx - g.x) * k; g.z += (tz - g.z) * k; g.y += (ty + Math.sin(VT * 1.3 + i) * 1.2 - g.y) * k;
@@ -1568,7 +1597,7 @@ function updateGulls(dt) {
     _q2.setFromAxisAngle(_ax, flap); const qw = _q.clone().multiply(_q2); _m.compose(_v, qw, _s); gullR.setMatrixAt(i, _m);
     _q2.setFromAxisAngle(_ax, -flap); const qw2 = _q.clone().multiply(_q2); _m.compose(_v, qw2, _sl); gullL.setMatrixAt(i, _m);
   }
-  for (const m of [gullB, gullL, gullR]) m.instanceMatrix.needsUpdate = true;
+  for (const m of [gullB, gullL, gullR]) { m.count = nG; m.instanceMatrix.needsUpdate = true; }
   gullSoundT -= dt; if (gullSoundT <= 0) { gullSoundT = 3 + Math.random() * 6; if (G.mode !== 'menu') Snd.gull(); }
 }
 
@@ -1629,6 +1658,7 @@ function updateParticles(dt) {
       wakeT = 0.05 + 0.2 / (1 + spd * 0.4);
       for (const side of [-1, 1]) { const sx = b.x - fx * 4.2 - fz * side * (0.6 + Math.random() * 0.5), sz = b.z - fz * 4.2 + fx * side * (0.6 + Math.random() * 0.5); emit(foam, sx, waveH(sx, sz) + 0.12, sz, -fz * side * 0.6, 0, fx * side * 0.6, 3.2); }
       if (spd > 3) { const bx = b.x + fx * 5, bz = b.z + fz * 5; for (let k = 0; k < 2; k++) emit(spray, bx, waveH(bx, bz) + 0.6, bz, (Math.random() - 0.5) * 3 - fz * (Math.random() < 0.5 ? 2 : -2), 2 + Math.random() * 2.5, (Math.random() - 0.5) * 3 + fx * (Math.random() < 0.5 ? 2 : -2), 0.7); }
+      if (S.quality !== 'low' && G.fuel > 0) { const ex = b.x - fx * 2.2 + fz * 0.8, ez = b.z - fz * 2.2 - fx * 0.8; emit(foam, ex, b.y + 5.1, ez, -fx * 0.9 + (Math.random() - 0.5) * 0.5, 1.3 + Math.random() * 0.6, -fz * 0.9 + (Math.random() - 0.5) * 0.5, 1.1); }
     }
   }
   if (G.net.phase === 'haul') {
@@ -1990,7 +2020,7 @@ bindRange('vMaster', 'master'); bindRange('vMusic', 'music'); bindRange('vSfx', 
 $('sTR').addEventListener('click', () => { S.lang = 'tr'; saveSettings(); applyLang(); }); $('sEN').addEventListener('click', () => { S.lang = 'en'; saveSettings(); applyLang(); });
 $('sLow').addEventListener('click', () => { S.quality = 'low'; saveSettings(); qualityChanged(); }); $('sHigh').addEventListener('click', () => { S.quality = 'high'; saveSettings(); qualityChanged(); });
 $('sFull').addEventListener('click', () => { try { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); } catch (e) { } });
-function qualityChanged() { applyLang(); setupShadows(); resize(); for (const P of [foam, spray]) if (P) { scene.remove(P.m); P.m.geometry.dispose(); } if (rainP) scene.remove(rainP); initParticles(); }
+function qualityChanged() { applyLang(); setupShadows(); resize(); if (headlands) headlands.visible = S.quality !== 'low'; for (const P of [foam, spray]) if (P) { scene.remove(P.m); P.m.geometry.dispose(); } if (rainP) scene.remove(rainP); initParticles(); }
 
 addEventListener('keydown', e => {
   if (e.repeat && (e.code === 'Space' || e.code === 'KeyM' || e.code === 'KeyP')) { e.preventDefault(); return; }
