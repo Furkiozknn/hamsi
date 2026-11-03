@@ -626,9 +626,12 @@ function terrainH(x, z) {
   return h;
 }
 function seabed(x, z) { const d = x - shoreX(z); return clamp(1.5 + d * 0.45, 0, 70); }
+const _segRes = { d: 0, cx: 0, cz: 0 };
 function segDist(px, pz, ax, az, bx, bz) {
   const dx = bx - ax, dz = bz - az; const l2 = dx * dx + dz * dz; let t = l2 ? ((px - ax) * dx + (pz - az) * dz) / l2 : 0; t = clamp(t, 0, 1);
-  const cx = ax + dx * t, cz = az + dz * t; return { d: Math.hypot(px - cx, pz - cz), cx, cz };
+  _segRes.cx = ax + dx * t; _segRes.cz = az + dz * t;
+  _segRes.d = Math.hypot(px - _segRes.cx, pz - _segRes.cz);
+  return _segRes;
 }
 function ptInPoly(x, z, P) {
   let c = false; for (let i = 0, j = P.length - 1; i < P.length; j = i++) {
@@ -1009,13 +1012,14 @@ function stepBoat(dt) {
   const steer = clamp(0.22 + Math.abs(b.v) / 4.5, 0, 1) * (b.v < -0.2 ? -1 : 1);
   b.yawr += (b.rud * 0.66 * steer - b.yawr) * clamp(dt * 2.6, 0, 1);
   b.h += b.yawr * dt + Math.sin(G.time * 1.3) * 0.02 * wx.s * dt;
-  const f = [Math.cos(b.h), Math.sin(b.h)];
+  const fx = Math.cos(b.h), fz = Math.sin(b.h);
   const dr = wx.wind * (0.07 + 0.05 * wx.s);
-  b.x += (f[0] * b.v + Math.cos(wx.windDir) * dr) * dt; b.z += (f[1] * b.v + Math.sin(wx.windDir) * dr) * dt;
-  // fuel
-  if (G.mode === 'play') {
+  b.x += (fx * b.v + Math.cos(wx.windDir) * dr) * dt; b.z += (fz * b.v + Math.sin(wx.windDir) * dr) * dt;
+  // fuel: only consume and bill actual fuel when engine has fuel
+  if (G.mode === 'play' && hasFuel) {
     const use = (0.010 + 0.115 * thrEff * thrEff) * UPG.engine.eff[up.engine] * dt;
-    G.fuel = Math.max(0, G.fuel - use); G.today.fuelCost += use * FUEL_PRICE;
+    const actual = Math.min(G.fuel, use);
+    G.fuel = Math.max(0, G.fuel - actual); G.today.fuelCost += actual * FUEL_PRICE;
     const tank = UPG.engine.tank[up.engine];
     if (G.fuel < tank * 0.2 && !G.flags.lowfuel) { G.flags.lowfuel = true; toast(t('toast_fuel'), 'bad'); }
     if (G.fuel <= 0 && !G.flags.nofuel) { G.flags.nofuel = true; toast(t('toast_nofuel'), 'bad'); }
@@ -1492,7 +1496,8 @@ function updateSeaLife(dt) {
     _dm.position.set(s.x, waveH(s.x, s.z) + 0.45, s.z); _dm.rotation.set(0, VT * 0.1, 0); const k = s.rad * 1.5 * (1.0 + 0.06 * Math.sin(VT * 1.7 + s.id)); _dm.scale.set(k, 1, k * 0.85); _dm.updateMatrix(); hintDisc.setMatrixAt(n++, _dm.matrix);
     if (hintT <= 0 && s.mem.length) { const f = s.mem[Math.floor(Math.random() * s.mem.length)], x = s.x + f.x, z = s.z + f.z; emit(spray, x, waveH(x, z) + 0.1, z, (Math.random() - 0.5) * 1.5, 3 + Math.random() * 2, (Math.random() - 0.5) * 1.5, 0.55); }
   }
-  if (hintT <= 0) hintT = 0.09; hintDisc.count = n; hintDisc.instanceMatrix.needsUpdate = true;
+  if (hintT <= 0) hintT = 0.09;
+  if (n > 0 || hintDisc.count > 0) { hintDisc.count = n; hintDisc.instanceMatrix.needsUpdate = true; }
 }
 
 /* ---------- player boat */
@@ -1579,7 +1584,7 @@ const gullMat = new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.
 const gullB = new THREE.InstancedMesh(gullBody, gullMat, GN), gullL = new THREE.InstancedMesh(gullWing, gullMat, GN), gullR = new THREE.InstancedMesh(gullWing, gullMat, GN);
 for (const m of [gullB, gullL, gullR]) { m.frustumCulled = false; scene.add(m); }
 const gulls = Array.from({ length: GN }, (_, i) => ({ x: -30 + i * 3, y: 8, z: i * 2, a: i * 0.8, r: 13 + (i % 5) * 3.5, h: 5 + (i % 4) * 1.8, w: 0.58 + (i % 3) * 0.12, yaw: 0, ph: i * 1.3, vx: 0, vz: 0, grp: i < 6 ? 1 : i < 15 ? 0 : 2 }));
-const _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _q2 = new THREE.Quaternion(), _v = new THREE.Vector3(), _s = new THREE.Vector3(0.55, 0.55, 0.55), _sl = new THREE.Vector3(0.55, 0.55, -0.55), _ax = new THREE.Vector3(1, 0, 0), _ay = new THREE.Vector3(0, 1, 0);
+const _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _q2 = new THREE.Quaternion(), _qw = new THREE.Quaternion(), _v = new THREE.Vector3(), _s = new THREE.Vector3(0.55, 0.55, 0.55), _sl = new THREE.Vector3(0.55, 0.55, -0.55), _ax = new THREE.Vector3(1, 0, 0), _ay = new THREE.Vector3(0, 1, 0);
 let gullTarget = null, gullSoundT = 0;
 function updateGulls(dt) {
   const b = G.boat, nG = S.quality === 'low' ? 11 : GN; gullTarget = null;
@@ -1595,8 +1600,8 @@ function updateGulls(dt) {
     const flap = Math.sin(VT * (8 + i % 3) + g.ph) * 0.65 * (Math.abs(Math.sin(VT * 0.37 + i)) > 0.45 ? 1 : 0.15);
     _q.setFromAxisAngle(_ay, -g.yaw); _q2.setFromAxisAngle(_ax, 0.3 * Math.sin(g.a)); _q.multiply(_q2); _v.set(g.x, g.y, g.z);
     _m.compose(_v, _q, _s); gullB.setMatrixAt(i, _m);
-    _q2.setFromAxisAngle(_ax, flap); const qw = _q.clone().multiply(_q2); _m.compose(_v, qw, _s); gullR.setMatrixAt(i, _m);
-    _q2.setFromAxisAngle(_ax, -flap); const qw2 = _q.clone().multiply(_q2); _m.compose(_v, qw2, _sl); gullL.setMatrixAt(i, _m);
+    _q2.setFromAxisAngle(_ax, flap); _qw.copy(_q).multiply(_q2); _m.compose(_v, _qw, _s); gullR.setMatrixAt(i, _m);
+    _q2.setFromAxisAngle(_ax, -flap); _qw.copy(_q).multiply(_q2); _m.compose(_v, _qw, _sl); gullL.setMatrixAt(i, _m);
   }
   for (const m of [gullB, gullL, gullR]) { m.count = nG; m.instanceMatrix.needsUpdate = true; }
   gullSoundT -= dt; if (gullSoundT <= 0) { gullSoundT = 3 + Math.random() * 6; if (G.mode !== 'menu') Snd.gull(); }
@@ -1612,15 +1617,35 @@ for (let i = 0; i < MAXP; i++) floats.setColorAt(i, _c.set(i % 3 === 0 ? '#ff7a1
 const buoy = lamMesh([gSph(0.6, 0, 0.2, 0, '#e24a2a'), gCyl(0.05, 0.05, 2.4, 5, 0, 1.6, 0, '#eeeeee'), gBox(0.7, 0.45, 0.04, 0.35, 2.5, 0, '#ffd25a')]); buoy.visible = false; scene.add(buoy);
 const netTmp = [];
 function updateNet() {
-  const n = G.net, b = G.boat; if (n.phase === 'stowed') { netMesh.visible = false; floats.count = 0; buoy.visible = false; return; }
+  const n = G.net, b = G.boat; if (n.phase === 'stowed' || !n.pts.length) { netMesh.visible = false; floats.count = 0; buoy.visible = false; return; }
   netMesh.visible = true; buoy.visible = true;
-  let pts = n.pts.slice(0, MAXP - 2);
+  const P = netGeo.attributes.position.array, depthVis = n.phase === 'haul' ? lerp(6, 2.4, clamp(n.ht / n.haulT, 0, 1)) : 6;
+  const rawN = Math.min(n.pts.length, MAXP - 2);
+  let np = 0;
   if (n.phase === 'haul') {
-    const e = Math.pow(clamp(n.ht / n.haulT, 0, 1), 1.4), cx = pts.reduce((a, p) => a + p.x, 0) / pts.length, cz = pts.reduce((a, p) => a + p.z, 0) / pts.length;
-    pts = pts.map(p => ({ x: lerp(p.x, lerp(cx, b.x, e), e * 0.85), z: lerp(p.z, lerp(cz, b.z, e), e * 0.85) })); pts.push(pts[0]);
-  } else { const l = pts[pts.length - 1]; pts.push({ x: b.x - Math.cos(b.h) * 3.2, z: b.z - Math.sin(b.h) * 3.2 }); }
-  const P = netGeo.attributes.position.array, np = Math.min(pts.length, MAXP), depthVis = n.phase === 'haul' ? lerp(6, 2.4, clamp(n.ht / n.haulT, 0, 1)) : 6;
-  for (let i = 0; i < np; i++) { const p = pts[i], y = waveH(p.x, p.z) + 0.1; P[i * 6] = p.x; P[i * 6 + 1] = y; P[i * 6 + 2] = p.z; P[i * 6 + 3] = p.x; P[i * 6 + 4] = y - depthVis; P[i * 6 + 5] = p.z; _m.makeTranslation(p.x, y + 0.05 + Math.sin(VT * 3 + i * 0.7) * 0.05, p.z); floats.setMatrixAt(i, _m); }
+    const e = Math.pow(clamp(n.ht / n.haulT, 0, 1), 1.4);
+    let sx = 0, sz = 0; for (let i = 0; i < rawN; i++) { sx += n.pts[i].x; sz += n.pts[i].z; }
+    const cx = sx / rawN, cz = sz / rawN, tX = lerp(cx, b.x, e), tZ = lerp(cz, b.z, e), k = e * 0.85;
+    for (let i = 0; i < rawN; i++) {
+      const p = n.pts[i], px = lerp(p.x, tX, k), pz = lerp(p.z, tZ, k), y = waveH(px, pz) + 0.1;
+      P[i * 6] = px; P[i * 6 + 1] = y; P[i * 6 + 2] = pz; P[i * 6 + 3] = px; P[i * 6 + 4] = y - depthVis; P[i * 6 + 5] = pz;
+      _m.makeTranslation(px, y + 0.05 + Math.sin(VT * 3 + i * 0.7) * 0.05, pz); floats.setMatrixAt(i, _m);
+    }
+    const p0 = n.pts[0], p0x = lerp(p0.x, tX, k), p0z = lerp(p0.z, tZ, k), y0 = waveH(p0x, p0z) + 0.1;
+    P[rawN * 6] = p0x; P[rawN * 6 + 1] = y0; P[rawN * 6 + 2] = p0z; P[rawN * 6 + 3] = p0x; P[rawN * 6 + 4] = y0 - depthVis; P[rawN * 6 + 5] = p0z;
+    _m.makeTranslation(p0x, y0 + 0.05 + Math.sin(VT * 3 + rawN * 0.7) * 0.05, p0z); floats.setMatrixAt(rawN, _m);
+    np = rawN + 1;
+  } else {
+    for (let i = 0; i < rawN; i++) {
+      const p = n.pts[i], px = p.x, pz = p.z, y = waveH(px, pz) + 0.1;
+      P[i * 6] = px; P[i * 6 + 1] = y; P[i * 6 + 2] = pz; P[i * 6 + 3] = px; P[i * 6 + 4] = y - depthVis; P[i * 6 + 5] = pz;
+      _m.makeTranslation(px, y + 0.05 + Math.sin(VT * 3 + i * 0.7) * 0.05, pz); floats.setMatrixAt(i, _m);
+    }
+    const bx = b.x - Math.cos(b.h) * 3.2, bz = b.z - Math.sin(b.h) * 3.2, by = waveH(bx, bz) + 0.1;
+    P[rawN * 6] = bx; P[rawN * 6 + 1] = by; P[rawN * 6 + 2] = bz; P[rawN * 6 + 3] = bx; P[rawN * 6 + 4] = by - depthVis; P[rawN * 6 + 5] = bz;
+    _m.makeTranslation(bx, by + 0.05 + Math.sin(VT * 3 + rawN * 0.7) * 0.05, bz); floats.setMatrixAt(rawN, _m);
+    np = rawN + 1;
+  }
   netGeo.attributes.position.needsUpdate = true; netGeo.setDrawRange(0, Math.max(0, (np - 1) * 6)); floats.count = np; floats.instanceMatrix.needsUpdate = true;
   const p0 = n.pts[0]; buoy.position.set(p0.x, waveH(p0.x, p0.z), p0.z); buoy.rotation.z = Math.sin(VT * 2) * 0.1;
 }
@@ -1691,11 +1716,12 @@ dockBeam.position.set(DOCK.x, 20, DOCK.z); scene.add(dockBeam);
 /* ---------- camera + environment per frame */
 const cam = { yaw: 0, pitch: 0.3, dist: 31, drag: false, idle: 0, h: 0, pos: new THREE.Vector3(-40, 14, 20), look: new THREE.Vector3(-40, 2, -5), orbit: 0 };
 const SKY = { zen: new THREE.Color(), hor: new THREE.Color(), fog: new THREE.Color(), tmp: new THREE.Color() };
+const _sd = new THREE.Vector3();
 let skyT = 0;
 function updateEnv(dt) {
   const tm = G.mode === 'menu' ? 520 : G.tmin, dayF = clamp((tm - T0) / (T1 - T0), 0, 1), el = 0.16 + 0.95 * Math.sin(Math.PI * dayF), az = dayF * Math.PI;
   const w = G.wx, over = clamp(w.s * 0.95 + w.fogMorning * 0.45, 0, 1);
-  const sd = new THREE.Vector3(Math.cos(el) * Math.cos(az), Math.sin(el), Math.cos(el) * Math.sin(az) * 0.8 + 0.1).normalize();
+  const sd = _sd.set(Math.cos(el) * Math.cos(az), Math.sin(el), Math.cos(el) * Math.sin(az) * 0.8 + 0.1).normalize();
   const warm = 1 - sstep(0.1, 0.5, Math.sin(el));
   sun.color.setRGB(1, lerp(0.93, 0.68, warm), lerp(0.82, 0.42, warm)); sun.intensity = lerp(2.6, 0.5, over) * (0.45 + 0.55 * Math.sin(el));
   hemi.intensity = lerp(0.9, 0.78, over); hemi.color.setRGB(lerp(0.72, 0.6, over), lerp(0.82, 0.7, over), lerp(0.92, 0.8, over)); hemi.groundColor.setRGB(0.2, 0.3, 0.27);
@@ -1805,18 +1831,19 @@ const DEPTH_MAX = 60;
 function drawSonar(dt) {
   const W = sonarC.width, H = sonarC.height, b = G.boat, R = sonarRange(), cx = 176, cy = 172, rad = 160, sc = rad / R;
   const fx = Math.cos(b.h), fz = Math.sin(b.h), sx = -fz, sz = fx;
-  const P = (x, z) => { const dx = x - b.x, dz = z - b.z; return [cx + (dx * sx + dz * sz) * sc, cy - (dx * fx + dz * fz) * sc]; };
+  const px = (x, z) => cx + ((x - b.x) * sx + (z - b.z) * sz) * sc;
+  const py = (x, z) => cy - ((x - b.x) * fx + (z - b.z) * fz) * sc;
   sctx.clearRect(0, 0, W, H);
   sctx.save(); sctx.beginPath(); sctx.arc(cx, cy, rad, 0, TAU); sctx.clip();
   const g = sctx.createRadialGradient(cx, cy, 10, cx, cy, rad); g.addColorStop(0, '#0d3a36'); g.addColorStop(1, '#06171b'); sctx.fillStyle = g; sctx.fillRect(0, 0, W, H);
   // land
   sctx.beginPath(); let first = true; const N = 24;
-  for (let i = 0; i <= N; i++) { const z = b.z - R * 1.2 + (2.4 * R) * i / N, p = P(shoreX(z), z); if (first) { sctx.moveTo(p[0], p[1]); first = false; } else sctx.lineTo(p[0], p[1]); }
-  for (let i = N; i >= 0; i--) { const z = b.z - R * 1.2 + (2.4 * R) * i / N, p = P(shoreX(z) - 900, z); sctx.lineTo(p[0], p[1]); }
+  for (let i = 0; i <= N; i++) { const z = b.z - R * 1.2 + (2.4 * R) * i / N, x0 = px(shoreX(z), z), y0 = py(shoreX(z), z); if (first) { sctx.moveTo(x0, y0); first = false; } else sctx.lineTo(x0, y0); }
+  for (let i = N; i >= 0; i--) { const z = b.z - R * 1.2 + (2.4 * R) * i / N; sctx.lineTo(px(shoreX(z) - 900, z), py(shoreX(z) - 900, z)); }
   sctx.closePath(); sctx.fillStyle = '#233f2b'; sctx.fill(); sctx.strokeStyle = '#6fcf8a'; sctx.lineWidth = 2; sctx.stroke();
   // moles
   sctx.strokeStyle = '#c9c5b8'; sctx.lineWidth = 5; sctx.lineJoin = 'round';
-  for (const m of MOLES) { sctx.beginPath(); m.forEach((q, i) => { const p = P(q[0], q[1]); i ? sctx.lineTo(p[0], p[1]) : sctx.moveTo(p[0], p[1]); }); sctx.stroke(); }
+  for (const m of MOLES) { sctx.beginPath(); m.forEach((q, i) => { const x0 = px(q[0], q[1]), y0 = py(q[0], q[1]); i ? sctx.lineTo(x0, y0) : sctx.moveTo(x0, y0); }); sctx.stroke(); }
   // rings and heading line
   sctx.strokeStyle = 'rgba(0,230,118,.3)'; sctx.lineWidth = 1.5; for (let i = 1; i <= 3; i++) { sctx.beginPath(); sctx.arc(cx, cy, rad * i / 3, 0, TAU); sctx.stroke(); }
   sctx.beginPath(); sctx.moveTo(cx - rad, cy); sctx.lineTo(cx + rad, cy); sctx.moveTo(cx, cy - rad); sctx.lineTo(cx, cy + rad); sctx.stroke();
@@ -1829,26 +1856,26 @@ function drawSonar(dt) {
   for (const s of G.schools) {
     const col = SPECIES[s.sp].col;
     for (const f of s.mem) {
-      const wx = s.x + f.x, wz = s.z + f.z; const p = P(wx, wz); const dx = p[0] - cx, dy = p[1] - cy; if (dx * dx + dy * dy > rad * rad) continue;
+      const wx = s.x + f.x, wz = s.z + f.z; const x0 = px(wx, wz), y0 = py(wx, wz); const dx = x0 - cx, dy = y0 - cy; if (dx * dx + dy * dy > rad * rad) continue;
       const ang = Math.atan2(dy, dx) + Math.PI / 2, d = ((sw - ang) % TAU + TAU) % TAU, glow = Math.exp(-d * 1.8);
-      const deep = s.dep + f.y > nd; sctx.globalAlpha = (deep ? 0.45 : 0.8) + 0.2 * glow; sctx.fillStyle = col; sctx.beginPath(); sctx.arc(p[0], p[1], 3.2 + glow * 1.2, 0, TAU); sctx.fill();
+      const deep = s.dep + f.y > nd; sctx.globalAlpha = (deep ? 0.45 : 0.8) + 0.2 * glow; sctx.fillStyle = col; sctx.beginPath(); sctx.arc(x0, y0, 3.2 + glow * 1.2, 0, TAU); sctx.fill();
     }
   }
   sctx.globalAlpha = 1;
   // net path
-  if (G.net.phase !== 'stowed' && G.net.pts.length > 1) { sctx.strokeStyle = '#ffd25a'; sctx.lineWidth = 3; sctx.beginPath(); G.net.pts.forEach((q, i) => { const p = P(q.x, q.z); i ? sctx.lineTo(p[0], p[1]) : sctx.moveTo(p[0], p[1]); }); sctx.stroke(); }
+  if (G.net.phase !== 'stowed' && G.net.pts.length > 1) { sctx.strokeStyle = '#ffd25a'; sctx.lineWidth = 3; sctx.beginPath(); G.net.pts.forEach((q, i) => { const x0 = px(q.x, q.z), y0 = py(q.x, q.z); i ? sctx.lineTo(x0, y0) : sctx.moveTo(x0, y0); }); sctx.stroke(); }
   // contact rings (inside the radar clip), labels are drawn after the clip is released
   const cs = sonarContacts().sort((a, c) => a.dist - c.dist).slice(0, 4); const labels = [];
   for (const c of cs) {
-    const p = P(c.x, c.z), r = Math.max(10, c.rad * sc); sctx.strokeStyle = SPECIES[c.sp].col; sctx.lineWidth = 2; sctx.setLineDash([6, 5]); sctx.beginPath(); sctx.arc(p[0], p[1], r + 4, 0, TAU); sctx.stroke(); sctx.setLineDash([]);
-    labels.push([p, r, t('sp_' + SPECIES[c.sp].id) + ' ' + t('depth', { d: Math.round(c.depth) }) + (G.up.sonar >= 1 ? ' ' + t('est', { k: Math.round(c.kg / 10) * 10 }) : '')]);
+    const cx0 = px(c.x, c.z), cy0 = py(c.x, c.z), r = Math.max(10, c.rad * sc); sctx.strokeStyle = SPECIES[c.sp].col; sctx.lineWidth = 2; sctx.setLineDash([6, 5]); sctx.beginPath(); sctx.arc(cx0, cy0, r + 4, 0, TAU); sctx.stroke(); sctx.setLineDash([]);
+    labels.push({ x: cx0, y: cy0, r, lbl: t('sp_' + SPECIES[c.sp].id) + ' ' + t('depth', { d: Math.round(c.depth) }) + (G.up.sonar >= 1 ? ' ' + t('est', { k: Math.round(c.kg / 10) * 10 }) : '') });
   }
   sctx.restore();
   sctx.font = '700 22px "Segoe UI",Arial,sans-serif'; sctx.textAlign = 'center';
-  for (const [p, r, lbl] of labels) { const tw = sctx.measureText(lbl).width, lx = clamp(p[0], tw / 2 + 6, 2 * cx - tw / 2 - 6), ly = clamp(p[1] - r - 11, 24, H - 8); sctx.fillStyle = 'rgba(5,20,30,.78)'; sctx.fillRect(lx - tw / 2 - 5, ly - 19, tw + 10, 26); sctx.fillStyle = '#fff'; sctx.fillText(lbl, lx, ly); }
+  for (const lb of labels) { const tw = sctx.measureText(lb.lbl).width, lx = clamp(lb.x, tw / 2 + 6, 2 * cx - tw / 2 - 6), ly = clamp(lb.y - lb.r - 11, 24, H - 8); sctx.fillStyle = 'rgba(5,20,30,.78)'; sctx.fillRect(lx - tw / 2 - 5, ly - 19, tw + 10, 26); sctx.fillStyle = '#fff'; sctx.fillText(lb.lbl, lx, ly); }
   // harbour bearing
-  { const dxh = DOCK.x - b.x, dzh = DOCK.z - b.z, dh = Math.hypot(dxh, dzh); const p = P(DOCK.x, DOCK.z); let ex = p[0], ey = p[1];
-    if (dh > R * 0.92) { const a = Math.atan2(p[1] - cy, p[0] - cx); ex = cx + Math.cos(a) * (rad - 14); ey = cy + Math.sin(a) * (rad - 14); }
+  { const dxh = DOCK.x - b.x, dzh = DOCK.z - b.z, dh = Math.hypot(dxh, dzh); const hx0 = px(DOCK.x, DOCK.z), hy0 = py(DOCK.x, DOCK.z); let ex = hx0, ey = hy0;
+    if (dh > R * 0.92) { const a = Math.atan2(hy0 - cy, hx0 - cx); ex = cx + Math.cos(a) * (rad - 14); ey = cy + Math.sin(a) * (rad - 14); }
     sctx.fillStyle = '#FFB74D'; sctx.beginPath(); sctx.arc(ex, ey, 11, 0, TAU); sctx.fill(); sctx.fillStyle = '#1a1206'; sctx.font = '900 16px "Segoe UI",Arial'; sctx.textAlign = 'center'; sctx.fillText('H', ex, ey + 6); }
   // rim and boat
   sctx.strokeStyle = 'rgba(0,230,118,.7)'; sctx.lineWidth = 3; sctx.beginPath(); sctx.arc(cx, cy, rad, 0, TAU); sctx.stroke();
