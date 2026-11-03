@@ -170,7 +170,7 @@ body.touch #actions .hint{display:none}
 .set output{width:42px;text-align:right;color:var(--dim);font-variant-numeric:tabular-nums}
 input[type=range]{width:100%;height:44px;accent-color:var(--accent-l);background:transparent}
 .seg{display:flex;gap:6px;grid-column:2/4}
-.seg .btn{flex:1;padding:8px 10px}
+.seg .btn{flex:1;min-width:44px;min-height:44px;padding:8px 10px} /* A11y: explicit 44x44 target */
 .seg .btn.sel{background:var(--accent);color:#fff;border-color:#a8d4ff}
 .stars{display:flex;gap:6px;justify-content:center;margin:6px 0}
 .stars svg{width:46px;height:46px;fill:rgba(255,255,255,.16);stroke:rgba(255,255,255,.3);stroke-width:1.5}
@@ -271,7 +271,8 @@ ul.feat li::before{background:var(--sonar);border-radius:1px}
 #mapc{border-radius:4px;border:1px solid rgba(0,230,118,.3);background:#0a2024}
 input[type=range]{accent-color:var(--sonar)}
 .rec{color:var(--sodium)}
-@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important}}
+button.btn:focus-visible{outline:3px solid var(--sonar);outline-offset:2px} /* A11y: high-contrast focus ring */
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important}#lens,#wcard.warn{animation:none!important}} /* A11y: disable infinite animations */
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 <script data-goatcounter="https://furkiozknn.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
