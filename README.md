@@ -1,91 +1,95 @@
 <p align="center">
-  <a href="https://furkiozknn.github.io/hamsi/"><img src="docs/banner.svg" width="100%" alt="Hamsi: a Black Sea fishing and boat-management game. A blue-and-white fishing boat closes a ring of net corks around a school of fish below green tea-terraced mountains. Click to play in your browser."></a>
+  <a href="https://furkiozknn.github.io/hamsi/">
+    <img src="docs/card.jpg" width="100%" alt="Hamsi: a 3D fishing and boat-management game on the Black Sea coast. A blue-and-white fishing boat closes a ring of net corks around a school of fish below green tea-terraced mountains. Click to play in your browser.">
+  </a>
 </p>
 
 <p align="center">
-  <a href="https://furkiozknn.github.io/hamsi/"><img src="https://img.shields.io/badge/%E2%96%B6_Play_now-in_your_browser-1E88E5?style=for-the-badge&labelColor=0A1E2C" alt="Play now in your browser"></a>
+  <a href="https://furkiozknn.github.io/hamsi/"><img src="https://img.shields.io/badge/%E2%96%B6_Play_free-in_your_browser-1E88E5?style=for-the-badge&logo=googlechrome&logoColor=white&labelColor=0A1E2C" height="40" alt="Play free in your browser"></a>
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/Three.js-r170-64B5F6?style=for-the-badge&logo=threedotjs&logoColor=white&labelColor=0A1E2C" alt="Three.js r170">
   <img src="https://img.shields.io/badge/built_by-Claude_Sonnet_5.5-FFD25A?style=for-the-badge&logo=claude&logoColor=white&labelColor=0A1E2C" alt="Built by Claude Sonnet 5.5">
   <a href="LICENSE"><img src="https://img.shields.io/badge/licence-MIT-7FE3A0?style=for-the-badge&labelColor=0A1E2C" alt="MIT licence"></a>
   <img src="https://img.shields.io/badge/no_install-desktop_%C2%B7_phone-F2F7FB?style=for-the-badge&labelColor=0A1E2C" alt="No install, desktop and phone">
 </p>
 
-<p align="center"><b>A 3D fishing and boat-management game on the Black Sea coast: find the schools on the sonar, circle a purse-seine net around them, race home before the storm, sell the catch fresh and pay off the boat loan in a 30-day season to become reis of the harbour.</b></p>
-
-<p align="center">
-  <img src="docs/gameplay.gif" width="640" alt="Hamsi gameplay after the redesign: the fishing boat sails out of the harbour on the Black Sea with the sonar and steel instrument panel">
-</p>
-
-<p align="center"><b>Play online: <a href="https://furkiozknn.github.io/hamsi/">https://furkiozknn.github.io/hamsi/</a></b> (desktop and phone, no install)</p>
-
 <!-- portals:start -->
-<p align="center">Also on: <a href="https://furkiozknn.itch.io/hamsi">itch.io</a> &middot; <a href="https://playgama.ai/play/ucyjxjsqamcub6">Playgama</a></p>
+<p align="center">
+  Also on: <a href="https://furkiozknn.itch.io/hamsi"><strong>itch.io</strong></a> &middot; <a href="https://playgama.ai/play/ucyjxjsqamcub6"><strong>Playgama</strong></a>
+</p>
 <!-- portals:end -->
 
-## Highlights
+<p align="center">
+  <strong>A 3D fishing and boat-management game on the Black Sea coast: find the schools on the sonar, circle a purse-seine net around them, race home before the storm, sell the catch fresh and pay off the boat loan in a 30-day season to become reis of the harbour.</strong>
+</p>
 
-- **A boat that handles like a boat.** The engine builds speed slowly, the rudder only bites when you are moving,
-  waves pitch and roll the hull and the wind pushes you sideways.
-- **Sonar and real schools.** The schools are boids under the water. The sonar shows them as moving dots with species
-  and depth, the fish finder strip shows what is under the keel and how deep your net reaches; gulls circle over rich
-  schools and shallow ones splash at the surface.
-- **Purse-seine fishing.** Drive a circle around a school while the net pays out, then haul. A tight circle catches
-  most of the school; a gap lets fish slip out, and fish deeper than the net escape under it. Hamsi and istavrit are
-  slow and calm, palamut and lüfer fast, nervous and worth much more.
-- **Weather and a market.** Misty mornings, forecast storms that damage the hull outside the harbour, a coast guard
-  tow at 18:00. Prices follow the season and fall as you sell; fresh fish pays more. Buy fuel, ice, repairs and
-  upgrades for the net, sonar, engine, hold, ice box and crew.
-- **Played by a bot.** `?auto` plays the whole 30-day season with the same controls and rules as a player, using only
-  sonar data. Measured: **season finished as reis, loan paid**, 60 fps, 18-56 draw calls.
-- **One file, made in code.** One `index.html` with Three.js r170 from a CDN: a wave-displaced ocean, a coast with tea
-  terraces and a harbour, a boat lofted in code, and engine, waves, gulls and a kemençe-style horon tune in 7/8
-  synthesised with Web Audio.
+<!-- gameplay gif -->
+
+## Features
+
+- **Purse-seine fishing & sonar:** Track underwater boid schools on the sonar with depth and species readouts; circle a school to deploy the net and haul before fish escape, pursuing calm hamsi and istavrit or fast, nervous and valuable palamut and lüfer.
+- **Dynamic weather & harbour economy:** Face misty mornings, forecast storms that damage the hull, and an 18:00 coast guard tow across a 30-day season; sell fresh catch as seasonal market prices fall, refuel, buy ice, and upgrade the net, sonar, engine, hold, ice box, and crew to pay off the loan and become harbour reis.
+- **Realistic boat handling & maritime world:** Inertial throttle, rudder bite that depends on forward speed, wave pitch and roll, tea-terraced coastline with harbour moles and lighthouse, circling gulls, and an authentic kemençe-style horon tune in 7/8 synthesized with Web Audio.
+- **Ultra-lean web performance:** A single `index.html` running Three.js r170 delivering 60 fps at 18–56 draw calls on Intel UHD 620 (tested at 500x900 on phone layout), verified by an automated `?auto` bot completing the full 30-day season with 0 JavaScript errors.
 
 ## How to play
 
 > [!TIP]
-> Set the net (`Space`) just ahead of a school and steer a tight circle around it, so the ring closes near where you
-> started. Then haul (`Space` again) and head home if the forecast says storm.
+> **Goal:** Pay off the boat loan in a 30-day season and become reis of the harbour. Set the net (`Space`) just ahead of a school and steer a tight circle around it so the ring closes near where you started, then haul (`Space` again) and head home before the storm.
 
-1. **Sail out.** Buy fuel and ice in the harbour if needed, then press *Sail out*.
-2. **Find a school** on the sonar; the dashed yellow line on the fish finder is how deep your net reaches.
-3. **Set the net** near the school, drive a circle around it, then **haul**.
-4. **Dock and sell.** Slow down inside the blue ring at the pier and press `Space`. Sell, refuel, add ice, repair,
-   pay the loan and buy upgrades.
-5. **Win.** After 30 days the loan must be paid. Each day also has a goal with a cash bonus.
+1. **Sail out:** Buy fuel and ice in the harbour if needed, then click *Sail out*.
+2. **Find a school:** Track moving dots and depth on the sonar; the dashed yellow line on the fish finder shows how deep your net reaches.
+3. **Set and haul:** Press `Space` near the school, steer a full circle around it to close the cork ring, then press `Space` to haul.
+4. **Dock and sell:** Slow down inside the blue ring at the pier and press `Space`. Sell catch fresh, refuel, add ice, repair hull damage, pay loan installments, and purchase upgrades.
+5. **Win:** Complete daily goals for cash bonuses and pay off the loan in full within 30 days to become reis of the harbour.
+
+<details>
+<summary><b>Fishing mechanics and economy</b></summary>
+
+- **School behavior:** Hamsi and istavrit are calm and slow; palamut and lüfer are fast, nervous, and significantly more valuable.
+- **Purse-seine net:** A tight circle catches most of the school; gaps allow fish to slip out, and fish swimming deeper than the net line escape underneath.
+- **Weather hazards:** Morning mist obscures vision, while forecast storms cause progressive hull damage outside the safety of the harbour.
+- **Coast guard tow:** If stranded or out past 18:00, the coast guard will tow your boat back to port.
+- **Market prices:** Fish prices follow seasonal supply and drop as you sell larger volumes; fresher fish fetches premium market rates.
+- **Upgrades:** Invest harbour earnings into net size, sonar range, engine power, hold capacity, ice box insulation, and hiring crew.
+
+</details>
 
 ### Controls
 
 | Action | Keyboard | Touch |
 |---|---|---|
-| Throttle | `W` / `S` (the lever stays where you leave it) | throttle slider |
-| Rudder | `A` / `D` or arrow keys | rudder wheel |
+| Throttle | `W` / `S` (the lever stays where you leave it) | Throttle slider |
+| Rudder | `A` / `D` or arrow keys | Rudder wheel |
 | Set net / haul net / dock | `Space` | Net / Dock buttons |
-| Map | `M` | map button |
-| Pause / back | `P` or `Esc` | pause button |
-| Music on/off | `N` | sound button (mutes all) |
+| Map | `M` | Map button |
+| Pause / back | `P` or `Esc` | Pause button |
+| Music on/off | `N` | Sound button (mutes all) |
 | Effects on/off | `X` | |
-| Language TR / EN | `L` | globe button |
-| Time speed x1 / x2 / x3 | `T` | speed button |
-| Camera | drag to orbit, wheel to zoom | drag |
+| Language TR / EN | `L` | Globe button |
+| Time speed x1 / x2 / x3 | `T` | Speed button |
+| Camera | Drag to orbit, wheel to zoom | Drag to orbit |
 
-`M` opens the map, so music uses `N`. Settings are saved in `localStorage` under `arena.hamsi.settings`, the run under
-`arena.hamsi.save` and the best result under `arena.hamsi.best`. Turkish is the default language.
+- **Audio control:** `N` toggles music (`M` opens the map), `X` toggles sound effects; the speaker button in the top bar mutes music and effects together and is remembered.
+- **Touch:** Virtual throttle slider, rudder wheel, map, sound, language globe, speed toggle, and context Net / Dock buttons.
+- **Time & camera:** `T` cycles simulation speed (x1 / x2 / x3); drag to orbit the camera, mouse wheel to zoom.
+- **Persistence:** Settings are saved in `localStorage` under `arena.hamsi.settings`, active run under `arena.hamsi.save`, and best result under `arena.hamsi.best`. Turkish is the default language.
 
 <details>
 <summary><b>URL flags for testing</b></summary>
 
 | Flag | Effect |
 |---|---|
-| `?auto` | a bot plays the whole 30-day season with the same controls and rules as a player (sonar data only) |
-| `?debug` | fps, draw calls, triangles, state and any JavaScript errors on screen |
-| `?sim=N` | fast-forward N seconds before the first frame (starts a new run if needed) |
-| `?low` | no shadows, half the particles, no blur on panels |
-| `?lang=en` / `?lang=tr` | language |
-| `?noassets` | accepted; the game has no asset files, so nothing changes |
+| `?auto` | A bot plays the whole 30-day season with the same controls and rules as a player (sonar data only) |
+| `?debug` | FPS, draw calls, triangles, state, and any JavaScript errors on screen |
+| `?sim=N` | Fast-forward N seconds before the first frame (starts a new run if needed) |
+| `?low` | No shadows, half the particles, no blur on panels |
+| `?lang=en` / `?lang=tr` | Language |
+| `?noassets` | Accepted for the arena convention; the game uses no external assets anyway |
 
-The live state is on `window.hamsi` (day, money, loan, boat, schools, net, weather, the bot's `log` of days, `assets`,
-`fps`, `calls`); `window.hamsiSim(seconds)` fast-forwards.
+The live state is accessible on `window.hamsi` (`day`, `money`, `loan`, `boat`, `schools`, `net`, `weather`, the bot's `log` of days, `assets`, `fps`, `calls`); `window.hamsiSim(seconds)` fast-forwards.
 
 </details>
 
@@ -104,78 +108,60 @@ The live state is on `window.hamsi` (day, money, loan, boat, schools, net, weath
   </tr>
 </table>
 
-## Redesign (2026-11)
+## Redesign & Performance
 
-**Art direction:** moody maritime stylized. Palette: Black Sea slate `#24343F`, foam `#E6F0F2`, boat blue `#1E88E5`, tea-terrace green `#4C7A3A`, sodium harbour `#FFB74D`, with sonar green `#00E676` for the instruments. The HUD is a set of wet-weather instrument panels (dark steel, rivets, sonar-green hairlines, monospace readouts, segmented gauge bars).
+**Art direction:** Moody maritime stylized. Black Sea slate `#24343F`, foam `#E6F0F2`, boat blue `#1E88E5`, tea-terrace green `#4C7A3A`, sodium harbour `#FFB74D`, with sonar green `#00E676` for the instruments. The HUD is a set of wet-weather instrument panels (dark steel, rivets, sonar-green hairlines, monospace readouts, segmented gauge bars).
 
-<p align="center"><img src="docs/redesign-before-after.png" width="100%" alt="Before and after: the same state (day 1, 06:25, clear, same camera) with the old glass HUD on the left and the new instrument-panel look on the right"></p>
+**Visual updates (physics, controls, scoring, bot, saves and the 30-day structure are untouched):**
+- **Palette and light:** Desaturated slate sea with deeper wave troughs and whitecaps, overcast-leaning sky, warmer low sun, darker forest and wet-concrete quay.
+- **Environment:** Two scrolling mist rings plus nine low mist banks along the coast (thicker in morning fog and storms), houses with windows, doors and chimneys, sodium harbour lamps that glow more in mist, storms and evening.
+- **Boat and crew:** Trawler with an A-frame, fish boxes, navigation lights, lit wheelhouse windows and a deck lamp that brighten in bad light, sou'wester hats on the crew, floats that bob on the net.
+- **Animation and FX:** Denser, longer rain streaks, rain droplets on the lens during storms, sonar ping ring leaving the hull every 3.2 s.
+- **UI:** Every screen (title, HUD, harbour, summary, ending, pause, settings, map) restyled; sonar, fish finder and map redrawn in sonar green on dark; Bahnschrift / Cascadia Mono system fonts with fallbacks, no new files or requests.
+- **Mist & notifications:** Slate-blue capped mist fog density keeps crests and coast readable ([docs/07-mist.png](docs/07-mist.png)); repeated identical toasts no longer stack.
+- **Phone:** Verified at 500x900 with the new panels.
 
-What changed (visuals only; physics, controls, scoring, bot, saves and the 30-day structure are untouched):
+**Measured on an Intel UHD 620 (headless Chrome, 1280x720):**
+- Draw calls: 18 before &rarr; 23–24 after while sailing clear water, up to 49–56 after during netting, storms and harbour views (budget about 150)
+- Page rAF: 60 fps in gameplay (both before and after)
+- Phone (500x900): layout verified with responsive panels
+- Bot run: `?auto` bot finished the 30-day season as reis with the loan paid, with 0 JavaScript errors (with assets and with `?noassets`)
 
-- **Palette and light:** desaturated slate sea with deeper wave troughs and always-present whitecaps, overcast-leaning sky, warmer low sun, darker forest and wet-concrete quay.
-- **Environment:** two scrolling mist rings plus nine low mist banks along the coast (thicker in the morning fog and storms), houses with windows, doors and chimneys, sodium harbour lamps that glow more in mist, storms and evening.
-- **Boat and crew:** trawler with an A-frame, fish boxes, navigation lights, lit wheelhouse windows and a deck lamp that brighten in bad light, sou'wester hats on the crew, floats that bob on the net.
-- **Animation and FX:** denser, longer rain streaks, rain droplets on the "lens" during storms, a sonar ping ring leaving the hull every 3.2 s.
-- **UI:** every screen (title, HUD, harbour, summary, ending, pause, settings, map) restyled; sonar, fish finder and map redrawn in sonar green on dark; Bahnschrift / Cascadia Mono system fonts with fallbacks, no new files or requests.
-- **Mist:** tinted slate-blue and capped (fog density and mist alpha), so the sea, wave crests and coast stay readable in misty weather ([docs/07-mist.png](docs/07-mist.png)). Repeated identical toasts no longer stack.
-- **Phone:** same layout rules as before, re-checked at 500x900 with the new panels.
-
-Measured on the development laptop (Intel UHD 620, headless Chrome, 1280x720; before is the `main` build, after is this branch): 60 fps in both; draw calls 18 before and 23-24 after while sailing clear water, up to 49-56 after during netting, storms and harbour views (budget about 150). The `?auto` bot finished the 30-day season as reis with the loan paid, with 0 JavaScript errors. Not checked: a real phone, Firefox and Safari.
+![Before and after](docs/redesign-before-after.png)
 
 ## Running locally
 
-Serve the folder over HTTP, for example:
+Serve the folder over HTTP (ES modules do not load from `file://`):
 
-```
+```bash
 python -m http.server 8000
 ```
 
-then open <http://localhost:8000/>.
+Then open <http://localhost:8000/>.
 
-## How it was made
+## Made with Claude Code
 
-Built by **Claude Sonnet 5.5** with Claude Code from one prompt: [prompts/hamsi.md](prompts/hamsi.md).
-Everything is generated in code, so there are no asset files and no credits to list.
+Built by **Claude Sonnet 5.5** with Claude Code from one prompt: [prompts/hamsi.md](prompts/hamsi.md). Everything is generated in code, so there are no asset files and no credits to list; Three.js is loaded from a CDN under its MIT licence.
 
 <details>
 <summary><b>Technical notes</b></summary>
 
-- **Ocean:** a vertex-displaced grid of four summed waves with whitecaps on the crests and analytic normals that
-  follows the camera.
-- **World:** the coast is a heightfield with tea terraces, instanced houses and trees, and a harbour with moles, a
-  pier, the fish market and a lighthouse; the boat is lofted in code and the fish are boids.
-- **Audio:** engine chug, waves, wind, gulls, creaks, market chatter and a kemençe-style horon tune in 7/8, all
-  synthesised with Web Audio.
-- **Performance:** measured on the development laptop's Intel UHD iGPU in headless Chrome at 1280x720: 60 fps with
-  18-56 draw calls (one directional light with a 1024 shadow map, pixel ratio capped at 1.5,
-  no post-processing).
+- **Ocean:** A vertex-displaced grid of four summed waves with whitecaps on the crests and analytic normals that follows the camera.
+- **World:** The coast is a heightfield with tea terraces, instanced houses and trees, and a harbour with moles, a pier, the fish market and a lighthouse; the boat is lofted in code and the fish are boids.
+- **Audio:** Engine chug, waves, wind, gulls, creaks, market chatter and a kemençe-style horon tune in 7/8, all synthesised with Web Audio.
+- **Performance:** Measured on the development laptop's Intel UHD 620 iGPU in headless Chrome at 1280x720: 60 fps with 18–56 draw calls (one directional light with a 1024 shadow map, pixel ratio capped at 1.5, no post-processing).
 
 </details>
 
-Hamsi is part of the **Claude Game Arena** series, where each game is built by a Claude model from one prompt. The
-other games: [Hisar](https://furkiozknn.github.io/kale-savunmasi/) ·
-[Çay Ocağı](https://furkiozknn.github.io/cay-ocagi/) · [Çini Ustası](https://furkiozknn.github.io/cini-ustasi/) ·
-[Martı](https://furkiozknn.github.io/marti/) · [Kervan](https://furkiozknn.github.io/kervan/) ·
-[Dolmuş](https://furkiozknn.github.io/dolmus/) · [Peri Golf](https://furkiozknn.github.io/peri-golf/) ·
-[Mehter](https://furkiozknn.github.io/mehter/) · [Boğaz Vapuru](https://furkiozknn.github.io/bogaz-vapuru/) ·
-[Simit Fırını](https://furkiozknn.github.io/simit-firini/) · [Karagöz](https://furkiozknn.github.io/karagoz/) ·
-[Lale Bahçesi](https://furkiozknn.github.io/lale-bahcesi/)
+### Claude Game Arena
 
-**Round 5:** [Kapadokya Balonu](https://furkiozknn.github.io/kapadokya-balonu/) ·
-[Ebru](https://furkiozknn.github.io/ebru/) · [Kırkpınar](https://furkiozknn.github.io/kirkpinar/) ·
-[Çarşı Kaçışı](https://furkiozknn.github.io/carsi-kacisi/)
+Hamsi is part of the **Claude Game Arena** series, where each game is built by a Claude model from one prompt.
 
-**Round 6:** [Topkapı Gecesi](https://furkiozknn.github.io/topkapi-gecesi/) · **Hamsi** ·
-[Pamukkale](https://furkiozknn.github.io/pamukkale/) · [Mimar Sinan](https://furkiozknn.github.io/mimar-sinan/)
+[Hisar](https://furkiozknn.github.io/kale-savunmasi/) · [Çay Ocağı](https://furkiozknn.github.io/cay-ocagi/) · [Çini Ustası](https://furkiozknn.github.io/cini-ustasi/) · [Martı](https://furkiozknn.github.io/marti/) · [Kervan](https://furkiozknn.github.io/kervan/) · [Dolmuş](https://furkiozknn.github.io/dolmus/) · [Peri Golf](https://furkiozknn.github.io/peri-golf/) · [Mehter](https://furkiozknn.github.io/mehter/) · [Boğaz Vapuru](https://furkiozknn.github.io/bogaz-vapuru/) · [Simit Fırını](https://furkiozknn.github.io/simit-firini/) · [Karagöz](https://furkiozknn.github.io/karagoz/) · [Lale Bahçesi](https://furkiozknn.github.io/lale-bahcesi/)
 
-## Türkçe
+**Round 5:** [Kapadokya Balonu](https://furkiozknn.github.io/kapadokya-balonu/) · [Ebru](https://furkiozknn.github.io/ebru/) · [Kırkpınar](https://furkiozknn.github.io/kirkpinar/) · [Çarşı Kaçışı](https://furkiozknn.github.io/carsi-kacisi/)
 
-**Hamsi**, Karadeniz kıyısında geçen 3D balıkçılık ve tekne yönetimi oyunu. Mavi beyaz ahşap teknenle limandan çık,
-sonarla balık sürüsünü bul, ağı sürünün çevresinde daire çizerek at, fırtınadan önce limana dön ve balığı tazeyken
-balık halinde sat. 30 günlük sezonda tekne kredisini öde, limanın reisi ol. Kurulum yok; masaüstünde ve telefonda
-tarayıcıda oynanır. Claude Sonnet 5.5 tarafından Claude Code ile tek bir prompt'tan yapıldı.
-
-**Oyna:** https://furkiozknn.github.io/hamsi/
+**Round 6:** [Topkapı Gecesi](https://furkiozknn.github.io/topkapi-gecesi/) · **Hamsi** · [Pamukkale](https://furkiozknn.github.io/pamukkale/) · [Mimar Sinan](https://furkiozknn.github.io/mimar-sinan/)
 
 ## License
 
