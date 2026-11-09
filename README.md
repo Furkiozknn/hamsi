@@ -30,7 +30,9 @@
 ## Features
 
 - **Purse-seine fishing & sonar:** Track underwater boid schools on the sonar with depth and species readouts; circle a school to deploy the net and haul before fish escape, pursuing calm hamsi and istavrit or fast, nervous and valuable palamut and lüfer.
-- **Dynamic weather & harbour economy:** Face misty mornings, forecast storms that damage the hull, and an 18:00 coast guard tow across a 30-day season; sell fresh catch as seasonal market prices fall, refuel, buy ice, and upgrade the net, sonar, engine, hold, ice box, and crew to pay off the loan and become harbour reis.
+- **Boat classes:** Start in a sandal (rowboat), then buy a taka, a trawler (trol) and a gırgır (purse seiner) at the shipyard; each has its own speed, hold, net, tank, crew slots, storm tolerance, daily upkeep and look. The old hull is traded in at 60% and the rest can go on the loan (up to ₺240,000). The six upgrades carry over to the next boat, capped per class.
+- **24-hour day & night fishing:** One in-game day is 24 real minutes (1 minute = 1 hour). Sail whenever you like, wait for dusk for a night trip (anchovy rise to the deck lights, more schools, longer sonar range, but riskier collisions), and sleep in the harbour to start the next day at 06:00. The fish market is open 04:00–23:00.
+- **Dynamic weather & harbour economy:** Face misty mornings and forecast storms that damage the hull across a 30-day season; sell fresh catch as seasonal market prices fall, refuel, buy ice, pay crew wages and upkeep, and upgrade the net, sonar, engine, hold, ice box, and crew to pay off the loan and become harbour reis.
 - **Realistic boat handling & maritime world:** Inertial throttle, rudder bite that depends on forward speed, wave pitch and roll, tea-terraced coastline with harbour moles and lighthouse, circling gulls, and an authentic kemençe-style horon tune in 7/8 synthesized with Web Audio.
 - **Ultra-lean web performance:** A single `index.html` running Three.js r170 delivering 60 fps at 18–56 draw calls on Intel UHD 620 (tested at 500x900 on phone layout), verified by an automated `?auto` bot completing the full 30-day season with 0 JavaScript errors.
 
@@ -42,7 +44,7 @@
 1. **Sail out:** Buy fuel and ice in the harbour if needed, then click *Sail out*.
 2. **Find a school:** Track moving dots and depth on the sonar; the dashed yellow line on the fish finder shows how deep your net reaches.
 3. **Set and haul:** Press `Space` near the school, steer a full circle around it to close the cork ring, then press `Space` to haul.
-4. **Dock and sell:** Slow down inside the blue ring at the pier and press `Space`. Sell catch fresh, refuel, add ice, repair hull damage, pay loan installments, and purchase upgrades.
+4. **Dock and sell:** Slow down inside the blue ring at the pier and press `Space`. Sell catch fresh, refuel, add ice, repair hull damage, pay loan installments, purchase upgrades or a bigger boat, then sail again, wait for dusk, or sleep till morning.
 5. **Win:** Complete daily goals for cash bonuses and pay off the loan in full within 30 days to become reis of the harbour.
 
 <details>
@@ -51,7 +53,7 @@
 - **School behavior:** Hamsi and istavrit are calm and slow; palamut and lüfer are fast, nervous, and significantly more valuable.
 - **Purse-seine net:** A tight circle catches most of the school; gaps allow fish to slip out, and fish swimming deeper than the net line escape underneath.
 - **Weather hazards:** Morning mist obscures vision, while forecast storms cause progressive hull damage outside the safety of the harbour.
-- **Coast guard tow:** If stranded or out past 18:00, the coast guard will tow your boat back to port.
+- **Coast guard tow:** Out of fuel, or still at sea at 05:00 the next morning, the coast guard tows your boat back to port for a fee.
 - **Market prices:** Fish prices follow seasonal supply and drop as you sell larger volumes; fresher fish fetches premium market rates.
 - **Upgrades:** Invest harbour earnings into net size, sonar range, engine power, hold capacity, ice box insulation, and hiring crew.
 
@@ -69,7 +71,7 @@
 | Music on/off | `N` | Sound button (mutes all) |
 | Effects on/off | `X` | |
 | Language TR / EN | `L` | Globe button |
-| Time speed x1 / x2 / x3 | `T` | Speed button |
+| Time speed x1 / x2 / x4 | `T` | Speed button |
 | Camera | Drag to orbit, wheel to zoom | Drag to orbit |
 
 - **Audio control:** `N` toggles music (`M` opens the map), `X` toggles sound effects; the speaker button in the top bar mutes music and effects together and is remembered.
