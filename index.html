@@ -864,13 +864,13 @@ const L = {
     end_reis: 'Limanın reisi oldun!', end_bank: 'Banka teknene el koydu', end_sub_reis: 'Krediyi ödedin ve 30 günlük sezonu kazandın.', end_sub_bank: 'Sezon bitti ama kredi ödenemedi.',
     end_worth: 'Net değer', end_kg: 'Toplam av', end_days: 'Fırtına atlatılan', end_best: 'Yeni rekor!', end_money: 'Kalan para', end_loan: 'Kalan kredi', end_boat: 'Tekne değeri',
     map_note: 'Sonarda görülen son sürü konumları · mavi daire: limanın ağzı', map_boat: 'Tekne', map_harbor: 'Liman',
-    rank: 'Rütbe', rank0: 'Tayfa', rank1: 'Kaptan', rank2: 'Reis',
+    rank: 'Rütbe', rank0: 'Tayfa', rank1: 'Kaptan', rank2: 'ağ ustası',
     fast: 'Hız', on: 'Açık', off: 'Kapalı', musict: 'Müzik', sfxt: 'Efekt', saved: 'Kaydedildi',
     wait: 'Bekleyin', sail_storm: 'Fırtına var: denize çıkmak tehlikeli!', sail_dusk: 'Gün bitti', held: 'Ambar {kg} kg',
     cap: '{a}/{b}', unit_l: 'L', notnow: 'Şimdi değil', note_market: 'Fiyatlar talebe göre değişir; taze balık daha değerli.', note_up: 'Geliştirmeler yeni tekneye taşınır; her teknenin bir üst sınırı var.', note_boat: 'Yakıt, buz ve tamir ücretleri anında ödenir.',
     note_yard: 'Eski tekne liste fiyatının %60\'ına takas edilir; peşin yetmezse fark krediye eklenir (en çok {m}).',
-    b_sandal: 'Sandal', b_taka: 'Taka', b_trol: 'Trol teknesi', b_girgir: 'Gırgır',
-    n_cevirme: 'çevirme ağı', n_girgir_k: 'küçük gırgır ağı', n_trol: 'derin trol ağı', n_girgir: 'gırgır ağı',
+    b_sandal: 'Sandal', b_taka: 'Taka', b_trol: 'vantrik', b_girgir: 'gırgır',
+    n_cevirme: 'çevirme ağı', n_girgir_k: 'küçük gırgır ağı', n_trol: 'derin vantrik ağı', n_girgir: 'gırgır ağı',
     d_boat: '{v} kn · ambar {h} kg · {n} {l} m / {d} m · depo {t} L · tayfa {c} · fırtına {s} · bakım {u}/gün',
     storm_lo: 'zayıf', storm_mid: 'orta', storm_hi: 'iyi', storm_top: 'çok iyi',
     deal: '{c} peşin + {f} kredi', deal_cash: '{c} peşin', owned: 'Teknen', sold_boat: 'Geride kaldı', tradein: 'Takas değeri {m}',
@@ -921,13 +921,13 @@ const L = {
     end_reis: 'You became reis of the harbour!', end_bank: 'The bank took your boat', end_sub_reis: 'You paid off the loan and won the 30-day season.', end_sub_bank: 'The season is over but the loan is unpaid.',
     end_worth: 'Net worth', end_kg: 'Total catch', end_days: 'Storms survived', end_best: 'New record!', end_money: 'Cash left', end_loan: 'Loan left', end_boat: 'Boat value',
     map_note: 'Last sonar contacts · blue circle: harbour mouth', map_boat: 'Boat', map_harbor: 'Harbour',
-    rank: 'Rank', rank0: 'Deckhand', rank1: 'Captain', rank2: 'Reis',
+    rank: 'Rank', rank0: 'Deckhand', rank1: 'Captain', rank2: 'net master',
     fast: 'Speed', on: 'On', off: 'Off', musict: 'Music', sfxt: 'Effects', saved: 'Saved',
     wait: 'Wait', sail_storm: 'A storm is out there: sailing is dangerous!', sail_dusk: 'Day over', held: 'Hold {kg} kg',
     cap: '{a}/{b}', unit_l: 'L', notnow: 'Not now', note_market: 'Prices follow demand; fresh fish is worth more.', note_up: 'Upgrades carry over to a new boat; each boat has a cap.', note_boat: 'Fuel, ice and repairs are paid on the spot.',
     note_yard: 'Your old boat is traded in at 60% of its list price; what cash cannot cover goes on the loan (up to {m}).',
-    b_sandal: 'Rowboat (sandal)', b_taka: 'Taka', b_trol: 'Trawler', b_girgir: 'Purse seiner',
-    n_cevirme: 'ring net', n_girgir_k: 'small seine', n_trol: 'deep trawl net', n_girgir: 'purse seine',
+    b_sandal: 'Rowboat (sandal)', b_taka: 'Taka', b_trol: 'vantrik', b_girgir: 'gırgır',
+    n_cevirme: 'ring net', n_girgir_k: 'small seine', n_trol: 'deep vantrik net', n_girgir: 'purse seine',
     d_boat: '{v} kn · hold {h} kg · {n} {l} m / {d} m · tank {t} L · crew {c} · storms {s} · upkeep {u}/day',
     storm_lo: 'weak', storm_mid: 'fair', storm_hi: 'good', storm_top: 'very good',
     deal: '{c} cash + {f} loan', deal_cash: '{c} cash', owned: 'Your boat', sold_boat: 'Left behind', tradein: 'Trade-in {m}',
@@ -1251,11 +1251,16 @@ function sellSpecies(i, silent) {
   const h = G.hold[i]; if (h.kg < 0.5) return 0;
   if (!marketOpen()) { if (!silent) toast(t('market_closed'), 'bad'); return 0; }
   const sp = SPECIES[i], d0 = G.mk.demand[i], d1 = Math.max(0.15, d0 - h.kg / sp.cap), fm = 0.35 + 0.65 * h.fresh / 100;
-  const rev = Math.round(h.kg * sp.price * G.mk.pm[i] * (d0 + d1) / 2 * fm);
+  let rev = Math.round(h.kg * sp.price * G.mk.pm[i] * (d0 + d1) / 2 * fm);
+  let isLidaki = (i === 0 && G.day <= 10 && h.kg < 250);
+  if (isLidaki) { rev = Math.round(rev * 0.2); }
   G.money += rev; G.today.sales += rev; G.tot.sales += rev; G.mk.demand[i] = d1;
   if (h.fresh >= 80) G.today.freshKg += h.kg;
   const kg = Math.round(h.kg); h.kg = 0; h.fresh = 100;
-  if (!silent) { toast(t('sold', { kg, sp: t('sp_' + sp.id), m: money(rev) }), 'good'); Snd.coin(); }
+  if (!silent) {
+    if (isLidaki) { toast(S.lang === 'tr' ? 'Lidaki (açıkgöz) boy tutmadı: değer %80 düştü!' : 'Undersized fish (lidaki): value reduced by 80%!', 'bad'); }
+    toast(t('sold', { kg, sp: t('sp_' + sp.id), m: money(rev) }), 'good'); Snd.coin();
+  }
   checkGoal(); return rev;
 }
 function sellAll() { if (!marketOpen()) { toast(t('market_closed'), 'bad'); return 0; } let r = 0; for (let i = 0; i < 4; i++) r += sellSpecies(i, true); if (r > 0) { toast('+' + money(r), 'good'); Snd.coin(); } else toast(t('nothing'), 'info'); saveRun(); return r; }
