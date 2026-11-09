@@ -16,7 +16,6 @@
 <meta property="og:image:height" content="540">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%231E88E5%27/%3E%3Cpath d=%27M4 21h24l-3 6H7z%27 fill=%27%23fff%27/%3E%3Crect x=%2711%27 y=%2713%27 width=%278%27 height=%278%27 rx=%271%27 fill=%27%23fff%27/%3E%3Cpath d=%27M4 12c4-5 9-5 12 0-3 5-8 5-12 0zM16 12l4-3v6z%27 fill=%27%23BBE3FF%27/%3E%3C/svg%3E">
-<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Hamsi%22%2C%22short_name%22%3A%22Hamsi%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230d2230%22%2C%22theme_color%22%3A%22%230d2230%22%7D">
 <style>
 :root{
   --accent:#1E88E5; --accent-l:#64B5F6; --accent-d:#1565C0; --ink:#e6f0f2; --dim:#9db1b8; --sonar:#00E676; --steel:#24343F; --sodium:#FFB74D;
@@ -27,8 +26,6 @@
 html,body{margin:0;height:100%;overflow:hidden;background:#0c161c;color:var(--ink);
   font:700 var(--fs)/1.3 "Segoe UI","Trebuchet MS",system-ui,sans-serif;touch-action:none;user-select:none;-webkit-user-select:none}
 canvas#gl{position:fixed;inset:0;width:100%;height:100%;display:block}
-canvas#gl.flash{animation:cflash .3s ease-out}
-@keyframes cflash{0%{filter:brightness(1.6)}100%{filter:none}}
 .hidden{display:none!important}
 svg.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .glass{background:var(--glass);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--glass-b);
@@ -636,7 +633,6 @@ a.btn{text-decoration:none;color:inherit;display:inline-flex;align-items:center;
 /*ARENA-KIT:END*/</script>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"},"integrity":{"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js":"sha384-GY5FqjttLCFRt/McQbyaVdCk2O1IQtOeX8Py6NfD89BIAsIyJFRl4UgSXrk2vXAk","https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/utils/BufferGeometryUtils.js":"sha384-wOjwauvHlJO7K6APr7FmMGH2nupQa3Ndzas9bJZhsAMOK055efJud8ns4aYmASKv"}}</script>
 <script data-goatcounter="https://furkiozknn.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
-<script>if('serviceWorker' in navigator){const b=new Blob([`self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('./')))));`],{type:'text/javascript'});navigator.serviceWorker.register(URL.createObjectURL(b)).catch(()=>{});}</script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -868,13 +864,13 @@ const L = {
     end_reis: 'Limanın reisi oldun!', end_bank: 'Banka teknene el koydu', end_sub_reis: 'Krediyi ödedin ve 30 günlük sezonu kazandın.', end_sub_bank: 'Sezon bitti ama kredi ödenemedi.',
     end_worth: 'Net değer', end_kg: 'Toplam av', end_days: 'Fırtına atlatılan', end_best: 'Yeni rekor!', end_money: 'Kalan para', end_loan: 'Kalan kredi', end_boat: 'Tekne değeri',
     map_note: 'Sonarda görülen son sürü konumları · mavi daire: limanın ağzı', map_boat: 'Tekne', map_harbor: 'Liman',
-    rank: 'Rütbe', rank0: 'Tayfa', rank1: 'Kaptan', rank2: 'ağ ustası',
+    rank: 'Rütbe', rank0: 'Tayfa', rank1: 'Kaptan', rank2: 'Reis',
     fast: 'Hız', on: 'Açık', off: 'Kapalı', musict: 'Müzik', sfxt: 'Efekt', saved: 'Kaydedildi',
     wait: 'Bekleyin', sail_storm: 'Fırtına var: denize çıkmak tehlikeli!', sail_dusk: 'Gün bitti', held: 'Ambar {kg} kg',
     cap: '{a}/{b}', unit_l: 'L', notnow: 'Şimdi değil', note_market: 'Fiyatlar talebe göre değişir; taze balık daha değerli.', note_up: 'Geliştirmeler yeni tekneye taşınır; her teknenin bir üst sınırı var.', note_boat: 'Yakıt, buz ve tamir ücretleri anında ödenir.',
     note_yard: 'Eski tekne liste fiyatının %60\'ına takas edilir; peşin yetmezse fark krediye eklenir (en çok {m}).',
-    b_sandal: 'Sandal', b_taka: 'Taka', b_trol: 'vantrik', b_girgir: 'gırgır',
-    n_cevirme: 'çevirme ağı', n_girgir_k: 'küçük gırgır ağı', n_trol: 'derin vantrik ağı', n_girgir: 'gırgır ağı',
+    b_sandal: 'Sandal', b_taka: 'Taka', b_trol: 'Trol teknesi', b_girgir: 'Gırgır',
+    n_cevirme: 'çevirme ağı', n_girgir_k: 'küçük gırgır ağı', n_trol: 'derin trol ağı', n_girgir: 'gırgır ağı',
     d_boat: '{v} kn · ambar {h} kg · {n} {l} m / {d} m · depo {t} L · tayfa {c} · fırtına {s} · bakım {u}/gün',
     storm_lo: 'zayıf', storm_mid: 'orta', storm_hi: 'iyi', storm_top: 'çok iyi',
     deal: '{c} peşin + {f} kredi', deal_cash: '{c} peşin', owned: 'Teknen', sold_boat: 'Geride kaldı', tradein: 'Takas değeri {m}',
@@ -925,13 +921,13 @@ const L = {
     end_reis: 'You became reis of the harbour!', end_bank: 'The bank took your boat', end_sub_reis: 'You paid off the loan and won the 30-day season.', end_sub_bank: 'The season is over but the loan is unpaid.',
     end_worth: 'Net worth', end_kg: 'Total catch', end_days: 'Storms survived', end_best: 'New record!', end_money: 'Cash left', end_loan: 'Loan left', end_boat: 'Boat value',
     map_note: 'Last sonar contacts · blue circle: harbour mouth', map_boat: 'Boat', map_harbor: 'Harbour',
-    rank: 'Rank', rank0: 'Deckhand', rank1: 'Captain', rank2: 'net master',
+    rank: 'Rank', rank0: 'Deckhand', rank1: 'Captain', rank2: 'Reis',
     fast: 'Speed', on: 'On', off: 'Off', musict: 'Music', sfxt: 'Effects', saved: 'Saved',
     wait: 'Wait', sail_storm: 'A storm is out there: sailing is dangerous!', sail_dusk: 'Day over', held: 'Hold {kg} kg',
     cap: '{a}/{b}', unit_l: 'L', notnow: 'Not now', note_market: 'Prices follow demand; fresh fish is worth more.', note_up: 'Upgrades carry over to a new boat; each boat has a cap.', note_boat: 'Fuel, ice and repairs are paid on the spot.',
     note_yard: 'Your old boat is traded in at 60% of its list price; what cash cannot cover goes on the loan (up to {m}).',
-    b_sandal: 'Rowboat (sandal)', b_taka: 'Taka', b_trol: 'vantrik', b_girgir: 'gırgır',
-    n_cevirme: 'ring net', n_girgir_k: 'small seine', n_trol: 'deep vantrik net', n_girgir: 'purse seine',
+    b_sandal: 'Rowboat (sandal)', b_taka: 'Taka', b_trol: 'Trawler', b_girgir: 'Purse seiner',
+    n_cevirme: 'ring net', n_girgir_k: 'small seine', n_trol: 'deep trawl net', n_girgir: 'purse seine',
     d_boat: '{v} kn · hold {h} kg · {n} {l} m / {d} m · tank {t} L · crew {c} · storms {s} · upkeep {u}/day',
     storm_lo: 'weak', storm_mid: 'fair', storm_hi: 'good', storm_top: 'very good',
     deal: '{c} cash + {f} loan', deal_cash: '{c} cash', owned: 'Your boat', sold_boat: 'Left behind', tradein: 'Trade-in {m}',
@@ -1255,16 +1251,11 @@ function sellSpecies(i, silent) {
   const h = G.hold[i]; if (h.kg < 0.5) return 0;
   if (!marketOpen()) { if (!silent) toast(t('market_closed'), 'bad'); return 0; }
   const sp = SPECIES[i], d0 = G.mk.demand[i], d1 = Math.max(0.15, d0 - h.kg / sp.cap), fm = 0.35 + 0.65 * h.fresh / 100;
-  let rev = Math.round(h.kg * sp.price * G.mk.pm[i] * (d0 + d1) / 2 * fm);
-  let isLidaki = (i === 0 && G.day <= 10 && h.kg < 250);
-  if (isLidaki) { rev = Math.round(rev * 0.2); }
+  const rev = Math.round(h.kg * sp.price * G.mk.pm[i] * (d0 + d1) / 2 * fm);
   G.money += rev; G.today.sales += rev; G.tot.sales += rev; G.mk.demand[i] = d1;
   if (h.fresh >= 80) G.today.freshKg += h.kg;
   const kg = Math.round(h.kg); h.kg = 0; h.fresh = 100;
-  if (!silent) {
-    if (isLidaki) { toast(S.lang === 'tr' ? 'Lidaki (açıkgöz) boy tutmadı: değer %80 düştü!' : 'Undersized fish (lidaki): value reduced by 80%!', 'bad'); }
-    toast(t('sold', { kg, sp: t('sp_' + sp.id), m: money(rev) }), 'good'); Snd.coin();
-  }
+  if (!silent) { toast(t('sold', { kg, sp: t('sp_' + sp.id), m: money(rev) }), 'good'); Snd.coin(); }
   checkGoal(); return rev;
 }
 function sellAll() { if (!marketOpen()) { toast(t('market_closed'), 'bad'); return 0; } let r = 0; for (let i = 0; i < 4; i++) r += sellSpecies(i, true); if (r > 0) { toast('+' + money(r), 'good'); Snd.coin(); } else toast(t('nothing'), 'info'); saveRun(); return r; }
@@ -1414,13 +1405,7 @@ function finishHaul() {
     toast(t('toast_caught', { kg: Math.round(r.add), sp: t('sp_' + SPECIES[i].id) }), 'good');
     if (r.lost > 1) toast(t('toast_hold', { kg: Math.round(r.lost) }), 'bad');
   }
-  if (!any) toast(t('toast_empty'), 'info'); else {
-    Snd.haulDone();
-    try { if (navigator.vibrate) navigator.vibrate([50, 30, 100]); } catch (e) {}
-    const c = $('gl');
-    c.classList.add('flash');
-    setTimeout(() => c.classList.remove('flash'), 300);
-  }
+  if (!any) toast(t('toast_empty'), 'info'); else Snd.haulDone();
   stowNet(); checkGoal();
 }
 function stepNet(dt) {
