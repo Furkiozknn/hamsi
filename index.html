@@ -297,6 +297,7 @@ button.btn:focus-visible{outline:3px solid var(--sonar);outline-offset:2px} /* A
     <symbol id="i-hull" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z"/><path d="M9 12l2.2 2.2L15.5 10"/></symbol>
     <symbol id="i-wind" viewBox="0 0 24 24"><path d="M3 8h11a3 3 0 10-3-3M3 13h16a3 3 0 11-3 3M3 18h8"/></symbol>
     <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z"/></symbol>
     <symbol id="i-fog" viewBox="0 0 24 24"><path d="M6 11a4 4 0 017.5-1.5A3.5 3.5 0 0118 15H6a2.5 2.5 0 010-4zM4 18.5h16M7 21.5h10"/></symbol>
     <symbol id="i-storm" viewBox="0 0 24 24"><path d="M7 15a4 4 0 010-8 5 5 0 019.5 1A3.5 3.5 0 0117 15z"/><path d="M12.5 12l-2.5 4.5h3.5L11 21.5"/></symbol>
     <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3.5l10 17.5H2z"/><path d="M12 10v5M12 18v.4"/></symbol>
@@ -370,9 +371,9 @@ button.btn:focus-visible{outline:3px solid var(--sonar);outline-offset:2px} /* A
 <div class="screen dim" id="harbor">
   <div class="card glass wide">
     <div class="hbar"><h2 id="hTitle"></h2><div class="meta"><span><small data-i18n="day">Gün</small><b id="hDay"></b></span><span><small data-i18n="money">Para</small><b id="hMoney" style="color:var(--warn)"></b></span><span><small data-i18n="loan">Kredi</small><b id="hLoan" style="color:var(--bad)"></b></span></div></div>
-    <div class="tabs" role="tablist"><button class="btn sel" data-tab="market"></button><button class="btn" data-tab="upg"></button><button class="btn" data-tab="boat"></button></div>
+    <div class="tabs" role="tablist"><button class="btn sel" data-tab="market"></button><button class="btn" data-tab="upg"></button><button class="btn" data-tab="boat"></button><button class="btn" data-tab="yard"></button></div>
     <div id="hBody" class="list"></div>
-    <div class="hfoot"><span class="smallnote" id="hNote"></span><div class="row"><button class="btn" id="hEnd" data-i18n="endday">Günü bitir</button><button class="btn primary" id="hSail" data-i18n="sail">Denize çık</button></div></div>
+    <div class="hfoot"><span class="smallnote" id="hNote"></span><div class="row"><button class="btn" id="hWait" data-i18n="waitdusk">Akşamı bekle (19:00)</button><button class="btn" id="hEnd" data-i18n="endday">Sabaha kadar uyu</button><button class="btn primary" id="hSail" data-i18n="sail">Denize çık</button></div></div>
   </div>
 </div>
 
@@ -468,9 +469,9 @@ const L = {
   tr: {
     day: 'Gün', time: 'Saat', money: 'Para', loan: 'Kredi', goal: 'Günün hedefi', sonar: 'Sonar', dock: 'Yanaş',
     subtitle: "Karadeniz'de hamsi avı ve balıkçı teknesi yönetimi",
-    how: 'Sonarla balık sürüsünü bul, ağı sürünün çevresinde daire çizerek at, fırtınadan önce limana dön, balığı tazeyken sat. 30 günde krediyi öde ve limanın reisi ol.',
+    how: 'Sandalla başla, sonarla sürüyü bul, ağı sürünün çevresinde daire çizerek at, balığı tazeyken sat. Taka, trol ve gırgıra yüksel; gece hamsi yüzeye çıkar. 30 günde krediyi öde ve limanın reisi ol.',
     play: 'Yeni sezon', cont: 'Devam et', settings: 'Ayarlar', keys: 'W/S gaz · A/D dümen · Boşluk ağ · M harita · P duraklat',
-    endday: 'Günü bitir', sail: 'Denize çık', again: 'Tekrar oyna', menu: 'Ana menü', paused: 'Duraklatıldı', resume: 'Devam', restart: 'Yeniden başla',
+    endday: 'Sabaha kadar uyu', sail: 'Denize çık', waitdusk: 'Akşamı bekle (19:00)', again: 'Tekrar oyna', menu: 'Ana menü', paused: 'Duraklatıldı', resume: 'Devam', restart: 'Yeniden başla',
     vmaster: 'Ana ses', vmusic: 'Müzik', vsfx: 'Efektler', language: 'Dil', quality: 'Kalite', low: 'Düşük', high: 'Yüksek', screen: 'Ekran', fullscreen: 'Tam ekran',
     back: 'Geri', map: 'Harita', close: 'Kapat', loading: 'Yükleniyor… {n}/{N}',
     best: 'En iyi: {r} · {s}', nobest: 'Henüz sezon bitirilmedi', knots: 'kn', ms: 'm/s',
@@ -482,22 +483,22 @@ const L = {
     w_wind_line: 'Rüzgâr {w} m/s · Dalga {h} m', w_storm_in: 'Fırtınaya {t} · Limana dön!', w_storm_on: 'Limana dön! Tekne hasar alıyor', w_storm_exp: 'Bugün fırtına bekleniyor',
     t_gull: 'Martılar bir sürü üzerinde dönüyor',
     fuel: 'Yakıt', hold: 'Ambar', fresh: 'Tazelik', ice: 'Buz', hull: 'Gövde',
-    market: 'Pazar', upgrades: 'Geliştirmeler', boat: 'Tekne', harbor_title: 'Balıkçı Limanı', fish_market: 'Balık Hali',
+    market: 'Pazar', upgrades: 'Geliştirmeler', boat: 'İkmal', yard: 'Tersane', harbor_title: 'Balıkçı Limanı', fish_market: 'Balık Hali',
     price: '{p}/kg', inhold: 'Ambarda {kg} kg · tazelik %{f}', empty: 'boş', sell: 'Sat', sellall: 'Hepsini sat', demand: 'Talep',
     sold: '{kg} kg {sp} satıldı: +{m}', nothing: 'Satacak balık yok', total_hold: 'Ambar: {kg}/{cap} kg',
     refuel: 'Yakıt doldur', refuelc: 'Depo {a}/{b} L · {c}', addice: 'Buz doldur', repair: 'Tamir et', repairc: 'Gövde %{h}', payloan: 'Kredi öde', pay5: '{m} öde', payall: 'Tümünü öde',
     full: 'Dolu', maxed: 'En üst seviye', buy: 'Satın al', lvl: 'Seviye {n}', need: 'Para yetmiyor',
-    up_net: 'Gırgır ağı', up_sonar: 'Sonar', up_engine: 'Motor', up_hold: 'Ambar', up_ice: 'Buz kasası', up_crew: 'Tayfa',
+    up_net: 'Ağ', up_sonar: 'Sonar', up_engine: 'Motor', up_hold: 'Ambar', up_ice: 'Buz kasası', up_crew: 'Tayfa',
     d_net: '{len} m ağ · {dep} m derinlik', d_sonar: '{r} m menzil', d_engine: '{v} kn · tank {t} L', d_hold: '{c} kg', d_ice: '{c} birim buz · yavaş erime', d_crew: '{n} tayfa · çekme {s} sn',
     goal_kg: 'Bugün {n} kg balık tut', goal_sp: 'Bugün {n} kg {sp} tut', goal_cash: 'Bugün {n} satış yap', goal_fresh: '%80 üstü tazelikte {n} kg sat', goal_ring: 'Ağı {g} m aralıktan az açıklıkla kapat',
     goal_done: 'Hedef tamam! +{m}', goal_fail: 'Hedef tutmadı',
     toast_storm_warn: 'Fırtına geliyor! Limana dön.', toast_storm_on: 'Fırtına başladı!', toast_storm_end: 'Fırtına geçti.',
     toast_fog: 'Sis var: sonara güven.', toast_hit: 'Çarpma! Gövde -%{d}', toast_hullcrit: 'Gövde kritik!', toast_fuel: 'Yakıt azalıyor!', toast_nofuel: 'Yakıt bitti!',
     toast_hold: 'Ambar doldu: {kg} kg denize döküldü', toast_empty: 'Ağ boş kaldı', toast_caught: '{kg} kg yakalandı: {sp}', toast_rough: 'Deniz çok sert: ağ atılamaz',
-    toast_nonet: 'Burada ağ atılmaz', toast_gap: 'Ağın ağzı açık: balık kaçıyor', toast_dusk: 'Akşam oldu: sahil güvenlik çekiyor', toast_far: 'Açık deniz: geri dön',
+    toast_nonet: 'Burada ağ atılmaz', toast_gap: 'Ağın ağzı açık: balık kaçıyor', toast_tired: 'Tayfa bitkin (05:00): sahil güvenlik çekiyor', toast_towed: 'Yakıt bitti: sahil güvenlik limana çekti ({m})', toast_night: 'Gece çöktü: hamsi ışığa, yüzeye çıkıyor', w_night: 'Gece', market_closed: 'Hal kapalı: 04:00–23:00 arası açık', toast_far: 'Açık deniz: geri dön',
     toast_sunk: 'Tekne battı! Kurtarıldın, ambar kayıp', toast_netfull: 'Ağ sonuna geldi: çek!', toast_gulls: 'Martılar sürüyü gösteriyor', toast_nosonar: 'Sürü sonar menzilinde',
     toast_start: 'Gün {d}: hayırlı olsun reis!', toast_bonus: 'Günlük hedef +{m}',
-    sum_title: 'Gün {d} özeti', sum_catch: 'Yakalanan', sum_sales: 'Satışlar', sum_fuel: 'Yakıt', sum_interest: 'Kredi faizi', sum_tow: 'Çekme ücreti', sum_goal: 'Günlük hedef', sum_repair: 'Tamir', sum_bonus: 'Hedef ödülü',
+    sum_title: 'Gün {d} özeti', sum_catch: 'Yakalanan', sum_sales: 'Satışlar', sum_fuel: 'Yakıt', sum_interest: 'Kredi faizi', sum_upkeep: 'Tayfa yevmiyesi ve bakım', sum_tow: 'Çekme ücreti', sum_goal: 'Günlük hedef', sum_repair: 'Tamir', sum_bonus: 'Hedef ödülü',
     sum_money: 'Para', sum_loan: 'Kalan kredi', sum_next: 'Ertesi gün', sum_fc: 'Yarın: {w}', nextday: 'Sonraki gün', finish: 'Sezonu bitir', ok: 'Tamam', fail: 'Olmadı',
     end_reis: 'Limanın reisi oldun!', end_bank: 'Banka teknene el koydu', end_sub_reis: 'Krediyi ödedin ve 30 günlük sezonu kazandın.', end_sub_bank: 'Sezon bitti ama kredi ödenemedi.',
     end_worth: 'Net değer', end_kg: 'Toplam av', end_days: 'Fırtına atlatılan', end_best: 'Yeni rekor!', end_money: 'Kalan para', end_loan: 'Kalan kredi', end_boat: 'Tekne değeri',
@@ -505,16 +506,23 @@ const L = {
     rank: 'Rütbe', rank0: 'Tayfa', rank1: 'Kaptan', rank2: 'Reis',
     fast: 'Hız', on: 'Açık', off: 'Kapalı', musict: 'Müzik', sfxt: 'Efekt', saved: 'Kaydedildi',
     wait: 'Bekleyin', sail_storm: 'Fırtına var: denize çıkmak tehlikeli!', sail_dusk: 'Gün bitti', held: 'Ambar {kg} kg',
-    cap: '{a}/{b}', unit_l: 'L', notnow: 'Şimdi değil', note_market: 'Fiyatlar talebe göre değişir; taze balık daha değerli.', note_up: 'Geliştirmeler kalıcıdır.', note_boat: 'Yakıt, buz ve tamir ücretleri anında ödenir.',
+    cap: '{a}/{b}', unit_l: 'L', notnow: 'Şimdi değil', note_market: 'Fiyatlar talebe göre değişir; taze balık daha değerli.', note_up: 'Geliştirmeler yeni tekneye taşınır; her teknenin bir üst sınırı var.', note_boat: 'Yakıt, buz ve tamir ücretleri anında ödenir.',
+    note_yard: 'Eski tekne liste fiyatının %60\'ına takas edilir; peşin yetmezse fark krediye eklenir (en çok {m}).',
+    b_sandal: 'Sandal', b_taka: 'Taka', b_trol: 'Trol teknesi', b_girgir: 'Gırgır',
+    n_cevirme: 'çevirme ağı', n_girgir_k: 'küçük gırgır ağı', n_trol: 'derin trol ağı', n_girgir: 'gırgır ağı',
+    d_boat: '{v} kn · ambar {h} kg · {n} {l} m / {d} m · depo {t} L · tayfa {c} · fırtına {s} · bakım {u}/gün',
+    storm_lo: 'zayıf', storm_mid: 'orta', storm_hi: 'iyi', storm_top: 'çok iyi',
+    deal: '{c} peşin + {f} kredi', deal_cash: '{c} peşin', owned: 'Teknen', sold_boat: 'Geride kaldı', tradein: 'Takas değeri {m}',
+    loan_full: 'Kredi limiti dolu ({m})', toast_newboat: 'Hayırlı olsun: yeni teknen {b}!', lvl_cap: 'bu teknede sınır', boatcls: 'Tekne',
     trend_up: 'yükseliyor', trend_down: 'düşüyor', season_hi: 'sezonu', season_lo: 'azaldı',
     ai: 'Otomatik pilot', fishfinder: 'Derinlik', depth: '{d} m', est: '~{k} kg',
   },
   en: {
     day: 'Day', time: 'Time', money: 'Cash', loan: 'Loan', goal: "Today's goal", sonar: 'Sonar', dock: 'Dock',
     subtitle: 'Anchovy fishing and boat management on the Black Sea',
-    how: 'Find the schools on the sonar, circle the net around a school, run home before the storm and sell the catch fresh. Pay off the boat loan in 30 days and become reis of the harbour.',
+    how: 'Start in a rowboat, find schools on the sonar, circle the net around them and sell the catch fresh. Move up to a taka, a trawler and a purse seiner; at night the anchovy rise. Pay off the loan in 30 days and become reis of the harbour.',
     play: 'New season', cont: 'Continue', settings: 'Settings', keys: 'W/S throttle · A/D rudder · Space net · M map · P pause',
-    endday: 'End day', sail: 'Sail out', again: 'Play again', menu: 'Main menu', paused: 'Paused', resume: 'Resume', restart: 'Restart',
+    endday: 'Sleep till morning', sail: 'Sail out', waitdusk: 'Wait for dusk (19:00)', again: 'Play again', menu: 'Main menu', paused: 'Paused', resume: 'Resume', restart: 'Restart',
     vmaster: 'Master', vmusic: 'Music', vsfx: 'Effects', language: 'Language', quality: 'Quality', low: 'Low', high: 'High', screen: 'Screen', fullscreen: 'Fullscreen',
     back: 'Back', map: 'Map', close: 'Close', loading: 'Loading… {n}/{N}',
     best: 'Best: {r} · {s}', nobest: 'No season finished yet', knots: 'kn', ms: 'm/s',
@@ -526,22 +534,22 @@ const L = {
     w_wind_line: 'Wind {w} m/s · Waves {h} m', w_storm_in: 'Storm in {t} · Head home!', w_storm_on: 'Head home! The boat is taking damage', w_storm_exp: 'A storm is forecast today',
     t_gull: 'Gulls are circling over a school',
     fuel: 'Fuel', hold: 'Hold', fresh: 'Freshness', ice: 'Ice', hull: 'Hull',
-    market: 'Market', upgrades: 'Upgrades', boat: 'Boat', harbor_title: 'Fishing Harbour', fish_market: 'Fish Market',
+    market: 'Market', upgrades: 'Upgrades', boat: 'Supplies', yard: 'Shipyard', harbor_title: 'Fishing Harbour', fish_market: 'Fish Market',
     price: '{p}/kg', inhold: 'In hold {kg} kg · freshness {f}%', empty: 'empty', sell: 'Sell', sellall: 'Sell all', demand: 'Demand',
     sold: 'Sold {kg} kg {sp}: +{m}', nothing: 'Nothing to sell', total_hold: 'Hold: {kg}/{cap} kg',
     refuel: 'Refuel', refuelc: 'Tank {a}/{b} L · {c}', addice: 'Fill ice', repair: 'Repair', repairc: 'Hull {h}%', payloan: 'Pay loan', pay5: 'Pay {m}', payall: 'Pay max',
     full: 'Full', maxed: 'Max level', buy: 'Buy', lvl: 'Level {n}', need: 'Not enough cash',
-    up_net: 'Purse-seine net', up_sonar: 'Sonar', up_engine: 'Engine', up_hold: 'Hold', up_ice: 'Ice box', up_crew: 'Crew',
+    up_net: 'Net', up_sonar: 'Sonar', up_engine: 'Engine', up_hold: 'Hold', up_ice: 'Ice box', up_crew: 'Crew',
     d_net: '{len} m net · {dep} m deep', d_sonar: '{r} m range', d_engine: '{v} kn · {t} L tank', d_hold: '{c} kg', d_ice: '{c} ice units · slower melt', d_crew: '{n} crew · haul {s} s',
     goal_kg: 'Catch {n} kg of fish today', goal_sp: 'Catch {n} kg of {sp} today', goal_cash: 'Sell for {n} today', goal_fresh: 'Sell {n} kg at 80%+ freshness', goal_ring: 'Close the net with a gap under {g} m',
     goal_done: 'Goal done! +{m}', goal_fail: 'Goal missed',
     toast_storm_warn: 'A storm is coming! Head home.', toast_storm_on: 'The storm has hit!', toast_storm_end: 'The storm has passed.',
     toast_fog: 'Fog: trust the sonar.', toast_hit: 'Collision! Hull -{d}%', toast_hullcrit: 'Hull critical!', toast_fuel: 'Fuel is low!', toast_nofuel: 'Out of fuel!',
     toast_hold: 'Hold full: {kg} kg released', toast_empty: 'The net came up empty', toast_caught: 'Caught {kg} kg: {sp}', toast_rough: 'Seas too rough to set the net',
-    toast_nonet: 'You cannot set a net here', toast_gap: 'The net is open: fish are escaping', toast_dusk: 'Dusk: the coast guard tows you in', toast_far: 'Open sea: turn back',
+    toast_nonet: 'You cannot set a net here', toast_gap: 'The net is open: fish are escaping', toast_tired: 'Crew exhausted (05:00): the coast guard tows you in', toast_towed: 'Out of fuel: the coast guard towed you in ({m})', toast_night: 'Night falls: anchovy rise to the lights', w_night: 'Night', market_closed: 'Market closed: open 04:00–23:00', toast_far: 'Open sea: turn back',
     toast_sunk: 'The boat sank! Rescued, hold lost', toast_netfull: 'Net fully out: haul!', toast_gulls: 'Gulls point to a school', toast_nosonar: 'School in sonar range',
     toast_start: 'Day {d}: good luck, reis!', toast_bonus: 'Daily goal +{m}',
-    sum_title: 'Day {d} summary', sum_catch: 'Caught', sum_sales: 'Sales', sum_fuel: 'Fuel', sum_interest: 'Loan interest', sum_tow: 'Tow fee', sum_goal: 'Daily goal', sum_repair: 'Repairs', sum_bonus: 'Goal bonus',
+    sum_title: 'Day {d} summary', sum_catch: 'Caught', sum_sales: 'Sales', sum_fuel: 'Fuel', sum_interest: 'Loan interest', sum_upkeep: 'Crew wages & upkeep', sum_tow: 'Tow fee', sum_goal: 'Daily goal', sum_repair: 'Repairs', sum_bonus: 'Goal bonus',
     sum_money: 'Cash', sum_loan: 'Loan left', sum_next: 'Tomorrow', sum_fc: 'Tomorrow: {w}', nextday: 'Next day', finish: 'Finish season', ok: 'Done', fail: 'Missed',
     end_reis: 'You became reis of the harbour!', end_bank: 'The bank took your boat', end_sub_reis: 'You paid off the loan and won the 30-day season.', end_sub_bank: 'The season is over but the loan is unpaid.',
     end_worth: 'Net worth', end_kg: 'Total catch', end_days: 'Storms survived', end_best: 'New record!', end_money: 'Cash left', end_loan: 'Loan left', end_boat: 'Boat value',
@@ -549,7 +557,14 @@ const L = {
     rank: 'Rank', rank0: 'Deckhand', rank1: 'Captain', rank2: 'Reis',
     fast: 'Speed', on: 'On', off: 'Off', musict: 'Music', sfxt: 'Effects', saved: 'Saved',
     wait: 'Wait', sail_storm: 'A storm is out there: sailing is dangerous!', sail_dusk: 'Day over', held: 'Hold {kg} kg',
-    cap: '{a}/{b}', unit_l: 'L', notnow: 'Not now', note_market: 'Prices follow demand; fresh fish is worth more.', note_up: 'Upgrades are permanent.', note_boat: 'Fuel, ice and repairs are paid on the spot.',
+    cap: '{a}/{b}', unit_l: 'L', notnow: 'Not now', note_market: 'Prices follow demand; fresh fish is worth more.', note_up: 'Upgrades carry over to a new boat; each boat has a cap.', note_boat: 'Fuel, ice and repairs are paid on the spot.',
+    note_yard: 'Your old boat is traded in at 60% of its list price; what cash cannot cover goes on the loan (up to {m}).',
+    b_sandal: 'Rowboat (sandal)', b_taka: 'Taka', b_trol: 'Trawler', b_girgir: 'Purse seiner',
+    n_cevirme: 'ring net', n_girgir_k: 'small seine', n_trol: 'deep trawl net', n_girgir: 'purse seine',
+    d_boat: '{v} kn · hold {h} kg · {n} {l} m / {d} m · tank {t} L · crew {c} · storms {s} · upkeep {u}/day',
+    storm_lo: 'weak', storm_mid: 'fair', storm_hi: 'good', storm_top: 'very good',
+    deal: '{c} cash + {f} loan', deal_cash: '{c} cash', owned: 'Your boat', sold_boat: 'Left behind', tradein: 'Trade-in {m}',
+    loan_full: 'Loan limit reached ({m})', toast_newboat: 'New boat: {b}!', lvl_cap: 'cap on this boat', boatcls: 'Boat',
     trend_up: 'rising', trend_down: 'falling', season_hi: 'in season', season_lo: 'scarce',
     ai: 'Autopilot', fishfinder: 'Depth', depth: '{d} m', est: '~{k} kg',
   },
@@ -566,18 +581,19 @@ function applyLang() {
   $('sTR').classList.toggle('sel', S.lang === 'tr'); $('sEN').classList.toggle('sel', S.lang === 'en');
   document.body.classList.toggle('lowq', S.quality === 'low');
   $('sLow').classList.toggle('sel', S.quality === 'low'); $('sHigh').classList.toggle('sel', S.quality === 'high');
-  document.querySelectorAll('.tabs .btn').forEach(b => { b.textContent = t({ market: 'market', upg: 'upgrades', boat: 'boat' }[b.dataset.tab]); });
-  $('hTitle').textContent = t('harbor_title');
+  document.querySelectorAll('.tabs .btn').forEach(b => { b.textContent = t({ market: 'market', upg: 'upgrades', boat: 'boat', yard: 'yard' }[b.dataset.tab]); });
+  $('hTitle').textContent = t('harbor_title') + ' · ' + t('b_' + BC().id);
   $('bNetT').textContent = t('net_set');
   refreshBest(); if (typeof refreshUI === 'function') refreshUI(true);
 }
 
 /* ---------------------------------------------------------------- game data */
 const SPECIES = [
-  { id: 'hamsi',    col: '#7fe0ff', price: 22,  cap: 900, spd: 3.0, skit: 26, dep: [10, 26], kg: [380, 820], rad: [10, 15], n: 36, slip: 1.0 },
-  { id: 'istavrit', col: '#ffd25a', price: 34,  cap: 620, spd: 3.6, skit: 30, dep: [5, 16],  kg: [220, 480], rad: [8, 12],  n: 28, slip: 1.0 },
-  { id: 'palamut',  col: '#ff8a5c', price: 62,  cap: 420, spd: 5.0, skit: 31, dep: [22, 38], kg: [130, 330], rad: [7, 11],  n: 22, slip: 1.25 },
-  { id: 'lufer',    col: '#c58cff', price: 105, cap: 260, spd: 5.8, skit: 35, dep: [12, 30], kg: [90, 230],  rad: [6, 9],   n: 18, slip: 1.45 },
+  // rise: how far a school comes up towards the surface at night (0..1); nite: spawn weight multiplier at night
+  { id: 'hamsi',    col: '#7fe0ff', price: 22,  cap: 900, spd: 3.0, skit: 26, dep: [10, 26], kg: [380, 820], rad: [10, 15], n: 36, slip: 1.0,  rise: 0.55, nite: 1.8 },
+  { id: 'istavrit', col: '#ffd25a', price: 34,  cap: 620, spd: 3.6, skit: 30, dep: [5, 16],  kg: [220, 480], rad: [8, 12],  n: 28, slip: 1.0,  rise: 0.45, nite: 1.2 },
+  { id: 'palamut',  col: '#ff8a5c', price: 62,  cap: 420, spd: 5.0, skit: 31, dep: [22, 38], kg: [130, 330], rad: [7, 11],  n: 22, slip: 1.25, rise: 0.2,  nite: 0.8 },
+  { id: 'lufer',    col: '#c58cff', price: 105, cap: 260, spd: 5.8, skit: 35, dep: [12, 30], kg: [90, 230],  rad: [6, 9],   n: 18, slip: 1.45, rise: 0.15, nite: 1.0 },
 ];
 function availability(i, day) {
   switch (i) {
@@ -587,17 +603,43 @@ function availability(i, day) {
     default: return 0.12 + 0.88 * Math.exp(-Math.pow((day - 22) / 8, 2));
   }
 }
-const UPG = {
-  net:    { cost: [0, 7000, 16000],         len: [170, 230, 300], dep: [24, 34, 46] },
-  sonar:  { cost: [0, 5000, 12000],         range: [110, 160, 230] },
-  engine: { cost: [0, 9000, 20000],         vmax: [9.5, 11.5, 13.5], eff: [1, 0.85, 0.7], tank: [30, 40, 50] },
-  hold:   { cost: [0, 4500, 11000, 22000],  cap: [350, 600, 950, 1400] },
-  ice:    { cost: [0, 3500, 8500],          cap: [100, 170, 260], melt: [8, 7, 6] },
+/* Boat classes: sandal -> taka -> trol -> gırgır. Each class has its own base stats; the six upgrade
+   axes multiply / add to them and each class caps how far an axis can go (cap = highest level).
+   Upgrades CARRY OVER to a new boat (costs are flat, not per class, so nothing is lost or exploited);
+   the old hull is traded in at TRADE_IN of its list price and anything the cash does not cover can be
+   added to the loan up to LOAN_MAX. Old (v1) saves become a taka, the closest match to the old boat. */
+const BOATS = [
+  { id: 'sandal', price: 9000,   upkeep: 100,  vmax: 7.6,  hold: 150,  net: 160, dep: 16, netId: 'cevirme', tank: 26, eff: 0.5, sonar: 90,   crew: 1, storm: 1.8, rough: 1.55, haul: 1.15,
+    cap: { net: 1, sonar: 1, engine: 1, hold: 1, ice: 1, crew: 1 }, scale: 0.62 },
+  { id: 'taka',   price: 30000,  upkeep: 800,  vmax: 9.5,  hold: 350,  net: 170, dep: 24, netId: 'girgir_k', tank: 50, eff: 1.0, sonar: 110, crew: 2, storm: 1.0, rough: 1.95, haul: 1.0,
+    cap: { net: 2, sonar: 2, engine: 2, hold: 2, ice: 2, crew: 2 }, scale: 0.86 },
+  { id: 'trol',   price: 90000,  upkeep: 2000, vmax: 10.5, hold: 520,  net: 210, dep: 40, netId: 'trol', tank: 70, eff: 1.3, sonar: 135, crew: 3, storm: 0.7, rough: 2.02, haul: 0.95,
+    cap: { net: 2, sonar: 3, engine: 2, hold: 3, ice: 3, crew: 3 }, scale: 1.0 },
+  { id: 'girgir', price: 180000, upkeep: 4000, vmax: 11.5, hold: 800,  net: 300, dep: 48, netId: 'girgir', tank: 95, eff: 1.6, sonar: 160, crew: 3, storm: 0.55, rough: 2.08, haul: 0.85,
+    cap: { net: 3, sonar: 3, engine: 3, hold: 3, ice: 3, crew: 3 }, scale: 1.22 },
+];
+const UPG = { // level 0..3; len/range/vmax/tank/cap multiply the class base, dep adds metres
+  net:    { cost: [0, 7000, 16000, 28000],  len: [1, 1.3, 1.6, 1.85], dep: [0, 8, 16, 22] },
+  sonar:  { cost: [0, 5000, 12000, 22000],  range: [1, 1.45, 2.05, 2.4] },
+  engine: { cost: [0, 9000, 20000, 32000],  vmax: [1, 1.18, 1.36, 1.48], eff: [1, 0.85, 0.7, 0.62], tank: [1, 1.33, 1.67, 2] },
+  hold:   { cost: [0, 4500, 11000, 22000],  cap: [1, 1.7, 2.7, 4] },
+  ice:    { cost: [0, 3500, 8500, 15000],   cap: [100, 170, 260, 340], melt: [8, 7, 6, 5] },
   crew:   { cost: [0, 8000, 16000, 30000],  haul: [9, 6, 4.4, 3.2] },
 };
 const UP_ORDER = ['net', 'sonar', 'engine', 'hold', 'ice', 'crew'];
 const START_MONEY = 2500, START_LOAN = 110000, LOAN_RATE = 0.006, FUEL_PRICE = 25, ICE_PRICE = 1.4, REPAIR_PRICE = 90;
-const DAYS = 30, DAY_LEN = 150, T0 = 360, T1 = 1080, MIN_PER_SEC = (T1 - T0) / DAY_LEN;
+const TRADE_IN = 0.6, LOAN_MAX = 240000, CREW_WAGE = 400; // daily: class upkeep + a wage per hired hand
+/* Day cycle: one full 24 h day takes 24 real minutes (1 real second = 1 game minute, 1 real minute = 1 hour).
+   A 30-day season would be 12 h of real time if every hour had to be sailed, so the day is NOT played out
+   in full: a campaign day starts at 06:00 in the harbour, a trip lasts as long as the player wants, and
+   "Sleep till morning" in the harbour ends the day (overnight interest, ice and freshness are applied for
+   the hours slept). "Wait for dusk" skips the harbour clock to 19:00 for a night trip. Still at sea at
+   05:00 the next morning, the exhausted crew is towed home. The fish market (hal) is open 04:00-23:00.
+   Night (about 20:00-05:00): anchovy and horse mackerel rise towards the deck lights, more anchovy
+   schools show up and the sonar reaches 25% further, but collisions do 60% more damage and the deck
+   lights burn extra fuel. */
+const DAYS = 30, T0 = 360, T_WAKE = T0, T_DUSK = 1140, T_LIMIT = 1440 + 300, MIN_PER_SEC = 1;
+const MARKET_OPEN = 240, MARKET_CLOSE = 1380;
 const SEED = 20261027;
 
 /* ---------------------------------------------------------------- world geometry */
@@ -757,9 +799,9 @@ const Snd = (() => {
 const G = {
   mode: 'menu',            // menu | dock | play | summary | end
   paused: false, overlay: null, scale: 1, time: 0, runId: 0, auto: FLAG.auto,
-  day: 1, tmin: T0, money: START_MONEY, loan: START_LOAN, seed: SEED,
+  day: 1, tmin: T0, money: START_MONEY, loan: START_LOAN, seed: SEED, boatClass: 0,
   up: { net: 0, sonar: 0, engine: 0, hold: 0, ice: 0, crew: 0 },
-  fuel: 30, hull: 100, ice: 100,
+  fuel: 26, hull: 100, ice: 100,
   hold: [0, 1, 2, 3].map(() => ({ kg: 0, fresh: 100 })),
   boat: { x: SPAWN.x, z: SPAWN.z, h: 0, v: 0, thr: 0, rud: 0, yawr: 0, y: 0, pitch: 0, roll: 0, hit: 0 },
   wx: { wind: 4, windDir: Math.PI, wave: 0.9, fog: 0.003, rain: 0, s: 0, phase: 'clear', fogMorning: 0 },
@@ -771,6 +813,22 @@ const G = {
 };
 const inp = { thr: 0, rud: 0, kU: false, kD: false, kL: false, kR: false, touchThr: null, touchRud: null };
 const rand = Math.random;
+// current boat class and its stats with upgrades applied (single place for every gameplay number)
+const BC = () => BOATS[G.boatClass] || BOATS[0];
+const hourOf = tm => ((tm / 60) % 24 + 24) % 24;
+function nightF(tm) { const h = hourOf(tm === undefined ? G.tmin : tm); return h >= 12 ? sstep(19, 21, h) : 1 - sstep(4.5, 6.2, h); } // 0 day .. 1 night
+const ST = {
+  vmax: () => BC().vmax * UPG.engine.vmax[G.up.engine],
+  eff: () => BC().eff * UPG.engine.eff[G.up.engine],
+  tank: () => Math.round(BC().tank * UPG.engine.tank[G.up.engine]),
+  hold: () => Math.round(BC().hold * UPG.hold.cap[G.up.hold] / 10) * 10,
+  netLen: () => Math.round(BC().net * UPG.net.len[G.up.net]),
+  netDep: () => BC().dep + UPG.net.dep[G.up.net],
+  sonarBase: () => Math.round(BC().sonar * UPG.sonar.range[G.up.sonar]),
+  ice: () => UPG.ice.cap[G.up.ice], melt: () => UPG.ice.melt[G.up.ice],
+  haul: () => UPG.crew.haul[G.up.crew] * BC().haul,
+};
+function marketOpen() { const m = ((G.tmin % 1440) + 1440) % 1440; return m >= MARKET_OPEN && m < MARKET_CLOSE; }
 
 function newToday() { return { catch: [0, 0, 0, 0], sales: 0, fuelCost: 0, repair: 0, freshKg: 0, ring: 0, tow: 0, interest: 0, bonus: 0, startMoney: G.money }; }
 function pickStormDays(seed) { const r = rng(seed ^ 0x9e3779b9); const set = new Set(); let d = 4 + Math.floor(r() * 2); while (d <= 29) { set.add(d); d += 4 + Math.floor(r() * 4); } return set; }
@@ -816,7 +874,8 @@ function holdTotal() { return G.hold.reduce((a, h) => a + h.kg, 0); }
 function holdFresh() { const k = holdTotal(); return k > 0 ? G.hold.reduce((a, h) => a + h.fresh * h.kg, 0) / k : 100; }
 function sellSpecies(i, silent) {
   const h = G.hold[i]; if (h.kg < 0.5) return 0;
-  const sp = SPECIES[i], d0 = G.mk.demand[i], d1 = Math.max(0.25, d0 - h.kg / sp.cap), fm = 0.35 + 0.65 * h.fresh / 100;
+  if (!marketOpen()) { if (!silent) toast(t('market_closed'), 'bad'); return 0; }
+  const sp = SPECIES[i], d0 = G.mk.demand[i], d1 = Math.max(0.15, d0 - h.kg / sp.cap), fm = 0.35 + 0.65 * h.fresh / 100;
   const rev = Math.round(h.kg * sp.price * G.mk.pm[i] * (d0 + d1) / 2 * fm);
   G.money += rev; G.today.sales += rev; G.tot.sales += rev; G.mk.demand[i] = d1;
   if (h.fresh >= 80) G.today.freshKg += h.kg;
@@ -824,9 +883,9 @@ function sellSpecies(i, silent) {
   if (!silent) { toast(t('sold', { kg, sp: t('sp_' + sp.id), m: money(rev) }), 'good'); Snd.coin(); }
   checkGoal(); return rev;
 }
-function sellAll() { let r = 0; for (let i = 0; i < 4; i++) r += sellSpecies(i, true); if (r > 0) { toast('+' + money(r), 'good'); Snd.coin(); } else toast(t('nothing'), 'info'); saveRun(); return r; }
+function sellAll() { if (!marketOpen()) { toast(t('market_closed'), 'bad'); return 0; } let r = 0; for (let i = 0; i < 4; i++) r += sellSpecies(i, true); if (r > 0) { toast('+' + money(r), 'good'); Snd.coin(); } else toast(t('nothing'), 'info'); saveRun(); return r; }
 function addToHold(i, kg, fresh) {
-  const cap = UPG.hold.cap[G.up.hold]; const space = Math.max(0, cap - holdTotal()); const add = Math.min(kg, space);
+  const cap = ST.hold(); const space = Math.max(0, cap - holdTotal()); const add = Math.min(kg, space);
   const h = G.hold[i]; if (add > 0) { h.fresh = (h.fresh * h.kg + fresh * add) / (h.kg + add); h.kg += add; }
   return { add, lost: kg - add };
 }
@@ -866,7 +925,7 @@ function checkGoal() {
 
 /* ---------------------------------------------------------------- schools (boids) */
 function spawnSchool(near) {
-  const wts = SPECIES.map((s, i) => availability(i, G.day)); let sum = wts.reduce((a, b) => a + b, 0), x = rand() * sum, si = 0;
+  const nf = nightF(), wts = SPECIES.map((s, i) => availability(i, G.day) * lerp(1, s.nite, nf)); let sum = wts.reduce((a, b) => a + b, 0), x = rand() * sum, si = 0;
   for (let i = 0; i < 4; i++) { x -= wts[i]; if (x <= 0) { si = i; break; } }
   const sp = SPECIES[si];
   for (let tries = 0; tries < 40; tries++) {
@@ -874,7 +933,7 @@ function spawnSchool(near) {
     const b = G.boat; if (Math.hypot(px - b.x, pz - b.z) < 60) continue;
     if (G.schools.some(o => Math.hypot(o.x - px, o.z - pz) < 70)) continue;
     const sb = seabed(px, pz); const dep0 = clamp(sp.dep[0] + rand() * (sp.dep[1] - sp.dep[0]), 3, sb - 4);
-    const n = Math.round(sp.n * (0.8 + rand() * 0.4)), kg0 = sp.kg[0] + rand() * (sp.kg[1] - sp.kg[0]), rad = sp.rad[0] + rand() * (sp.rad[1] - sp.rad[0]);
+    const n = Math.round(sp.n * (0.8 + rand() * 0.4)), kg0 = (sp.kg[0] + rand() * (sp.kg[1] - sp.kg[0])) * (si === 0 ? 1 + 0.25 * nf : 1), rad = sp.rad[0] + rand() * (sp.rad[1] - sp.rad[0]);
     const s = { id: G.nextId++, sp: si, x: px, z: pz, hd: rand() * TAU, dep: dep0, dep0, kg0, n0: n, kgPer: kg0 / n, rad, mem: [], age: 0, rot: rand() * TAU };
     for (let i = 0; i < n; i++) {
       const a = rand() * TAU, r = Math.sqrt(rand()) * rad;
@@ -892,7 +951,7 @@ function stepSchool(s, dt) {
   const bs = Math.abs(b.v) / 9, thr = sp.skit * (0.4 + 0.6 * clamp(bs, 0, 1)) * (G.net.phase === 'haul' ? 1.6 : 1) + s.rad * 0.5;
   s.fleeing = false;
   if (G.mode === 'play' && d < thr) { const f = sp.spd * 1.0 * (1 - d / thr); vx += dx / d * f; vz += dz / d * f; s.dep = Math.min(s.dep + dt * 1.4, Math.min(s.dep0 + 8, seabed(s.x, s.z) - 3)); s.fleeing = true; }
-  else s.dep += (s.dep0 + Math.sin(s.age * 0.15 + s.rot) * 2.5 - s.dep) * dt * 0.3;
+  else s.dep += (Math.max(3, s.dep0 * (1 - sp.rise * nightF())) + Math.sin(s.age * 0.15 + s.rot) * 2.5 - s.dep) * dt * 0.3; // night: rise towards the lights
   // keep in the sea and inside the play area
   const sb = seabed(s.x + vx * 6, s.z + vz * 6);
   if (sb < s.dep + 6 || s.x < 55) { vx += 2.0; }
@@ -914,7 +973,7 @@ function stepSchool(s, dt) {
   }
 }
 function schoolWorld(s, f) { return [s.x + f.x, s.z + f.z, s.dep + f.y]; }
-function sonarRange() { return UPG.sonar.range[G.up.sonar]; }
+function sonarRange() { return Math.round(ST.sonarBase() * (1 + 0.25 * nightF())); } // night: +25% (quiet water, fish near the surface)
 function sonarContacts() {
   const R = sonarRange(), b = G.boat, out = [];
   for (const s of G.schools) {
@@ -935,8 +994,8 @@ function canDock() { const b = G.boat; return G.mode === 'play' && netNear() < 1
 function trySetNet() {
   const b = G.boat; if (G.net.phase !== 'stowed') return;
   if (inBasin(b.x, b.z)) { toast(t('toast_nonet'), 'bad'); return; }
-  if (G.wx.wave > 1.95) { toast(t('toast_rough'), 'bad'); return; }
-  const n = G.net; n.phase = 'set'; n.pts = []; n.len = 0; n.ht = 0; n.full = false; n.fullT = 0; n.maxLen = UPG.net.len[G.up.net]; n.depth = UPG.net.dep[G.up.net];
+  if (G.wx.wave > BC().rough) { toast(t('toast_rough'), 'bad'); return; }
+  const n = G.net; n.phase = 'set'; n.pts = []; n.len = 0; n.ht = 0; n.full = false; n.fullT = 0; n.maxLen = ST.netLen(); n.depth = ST.netDep();
   n.pts.push({ x: b.x - Math.cos(b.h) * 3.2, z: b.z - Math.sin(b.h) * 3.2 }); Snd.netSet(); G.today.sets = (G.today.sets || 0) + 1;
 }
 function startHaul() {
@@ -959,7 +1018,7 @@ function startHaul() {
     s.mem = keep;
   }
   G.schools = G.schools.filter(s => s.mem.length >= 4);
-  n.phase = 'haul'; n.ht = 0; n.haulT = UPG.crew.haul[G.up.crew]; G.today.hauls = (G.today.hauls || 0) + 1; G.today.mem = (G.today.mem || 0) + n.members; G.today.gaps = (G.today.gaps || 0) + n.gap;
+  n.phase = 'haul'; n.ht = 0; n.haulT = ST.haul(); G.today.hauls = (G.today.hauls || 0) + 1; G.today.mem = (G.today.mem || 0) + n.members; G.today.gaps = (G.today.gaps || 0) + n.gap;
   if (G.today && n.gap < 7 && n.members > 3) { G.today.ring = 1; checkGoal(); }
   Snd.splash();
 }
@@ -990,7 +1049,7 @@ function stepNet(dt) {
 /* ---------------------------------------------------------------- boat */
 function hitBoat(spd) {
   const b = G.boat; if (b.hit > 0) return; b.hit = 1.2;
-  const dmg = Math.max(0, (spd - 3) * 1.6); b.v *= 0.35;
+  const dmg = Math.max(0, (spd - 3) * 1.6) * (1 + 0.6 * nightF()) * (0.7 + 0.3 * BC().storm); b.v *= 0.35; // night and small hulls: more damage
   if (dmg > 0.5) { G.hull = Math.max(0, G.hull - dmg); toast(t('toast_hit', { d: Math.round(dmg) }), 'bad'); Snd.hit(); hurtFlash(); }
 }
 function stepBoat(dt) {
@@ -1003,7 +1062,7 @@ function stepBoat(dt) {
   const rudT = G.auto ? inp.rud : (inp.touchRud !== null ? inp.touchRud : (inp.kR ? 1 : 0) - (inp.kL ? 1 : 0));
   b.thr += clamp(inp.thr - b.thr, -dt * 0.9, dt * 0.9);
   const hasFuel = G.fuel > 0; const thrEff = hasFuel ? b.thr : 0;
-  let vmax = UPG.engine.vmax[up.engine];
+  let vmax = ST.vmax();
   if (G.net.phase === 'set') vmax *= 0.72; else if (G.net.phase === 'haul') vmax *= 0.15;
   vmax *= 1 - 0.18 * clamp((wx.wave - 0.9) / 1.1, 0, 1);
   const target = thrEff * vmax;
@@ -1017,10 +1076,10 @@ function stepBoat(dt) {
   b.x += (fx * b.v + Math.cos(wx.windDir) * dr) * dt; b.z += (fz * b.v + Math.sin(wx.windDir) * dr) * dt;
   // fuel: only consume and bill actual fuel when engine has fuel
   if (G.mode === 'play' && hasFuel) {
-    const use = (0.010 + 0.115 * thrEff * thrEff) * UPG.engine.eff[up.engine] * dt;
+    const use = ((0.010 + 0.115 * thrEff * thrEff) * ST.eff() + 0.012 * BC().eff * nightF()) * dt; // night: deck lights
     const actual = Math.min(G.fuel, use);
     G.fuel = Math.max(0, G.fuel - actual); G.today.fuelCost += actual * FUEL_PRICE;
-    const tank = UPG.engine.tank[up.engine];
+    const tank = ST.tank();
     if (G.fuel < tank * 0.2 && !G.flags.lowfuel) { G.flags.lowfuel = true; toast(t('toast_fuel'), 'bad'); }
     if (G.fuel <= 0 && !G.flags.nofuel) { G.flags.nofuel = true; toast(t('toast_nofuel'), 'bad'); }
   }
@@ -1034,7 +1093,7 @@ function stepBoat(dt) {
   if (b.z > 300) b.z = 300; if (b.z < -300) b.z = -300;
   // storm damage
   if (G.wx.phase === 'storm' && G.mode === 'play' && !inBasin(b.x, b.z)) {
-    G.hull = Math.max(0, G.hull - (0.35 + 0.25 * clamp(Math.abs(b.v) / 8, 0, 1)) * dt * G.wx.s);
+    G.hull = Math.max(0, G.hull - (0.35 + 0.25 * clamp(Math.abs(b.v) / 8, 0, 1)) * dt * G.wx.s * BC().storm);
     if (G.hull < 25 && !G.flags.crit) { G.flags.crit = true; toast(t('toast_hullcrit'), 'bad'); }
   }
   boatWaves(dt);
@@ -1050,17 +1109,20 @@ function stepOnce(h) {
   stepBoat(h); stepNet(h);
   for (const s of G.schools) stepSchool(s, h);
   G.schoolTimer -= h;
-  const maxSchools = 7 + (G.day > 10 ? 1 : 0);
+  const nf = nightF(), maxSchools = 7 + (G.day > 10 ? 1 : 0) + Math.round(2 * nf);
+  if (nf > 0.6 && !G.flags.night) { G.flags.night = true; toast(t('toast_night'), 'info'); }
   if (G.schools.length < maxSchools && G.schoolTimer <= 0) { spawnSchool(); G.schoolTimer = 7 + rand() * 9; }
   // freshness and ice
   const hrs = h * MIN_PER_SEC / 60, rate = G.ice > 0 ? 2.4 : 7.0;
   for (const x of G.hold) if (x.kg > 0) x.fresh = Math.max(0, x.fresh - rate * hrs);
-  G.ice = Math.max(0, G.ice - UPG.ice.melt[G.up.ice] * hrs);
+  G.ice = Math.max(0, G.ice - ST.melt() * hrs);
   // sonar memory for the map
   if (((G.time * 2) | 0) !== (((G.time - h) * 2) | 0)) for (const c of sonarContacts()) G.seen[c.s.id] = { x: c.x, z: c.z, sp: c.sp, t: G.time };
   // game over conditions
   if (G.hull <= 0) { endDay('sunk'); return; }
-  if (G.tmin >= T1) { endDay('dusk'); return; }
+  if (G.tmin >= T_LIMIT) { endDay('tired'); return; }
+  // out of fuel and dead in the water: after 15 s the coast guard tows the boat to the pier (fee), the day goes on
+  if (G.fuel <= 0 && Math.abs(G.boat.v) < 0.6) { G.flags.dryT = (G.flags.dryT || 0) + h; if (G.flags.dryT > 15) { towHome(); return; } } else G.flags.dryT = 0;
   if (G.today && !G.today.warnedGulls) { /* gull hint handled in render */ }
 }
 let accum = 0;
@@ -1073,8 +1135,9 @@ function advance(dt) {
 
 /* ---------------------------------------------------------------- day flow */
 function freshRun() {
-  G.runId++; G.day = 1; G.money = START_MONEY; G.loan = START_LOAN; G.up = { net: 0, sonar: 0, engine: 0, hold: 0, ice: 0, crew: 0 };
-  G.fuel = UPG.engine.tank[0]; G.hull = 100; G.ice = UPG.ice.cap[0]; G.hold.forEach(h => { h.kg = 0; h.fresh = 100; });
+  G.runId++; G.day = 1; G.money = START_MONEY; G.loan = START_LOAN; G.up = { net: 0, sonar: 0, engine: 0, hold: 0, ice: 0, crew: 0 }; G.boatClass = 0; G.log = []; G.buys = []; setBoatVisual();
+  Object.assign(bot, { target: null, inHarbor: false, wp: 0, timer: 0 });
+  G.fuel = ST.tank(); G.hull = 100; G.ice = ST.ice(); G.hold.forEach(h => { h.kg = 0; h.fresh = 100; });
   G.tot = { catch: 0, storms: 0, sales: 0 }; G.seed = FLAG.auto ? SEED : (Math.random() * 1e9) | 0; G.stormDays = pickStormDays(G.seed);
   G.mk = { demand: [1, 1, 1, 1], pm: [1, 1, 1, 1], prev: [1, 1, 1, 1] }; G.result = null;
 }
@@ -1086,38 +1149,52 @@ function startDay() {
   // seed the sea with schools at dawn
   for (let i = 0; i < 6; i++) spawnSchool(); G.schoolTimer = 6;
   G.mode = 'dock'; G.today.startMoney = G.money;
-  const tank = UPG.engine.tank[G.up.engine]; G.fuel = Math.min(G.fuel, tank);
+  const tank = ST.tank(); G.fuel = Math.min(G.fuel, tank);
   saveRun(); openHarbor(true); refreshUI(true);
   toast(t('toast_start', { d: G.day }), 'info');
 }
 function sailOut() {
   if (G.mode !== 'dock') return;
   G.mode = 'play'; closeHarbor(); const b = G.boat; b.x = SPAWN.x; b.z = SPAWN.z; b.h = 0; b.v = 0; b.thr = 0; inp.thr = 0; stowNet();
-  G.flags.lowfuel = G.fuel < UPG.engine.tank[G.up.engine] * 0.2; G.flags.nofuel = false;
+  G.flags.lowfuel = G.fuel < ST.tank() * 0.2; G.flags.nofuel = false;
   if (G.plan.storm && !G.flags.warned && G.tmin / 60 < G.plan.warn) toast(t('w_storm_exp'), 'info');
   Snd.init(); refreshUI(true);
   if (G.day === 1 && !G.flags.tip) { G.flags.tip = true; toast(t('keys'), 'info'); }
 }
 function dockNow() {
   if (!canDock()) return;
-  G.mode = 'dock'; const b = G.boat; b.v = 0; b.thr = 0; inp.thr = 0; b.x = DOCK.x; b.z = DOCK.z; b.h = 0;
+  G.mode = 'dock'; const b = G.boat; b.v = 0; b.thr = 0; inp.thr = 0; b.x = DOCK.x; b.z = DOCK.z; b.h = 0; G.today.trips = (G.today.trips || 0) + 1;
   stowNet(); openHarbor(false); Snd.chatter(); saveRun(); refreshUI(true);
+}
+function towHome() {
+  const fee = Math.min(G.money, Math.max(300, Math.round(G.money * 0.05))); G.money -= fee; G.today.tow += fee; G.flags.dryT = 0;
+  toast(t('toast_towed', { m: money(fee) }), 'bad'); G.tmin += 45; // the tow takes 45 minutes
+  stowNet(); G.mode = 'dock'; const b = G.boat; b.x = DOCK.x; b.z = DOCK.z; b.v = 0; b.thr = 0; inp.thr = 0; b.h = 0; G.today.trips = (G.today.trips || 0) + 1; openHarbor(false); saveRun(); refreshUI(true);
+}
+// harbour clock skips (the harbour screen does not run the clock): fish and ice keep ageing for the skipped hours
+function ageHours(hrs) {
+  for (const h of G.hold) if (h.kg > 0) h.fresh = Math.max(0, h.fresh - (G.ice > 0 ? 2.4 : 7) * hrs);
+  G.ice = Math.max(0, G.ice - ST.melt() * hrs);
+}
+function waitDusk() {
+  if (G.mode !== 'dock' || G.tmin >= T_DUSK - 30) return false;
+  ageHours((T_DUSK - G.tmin) / 60); G.tmin = T_DUSK; updateWx(); Snd.click(); saveRun(); return true;
 }
 function endDay(reason) {
   const td = G.today; let note = '';
-  if (reason === 'dusk' || reason === 'sunk') {
+  if (reason === 'tired' || reason === 'sunk') {
     stowNet();
     if (reason === 'sunk') { G.hold.forEach(h => { h.kg = 0; h.fresh = 100; }); const fee = Math.min(G.money, 4000); G.money -= fee; td.tow = fee; G.hull = 45; toast(t('toast_sunk'), 'bad'); }
-    else { const fee = Math.min(G.money, Math.max(300, Math.round(G.money * 0.05))); G.money -= fee; td.tow = fee; G.hold.forEach(h => { h.fresh = Math.max(0, h.fresh - 15); }); toast(t('toast_dusk'), 'bad'); }
+    else { const fee = Math.min(G.money, Math.max(300, Math.round(G.money * 0.05))); G.money -= fee; td.tow = fee; G.hold.forEach(h => { h.fresh = Math.max(0, h.fresh - 15); }); toast(t('toast_tired'), 'bad'); }
   }
-  // overnight
-  for (const h of G.hold) if (h.kg > 0) h.fresh = Math.max(0, h.fresh - (G.ice > 0 ? 2.4 : 7) * 6);
-  G.ice = Math.max(0, G.ice - UPG.ice.melt[G.up.ice] * 8);
+  // overnight: the hours until 06:00 tomorrow (at most 10 h: the catch waits in the hal's cold room)
+  ageHours(clamp((1440 + T_WAKE - G.tmin) / 60, 0, 10));
   const interest = Math.round(G.loan * LOAN_RATE); G.loan += interest; td.interest = interest;
+  const upkeep = BC().upkeep + CREW_WAGE * G.up.crew, paid = Math.min(Math.max(0, G.money), upkeep); G.money -= paid; G.loan += upkeep - paid; td.upkeep = upkeep;
   if (G.plan && G.plan.storm) G.tot.storms++;
   const goalOk = !!(G.goal && G.goal.done);
-  G.sum = { day: G.day, catch: td.catch.slice(), sales: td.sales, fuel: Math.round(td.fuelCost), interest, tow: td.tow, bonus: td.bonus, goalOk, goalText: goalText(), reason, money: G.money, loan: G.loan, forecast: null };
-  (G.log = G.log || []).push({ d: G.day, kg: Math.round(td.catch.reduce((a, b) => a + b, 0)), sales: td.sales, money: G.money, loan: G.loan, why: reason, goal: goalOk, hull: Math.round(G.hull), up: Object.values(G.up).join(''), st: G.plan.storm ? 1 : 0, sets: td.sets || 0, hauls: td.hauls || 0, mem: td.mem || 0, gap: Math.round((td.gaps || 0) / Math.max(1, td.hauls || 1)) });
+  G.sum = { day: G.day, catch: td.catch.slice(), sales: td.sales, fuel: Math.round(td.fuelCost), interest, upkeep, tow: td.tow, bonus: td.bonus, goalOk, goalText: goalText(), reason, money: G.money, loan: G.loan, forecast: null };
+  (G.log = G.log || []).push({ d: G.day, kg: Math.round(td.catch.reduce((a, b) => a + b, 0)), sales: td.sales, money: G.money, loan: G.loan, why: reason, goal: goalOk, hull: Math.round(G.hull), up: Object.values(G.up).join(''), boat: BC().id, trips: td.trips || 0, end: clockStr(G.tmin), st: G.plan.storm ? 1 : 0, sets: td.sets || 0, hauls: td.hauls || 0, mem: td.mem || 0, gap: Math.round((td.gaps || 0) / Math.max(1, td.hauls || 1)) });
   if (G.day >= DAYS) { settle(); G.mode = 'summary'; G.sum.last = true; }
   else { G.sum.forecast = wxLabel(genWeather(G.day + 1)); G.mode = 'summary'; }
   G.sum.money = G.money; G.sum.loan = G.loan;
@@ -1128,20 +1205,24 @@ function nextDay() {
   if (G.sum && G.sum.last) { showEnding(); return; }
   G.day++; startDay(); $('summary').classList.remove('show');
 }
-function boatValue() { let v = 0; for (const k of UP_ORDER) { const c = UPG[k].cost; for (let i = 0; i <= G[ 'up' ][k]; i++) v += c[i]; } return Math.round(v * 0.6); }
+function upgradeSpend() { let v = 0; for (const k of UP_ORDER) { const c = UPG[k].cost; for (let i = 0; i <= G.up[k]; i++) v += c[i]; } return v; }
+function tradeIn() { return Math.round(BC().price * TRADE_IN); }
+function boatValue() { return Math.round(upgradeSpend() * 0.6) + tradeIn(); }
 function netWorth() { return Math.round(G.money - G.loan + boatValue()); }
 
 /* ---------------------------------------------------------------- save / load */
 function saveRun() {
   if (G.mode === 'menu' || G.mode === 'end') return;
-  const o = { v: 1, day: G.day, money: G.money, loan: G.loan, up: G.up, fuel: G.fuel, hull: G.hull, ice: G.ice, hold: G.hold, demand: G.mk.demand, seed: G.seed, tot: G.tot };
+  const o = { v: 2, day: G.day, money: G.money, loan: G.loan, boat: BC().id, up: G.up, fuel: G.fuel, hull: G.hull, ice: G.ice, hold: G.hold, demand: G.mk.demand, seed: G.seed, tot: G.tot };
   store.set(KEY_SAVE, JSON.stringify(o));
 }
-function hasSave() { try { const o = JSON.parse(store.get(KEY_SAVE) || 'null'); return !!(o && o.v === 1 && o.day >= 1 && o.day <= DAYS); } catch (e) { return false; } }
+function hasSave() { try { const o = JSON.parse(store.get(KEY_SAVE) || 'null'); return !!(o && (o.v === 1 || o.v === 2) && o.day >= 1 && o.day <= DAYS); } catch (e) { return false; } }
 function loadRun() {
   try {
-    const o = JSON.parse(store.get(KEY_SAVE) || 'null'); if (!o || o.v !== 1) return false;
-    freshRun(); G.day = o.day; G.money = o.money; G.loan = o.loan; G.up = Object.assign(G.up, o.up); G.fuel = o.fuel; G.hull = o.hull; G.ice = o.ice;
+    const o = JSON.parse(store.get(KEY_SAVE) || 'null'); if (!o || (o.v !== 1 && o.v !== 2)) return false;
+    freshRun(); G.day = o.day; G.money = o.money; G.loan = o.loan; G.up = Object.assign(G.up, o.up);
+    // v1 (before boat classes): the old boat had the taka's base stats; its upgrade levels are kept even above the taka cap
+    const bi = BOATS.findIndex(b => b.id === o.boat); G.boatClass = o.v === 1 ? 1 : Math.max(0, bi); setBoatVisual(); G.fuel = o.fuel; G.hull = o.hull; G.ice = o.ice;
     o.hold.forEach((h, i) => { G.hold[i].kg = h.kg; G.hold[i].fresh = h.fresh; }); G.mk.demand = o.demand.slice(); G.seed = o.seed; G.stormDays = pickStormDays(G.seed); G.tot = o.tot || G.tot;
     G.flags = { loaded: true }; return true;
   } catch (e) { return false; }
@@ -1149,7 +1230,7 @@ function loadRun() {
 function getBest() { try { return JSON.parse(store.get(KEY_BEST) || 'null'); } catch (e) { return null; } }
 
 /* ---------------------------------------------------------------- harbour actions (shared by UI and bot) */
-const upLevel = k => G.up[k], upMax = k => UPG[k].cost.length - 1;
+const upLevel = k => G.up[k], upMax = k => Math.min(UPG[k].cost.length - 1, BC().cap[k]);
 function upCost(k) { return UPG[k].cost[G.up[k] + 1]; }
 function buyUpgrade(k, silent) {
   if (G.up[k] >= upMax(k)) return false; const c = upCost(k); if (G.money < c) { if (!silent) toast(t('need'), 'bad'); return false; }
@@ -1157,13 +1238,25 @@ function buyUpgrade(k, silent) {
   if (k === 'engine') { /* bigger tank starts empty-filled by refuel */ }
   saveRun(); return true;
 }
+// shipyard: the current hull is traded in, cash pays what it can (keeping CASH_KEEP for fuel), the rest goes on the loan
+const CASH_KEEP = 1000;
+function boatDeal(i) {
+  const nb = BOATS[i], cost = Math.max(0, nb.price - tradeIn()), cash = Math.min(Math.max(0, G.money - CASH_KEEP), cost), fin = cost - cash;
+  return { cost, cash, fin, ok: i > G.boatClass && G.loan + fin <= LOAN_MAX };
+}
+function buyBoat(i, silent) {
+  const d = boatDeal(i); if (!d.ok) { if (!silent) toast(t('loan_full', { m: money(LOAN_MAX) }), 'bad'); return false; }
+  G.money -= d.cash; G.loan += d.fin; G.boatClass = i; G.hull = 100; G.fuel = Math.min(G.fuel, ST.tank()); G.ice = Math.min(G.ice, ST.ice());
+  setBoatVisual(); if (!silent) { toast(t('toast_newboat', { b: t('b_' + BOATS[i].id) }), 'good'); Snd.horn(); }
+  (G.buys = G.buys || []).push({ d: G.day, boat: BOATS[i].id, cash: d.cash, fin: d.fin }); saveRun(); return true;
+}
 function buyFuel(full) {
-  const tank = UPG.engine.tank[G.up.engine], need = tank - G.fuel; if (need < 0.3) return 0;
+  const tank = ST.tank(), need = tank - G.fuel; if (need < 0.3) return 0;
   const aff = Math.min(need, Math.floor(G.money / FUEL_PRICE)); if (aff <= 0) { toast(t('need'), 'bad'); return 0; }
   G.fuel += aff; G.money -= Math.round(aff * FUEL_PRICE); G.today.fuelCost += aff * FUEL_PRICE; G.flags.lowfuel = false; Snd.click(); saveRun(); return aff;
 }
 function buyIce() {
-  const cap = UPG.ice.cap[G.up.ice], need = cap - G.ice; if (need < 1) return 0;
+  const cap = ST.ice(), need = cap - G.ice; if (need < 1) return 0;
   const aff = Math.min(need, Math.floor(G.money / ICE_PRICE)); if (aff <= 0) { toast(t('need'), 'bad'); return 0; }
   G.ice += aff; G.money -= Math.round(aff * ICE_PRICE); Snd.click(); saveRun(); return aff;
 }
@@ -1229,6 +1322,19 @@ const sunSprite = (() => {
   const c = document.createElement('canvas'); c.width = c.height = 128; const x = c.getContext('2d'); const g = x.createRadialGradient(64, 64, 0, 64, 64, 64);
   g.addColorStop(0, 'rgba(255,250,225,1)'); g.addColorStop(0.12, 'rgba(255,240,200,.95)'); g.addColorStop(0.3, 'rgba(255,220,160,.35)'); g.addColorStop(1, 'rgba(255,200,120,0)'); x.fillStyle = g; x.fillRect(0, 0, 128, 128);
   const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), fog: false, depthWrite: false, blending: THREE.AdditiveBlending, transparent: true })); s.scale.set(520, 520, 1); s.renderOrder = -9; scene.add(s); return s;
+})();
+const SKY_MOON = new THREE.Vector3(-1400, 1900, 900);
+const moonSprite = (() => {
+  const c = document.createElement('canvas'); c.width = c.height = 128; const x = c.getContext('2d'); const g = x.createRadialGradient(64, 64, 0, 64, 64, 64);
+  g.addColorStop(0, 'rgba(235,240,255,1)'); g.addColorStop(0.16, 'rgba(225,232,250,.95)'); g.addColorStop(0.2, 'rgba(160,180,230,.28)'); g.addColorStop(1, 'rgba(120,140,200,0)'); x.fillStyle = g; x.fillRect(0, 0, 128, 128);
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), fog: false, depthWrite: false, transparent: true, opacity: 0 })); s.scale.set(420, 420, 1); s.renderOrder = -9; s.visible = false; scene.add(s); return s;
+})();
+const starPts = (() => {
+  const r = rng(99), n = 900, P = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) { const a = r() * TAU, y = 0.08 + 0.92 * r(), q = Math.sqrt(1 - y * y); P[i * 3] = Math.cos(a) * q * 3000; P[i * 3 + 1] = y * 3000; P[i * 3 + 2] = Math.sin(a) * q * 3000; }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(P, 3));
+  const m = new THREE.Points(g, new THREE.PointsMaterial({ color: 0xdfe8ff, size: 2.2, sizeAttenuation: false, transparent: true, opacity: 0, fog: false, depthWrite: false }));
+  m.renderOrder = -8; m.frustumCulled = false; m.visible = false; scene.add(m); return m;
 })();
 const cloudMesh = (() => {
   const list = []; const r = rng(5);
@@ -1501,14 +1607,15 @@ function updateSeaLife(dt) {
 }
 
 /* ---------- player boat */
-function buildHullGeometry() {
+function buildHullGeometry(pal) {
   const xs = [-4.6, -4.0, -3.0, -2.0, -1.0, 0, 1.0, 2.0, 3.0, 4.0, 4.8, 5.4];
   const half = x => x > 1.5 ? 1.75 * (1 - Math.pow((x - 1.5) / 3.95, 2.0)) : 1.75 * (1 - 0.2 * Math.pow((1.5 - x) / 6.1, 2));
   const sheer = x => 1.0 + 0.55 * Math.pow(Math.max(0, (x - 1.0) / 4.4), 2) + 0.05 * Math.pow(Math.max(0, (-x - 2) / 2.6), 2);
   const keel = x => -0.95 + 0.55 * Math.pow(Math.max(0, (x - 2.0) / 3.4), 2) + 0.35 * Math.pow(Math.max(0, (-x - 2.0) / 2.6), 2);
   const rings = xs.map(x => { const w = Math.max(0.02, half(x)), ys = sheer(x), yb = keel(x), p = [[0, yb], [0.55 * w, yb + 0.08], [0.93 * w, yb + 0.5 * (ys - yb)], [w, ys]]; return { x, p }; });
   const POS = [], COL = [];
-  const white = new THREE.Color('#f6f8fa'), blue = new THREE.Color('#1E88E5'), red = new THREE.Color('#7a2a20'), wood = new THREE.Color('#b98a5a'), wood2 = new THREE.Color('#a67c4e');
+  const P = Object.assign({ top: '#f6f8fa', stripe: '#1E88E5', bottom: '#7a2a20', deck: '#b98a5a', deck2: '#a67c4e' }, pal || {});
+  const white = new THREE.Color(P.top), blue = new THREE.Color(P.stripe), red = new THREE.Color(P.bottom), wood = new THREE.Color(P.deck), wood2 = new THREE.Color(P.deck2);
   const tri = (a, b, c, col) => { POS.push(a[0], a[1], a[2], b[0], b[1], b[2], c[0], c[1], c[2]); for (let i = 0; i < 3; i++) COL.push(col.r, col.g, col.b); };
   const quad = (a, b, c, d, col) => { tri(a, b, c, col); tri(a, c, d, col); };
   // loop of 7 points per station: L3 L2 L1 K R1 R2 R3
@@ -1522,52 +1629,89 @@ function buildHullGeometry() {
   const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(POS, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(COL, 3)); g.computeVertexNormals(); return g;
 }
 const boatGroup = new THREE.Group(); scene.add(boatGroup);
-const crewMeshes = [], flagMesh = (() => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 1.0), new THREE.MeshBasicMaterial({ map: flagTexture(), side: THREE.DoubleSide })); return m; })();
-let boatMesh = null, boatLights = null, radarMesh = null; const boatLightMat = new THREE.MeshBasicMaterial({ vertexColors: true, color: 0x222222 }), boatGlowMat = new THREE.SpriteMaterial({ map: SOFT, color: 0xffb74d, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 });
-function buildBoat() {
-  const L = [buildHullGeometry()];
-  // gunwale rail strips and wheelhouse
-  L.push(gBox(2.8, 2.3, 2.7, -1.4, 2.15, 0, '#f6f8fa'), gBox(3.3, 0.2, 3.2, -1.4, 3.4, 0, '#1565C0'), gBox(2.8, 0.1, 2.7, -1.4, 1.02, 0, '#8a6a46'));
-  L.push(gBox(0.04, 0.8, 1.0, 0.02, 2.6, -0.65, '#1c2c38'), gBox(0.04, 0.8, 1.0, 0.02, 2.6, 0.65, '#1c2c38'), gBox(1.0, 0.7, 0.04, -1.0, 2.6, 1.37, '#1c2c38'), gBox(1.0, 0.7, 0.04, -1.0, 2.6, -1.37, '#1c2c38'), gBox(1.0, 0.7, 0.04, -2.0, 2.6, 1.37, '#1c2c38'), gBox(1.0, 0.7, 0.04, -2.0, 2.6, -1.37, '#1c2c38'));
-  L.push(gCyl(0.2, 0.24, 1.5, 8, -2.2, 4.1, 0.8, '#2b2f33'), gCyl(0.22, 0.22, 0.3, 8, -2.2, 4.8, 0.8, '#c0392b'));
-  L.push(gCyl(0.07, 0.1, 5.4, 6, 1.9, 3.7, 0, '#d8d4c8'), gBox(0.1, 0.1, 2.0, 1.9, 5.7, 0, '#d8d4c8'), gBox(0.2, 0.2, 0.2, 1.9, 6.5, 0, '#ffe08a'), gCyl(0.04, 0.04, 2.0, 5, -1.0, 4.5, -0.6, '#222'));
-  L.push(gCyl(0.06, 0.07, 3.6, 6, 0.8, 3.2, 0, '#d8d4c8', { rz: 0.9 }));      // boom
-  // net drum with orange flanges and a heap of net
-  L.push(gCyl(0.8, 0.8, 1.8, 14, -3.35, 1.95, 0, '#2e6b46', { rx: Math.PI / 2 }), gCyl(1.05, 1.05, 0.14, 14, -3.35, 1.95, 1.0, '#e0791f', { rx: Math.PI / 2 }), gCyl(1.05, 1.05, 0.14, 14, -3.35, 1.95, -1.0, '#e0791f', { rx: Math.PI / 2 }));
-  L.push(gBox(0.2, 1.0, 0.2, -3.35, 1.4, 1.1, '#555'), gBox(0.2, 1.0, 0.2, -3.35, 1.4, -1.1, '#555'));
-  L.push(gSph(1, 3.0, 1.2, 0, '#2b5a46', 1.2, 0.45, 1.0, 8), gSph(0.28, 3.9, 1.2, 0.8, '#ff7a1c'), gSph(0.28, 3.9, 1.2, -0.8, '#ffffff'), gSph(0.28, 3.4, 1.55, 0.2, '#ff7a1c'));
-  // fenders, life rings, bow anchor, coiled hawsers, wheelhouse brow & searchlight (merged, 0 extra draw calls)
-  for (let i = 0; i < 4; i++) { L.push(gSph(0.22, -2 + i * 1.3, 0.55, 1.72, '#222', 1, 1.4, 1, 6), gSph(0.22, -2 + i * 1.3, 0.55, -1.72, '#222', 1, 1.4, 1, 6)); }
-  L.push(gCyl(0.55, 0.55, 0.12, 12, -1.4, 2.4, 1.42, '#ffffff', { rx: Math.PI / 2 }), gCyl(0.3, 0.3, 0.14, 12, -1.4, 2.4, 1.42, '#c0392b', { rx: Math.PI / 2 }));
-  L.push(gCyl(0.55, 0.55, 0.12, 12, -1.4, 2.4, -1.42, '#ffffff', { rx: Math.PI / 2 }), gCyl(0.3, 0.3, 0.14, 12, -1.4, 2.4, -1.42, '#c0392b', { rx: Math.PI / 2 }));
-  L.push(gBox(0.38, 0.08, 2.9, 0.12, 3.08, 0, '#1565C0'), gCyl(0.16, 0.18, 0.32, 8, -0.25, 3.65, 0, '#d8d4c8', { rz: Math.PI / 2 }), gCyl(0.24, 0.28, 0.32, 8, -1.15, 3.62, 0, '#d8d4c8'));
-  L.push(gCyl(0.36, 0.4, 0.2, 8, 4.3, 1.24, 0.52, '#c8a46e'), gCyl(0.32, 0.36, 0.18, 8, 4.3, 1.24, -0.52, '#c8a46e'), gBox(0.45, 0.14, 0.14, 5.05, 0.95, 0.42, '#2b2f33'), gBox(0.45, 0.14, 0.14, 5.05, 0.95, -0.42, '#2b2f33'));
-  L.push(gCyl(0.06, 0.06, 2.0, 5, -4.55, 2.0, 0, '#d8d4c8'), gCyl(0.06, 0.06, 1.6, 5, 5.3, 2.2, 0, '#d8d4c8'));
-  L.push(gCyl(0.07, 0.08, 3.0, 5, -4.2, 3.0, 1.05, '#c9c5b8'), gCyl(0.07, 0.08, 3.0, 5, -4.2, 3.0, -1.05, '#c9c5b8'), gBox(0.14, 0.14, 2.3, -4.2, 4.5, 0, '#c9c5b8'), gSph(0.2, -4.2, 4.2, 0, '#e0791f'));
-  L.push(gBox(0.8, 0.5, 0.7, 0.4, 1.3, 1.0, '#e0791f'), gBox(0.8, 0.5, 0.7, 0.4, 1.3, -1.0, '#e0791f'), gBox(0.8, 0.5, 0.7, 0.4, 1.78, 1.0, '#f2c230'), gBox(0.8, 0.5, 0.7, 0.4, 1.78, -1.0, '#3a7ec2'));
-  boatMesh = new THREE.Mesh(mergeGeometries(L.map(g => (g.index ? g.toNonIndexed() : g)), false), new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }));
-  boatMesh.castShadow = true; boatGroup.add(boatMesh);
-  // spinning marine radar bar on wheelhouse roof (skipped on ?low)
-  radarMesh = lamMesh([gBox(0.22, 0.14, 1.25, 0, 0, 0, '#f6f8fa'), gBox(0.24, 0.08, 0.3, 0, -0.06, 0, '#1565C0')]);
-  radarMesh.position.set(-1.15, 3.84, 0); radarMesh.visible = S.quality !== 'low'; boatGroup.add(radarMesh);
-  const W = '#ffc15a', LL = [gBox(0.06, 0.8, 1.0, 0.045, 2.6, -0.65, W), gBox(0.06, 0.8, 1.0, 0.045, 2.6, 0.65, W), gBox(1.0, 0.7, 0.06, -1.0, 2.6, 1.395, W), gBox(1.0, 0.7, 0.06, -1.0, 2.6, -1.395, W), gBox(1.0, 0.7, 0.06, -2.0, 2.6, 1.395, W), gBox(1.0, 0.7, 0.06, -2.0, 2.6, -1.395, W),
-    gSph(0.2, 1.9, 6.7, 0, '#ffffff'), gSph(0.16, 1.2, 2.0, 1.55, '#ff3b30'), gSph(0.16, 1.2, 2.0, -1.55, '#2ee86a'), gSph(0.22, -3.0, 4.0, 0, '#ffd27a')];
-  boatLights = new THREE.Mesh(mergeGeometries(LL.map(g => (g.index ? g.toNonIndexed() : g)), false), boatLightMat); boatGroup.add(boatLights);
-  const deckGlow = new THREE.Sprite(boatGlowMat); deckGlow.position.set(-3.0, 4.0, 0); deckGlow.scale.set(5.5, 5.5, 1); boatGroup.add(deckGlow);
-  flagMesh.position.set(-4.55, 2.5, 0.75); flagMesh.rotation.y = Math.PI / 2; boatGroup.add(flagMesh);
-  // crew
-  const slots = [[-2.6, 1.05, 1.05], [-3.3, 1.05, -1.35], [1.8, 1.05, 0.9]];
-  for (let i = 0; i < 3; i++) {
-    const m = lamMesh([gCyl(0.28, 0.32, 0.95, 8, 0, 0.7, 0, i === 1 ? '#e8742a' : '#f2c230'), gSph(0.24, 0, 1.42, 0, '#d9a77f'), gCyl(0.25, 0.25, 0.14, 8, 0, 1.62, 0, '#f2c230'), gCyl(0.38, 0.38, 0.05, 8, 0, 1.56, 0, '#f2c230'), gBox(0.18, 0.18, 0.5, 0.2, 0.9, 0.3, '#f2c230'), gBox(0.18, 0.18, 0.5, 0.2, 0.9, -0.3, '#f2c230')]);
-    m.position.set(...slots[i]); m.userData.y0 = slots[i][1]; m.castShadow = true; m.visible = false; boatGroup.add(m); crewMeshes.push(m);
+const flagMesh = (() => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 1.0), new THREE.MeshBasicMaterial({ map: flagTexture(), side: THREE.DoubleSide })); return m; })();
+const boatLightMat = new THREE.MeshBasicMaterial({ vertexColors: true, color: 0x222222 }), boatGlowMat = new THREE.SpriteMaterial({ map: SOFT, color: 0xffb74d, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 });
+const RIGS = []; let RIG = null; // one prebuilt rig (group) per boat class, only the current one is visible
+const mergedMesh = (L, mat) => new THREE.Mesh(mergeGeometries(L.map(g => (g.index ? g.toNonIndexed() : g)), false), mat);
+function crewMesh(i) { return lamMesh([gCyl(0.28, 0.32, 0.95, 8, 0, 0.7, 0, i === 1 ? '#e8742a' : '#f2c230'), gSph(0.24, 0, 1.42, 0, '#d9a77f'), gCyl(0.25, 0.25, 0.14, 8, 0, 1.62, 0, '#f2c230'), gCyl(0.38, 0.38, 0.05, 8, 0, 1.56, 0, '#f2c230'), gBox(0.18, 0.18, 0.5, 0.2, 0.9, 0.3, '#f2c230'), gBox(0.18, 0.18, 0.5, 0.2, 0.9, -0.3, '#f2c230')]); }
+// wheelhouse block shared by taka / trawler / purse seiner (x = cabin centre); window lights go to LL
+function cabin(L, LL, x, roof, W) {
+  L.push(gBox(2.8, 2.3, 2.7, x, 2.15, 0, '#f6f8fa'), gBox(3.3, 0.2, 3.2, x, 3.4, 0, roof), gBox(2.8, 0.1, 2.7, x, 1.02, 0, '#8a6a46'));
+  L.push(gBox(0.04, 0.8, 1.0, x + 1.42, 2.6, -0.65, '#1c2c38'), gBox(0.04, 0.8, 1.0, x + 1.42, 2.6, 0.65, '#1c2c38'), gBox(1.0, 0.7, 0.04, x + 0.4, 2.6, 1.37, '#1c2c38'), gBox(1.0, 0.7, 0.04, x + 0.4, 2.6, -1.37, '#1c2c38'), gBox(1.0, 0.7, 0.04, x - 0.6, 2.6, 1.37, '#1c2c38'), gBox(1.0, 0.7, 0.04, x - 0.6, 2.6, -1.37, '#1c2c38'));
+  L.push(gCyl(0.2, 0.24, 1.5, 8, x - 0.8, 4.1, 0.8, '#2b2f33'), gCyl(0.22, 0.22, 0.3, 8, x - 0.8, 4.8, 0.8, '#c0392b'));
+  L.push(gCyl(0.55, 0.55, 0.12, 12, x, 2.4, 1.42, '#ffffff', { rx: Math.PI / 2 }), gCyl(0.3, 0.3, 0.14, 12, x, 2.4, 1.42, '#c0392b', { rx: Math.PI / 2 }));
+  L.push(gCyl(0.55, 0.55, 0.12, 12, x, 2.4, -1.42, '#ffffff', { rx: Math.PI / 2 }), gCyl(0.3, 0.3, 0.14, 12, x, 2.4, -1.42, '#c0392b', { rx: Math.PI / 2 }));
+  L.push(gBox(0.38, 0.08, 2.9, x + 1.52, 3.08, 0, roof), gCyl(0.16, 0.18, 0.32, 8, x + 1.15, 3.65, 0, '#d8d4c8', { rz: Math.PI / 2 }), gCyl(0.24, 0.28, 0.32, 8, x + 0.25, 3.62, 0, '#d8d4c8'));
+  LL.push(gBox(0.06, 0.8, 1.0, x + 1.445, 2.6, -0.65, W), gBox(0.06, 0.8, 1.0, x + 1.445, 2.6, 0.65, W), gBox(1.0, 0.7, 0.06, x + 0.4, 2.6, 1.395, W), gBox(1.0, 0.7, 0.06, x + 0.4, 2.6, -1.395, W), gBox(1.0, 0.7, 0.06, x - 0.6, 2.6, 1.395, W), gBox(1.0, 0.7, 0.06, x - 0.6, 2.6, -1.395, W));
+}
+function makeRig(id) {
+  const L = [], LL = [], W = '#ffc15a', rig = { g: new THREE.Group(), crew: [], radar: null, flag: [-4.55, 2.5, 0.75], slots: [], glow: [-3.0, 4.0, 0] };
+  const fenders = () => { for (let i = 0; i < 4; i++) L.push(gSph(0.22, -2 + i * 1.3, 0.55, 1.72, '#222', 1, 1.4, 1, 6), gSph(0.22, -2 + i * 1.3, 0.55, -1.72, '#222', 1, 1.4, 1, 6)); };
+  const nav = (x, y) => LL.push(gSph(0.16, x, y, 1.55, '#ff3b30'), gSph(0.16, x, y, -1.55, '#2ee86a'));
+  if (id === 'sandal') { // open wooden boat: thwarts, outboard, a pressure lamp on a pole for night fishing
+    L.push(buildHullGeometry({ top: '#2e7d4f', stripe: '#f2efe6', bottom: '#8a3b22', deck: '#9a6b3f', deck2: '#8a5d35' }));
+    for (const x of [-2.6, -0.4, 1.8]) L.push(gBox(0.5, 0.12, 3.1, x, 1.0, 0, '#c8a46e'));
+    L.push(gBox(0.7, 0.9, 0.5, -4.9, 1.2, 0, '#2b2f33'), gBox(0.25, 1.4, 0.18, -5.0, 0.4, 0, '#2b2f33'), gBox(0.5, 0.35, 0.45, -4.85, 1.75, 0, '#c0392b'));
+    L.push(gCyl(0.05, 0.05, 2.8, 5, 3.9, 2.4, 0, '#6b4a2b'), gSph(1, 0.6, 1.25, 0, '#2b5a46', 1.1, 0.4, 0.9, 8), gSph(0.25, 1.3, 1.3, 0.6, '#ff7a1c'));
+    L.push(gCyl(0.05, 0.05, 3.2, 5, 0.6, 1.4, 1.65, '#c8a46e', { rz: 1.35 }), gCyl(0.05, 0.05, 3.2, 5, 0.6, 1.4, -1.65, '#c8a46e', { rz: 1.35 })); // oars
+    LL.push(gSph(0.24, 3.9, 3.85, 0, '#fff2c0')); rig.glow = [3.9, 3.9, 0]; rig.flag = [-4.4, 1.9, 0.6]; rig.slots = [[-1.6, 1.0, 0.7]];
+  } else {
+    const pal = id === 'taka' ? {} : id === 'trol' ? { top: '#c0392b', stripe: '#f6f8fa', bottom: '#2b2f33' } : { top: '#1d3557', stripe: '#f6f8fa', bottom: '#8a1c1c', deck: '#7d8a90', deck2: '#6c787e' };
+    L.push(buildHullGeometry(pal)); fenders();
+    if (id === 'taka') { // classic Black Sea taka: wheelhouse aft of midships, mast forward, heaped net
+      cabin(L, LL, -1.4, '#1565C0', W);
+      L.push(gCyl(0.07, 0.1, 5.4, 6, 1.9, 3.7, 0, '#d8d4c8'), gBox(0.1, 0.1, 2.0, 1.9, 5.7, 0, '#d8d4c8'), gBox(0.2, 0.2, 0.2, 1.9, 6.5, 0, '#ffe08a'), gCyl(0.06, 0.07, 3.6, 6, 0.8, 3.2, 0, '#d8d4c8', { rz: 0.9 }));
+      L.push(gSph(1, -3.3, 1.25, 0, '#2b5a46', 1.2, 0.5, 1.1, 8), gSph(0.28, -3.0, 1.6, 0.8, '#ff7a1c'), gSph(0.28, -3.6, 1.6, -0.6, '#ffffff'));
+      L.push(gBox(0.8, 0.5, 0.7, 0.4, 1.3, 1.0, '#e0791f'), gBox(0.8, 0.5, 0.7, 0.4, 1.3, -1.0, '#e0791f'), gBox(0.8, 0.5, 0.7, 0.4, 1.78, 1.0, '#f2c230'));
+      LL.push(gSph(0.2, 1.9, 6.7, 0, '#ffffff')); nav(1.2, 2.0); rig.glow = [1.9, 5.0, 0]; rig.slots = [[-3.0, 1.05, 1.05], [1.8, 1.05, 0.9]];
+    } else if (id === 'trol') { // trawler: wheelhouse forward, stern A-frame gantry, otter boards, winch drums
+      cabin(L, LL, 1.6, '#2b2f33', W);
+      L.push(gBox(0.3, 4.2, 0.3, -4.2, 3.0, 1.4, '#e0791f'), gBox(0.3, 4.2, 0.3, -4.2, 3.0, -1.4, '#e0791f'), gBox(0.35, 0.35, 3.2, -4.2, 5.1, 0, '#e0791f'));
+      L.push(gBox(1.4, 0.9, 0.15, -2.6, 1.6, 1.8, '#3a4248'), gBox(1.4, 0.9, 0.15, -2.6, 1.6, -1.8, '#3a4248'));
+      L.push(gCyl(0.55, 0.55, 0.9, 12, -1.5, 1.6, 0.8, '#2e6b46', { rx: Math.PI / 2 }), gCyl(0.55, 0.55, 0.9, 12, -1.5, 1.6, -0.8, '#2e6b46', { rx: Math.PI / 2 }));
+      L.push(gCyl(0.07, 0.1, 4.6, 6, 3.6, 3.3, 0, '#d8d4c8'), gBox(0.1, 0.1, 1.8, 3.6, 5.1, 0, '#d8d4c8'), gSph(0.6, -3.4, 1.3, 0, '#7a6a3a', 1.4, 0.5, 1.2, 8));
+      LL.push(gSph(0.2, 3.6, 5.7, 0, '#ffffff'), gSph(0.22, -4.2, 5.4, 0, '#ffd27a')); nav(2.6, 2.0); rig.glow = [-4.2, 5.2, 0]; rig.flag = [-4.6, 2.4, 0.4];
+      rig.slots = [[-2.6, 1.05, 1.05], [-3.3, 1.05, -1.0], [0.0, 1.05, 0.9]];
+    } else { // gırgır: the original purse seiner with net drum, power block, light masts and a skiff on the stern
+      cabin(L, LL, -1.4, '#1565C0', W);
+      L.push(gCyl(0.07, 0.1, 5.4, 6, 1.9, 3.7, 0, '#d8d4c8'), gBox(0.1, 0.1, 2.0, 1.9, 5.7, 0, '#d8d4c8'), gBox(0.2, 0.2, 0.2, 1.9, 6.5, 0, '#ffe08a'), gCyl(0.04, 0.04, 2.0, 5, -1.0, 4.5, -0.6, '#222'));
+      L.push(gCyl(0.06, 0.07, 3.6, 6, 0.8, 3.2, 0, '#d8d4c8', { rz: 0.9 }));
+      L.push(gCyl(0.8, 0.8, 1.8, 14, -3.35, 1.95, 0, '#2e6b46', { rx: Math.PI / 2 }), gCyl(1.05, 1.05, 0.14, 14, -3.35, 1.95, 1.0, '#e0791f', { rx: Math.PI / 2 }), gCyl(1.05, 1.05, 0.14, 14, -3.35, 1.95, -1.0, '#e0791f', { rx: Math.PI / 2 }));
+      L.push(gBox(0.2, 1.0, 0.2, -3.35, 1.4, 1.1, '#555'), gBox(0.2, 1.0, 0.2, -3.35, 1.4, -1.1, '#555'));
+      L.push(gSph(1, 3.0, 1.2, 0, '#2b5a46', 1.2, 0.45, 1.0, 8), gSph(0.28, 3.9, 1.2, 0.8, '#ff7a1c'), gSph(0.28, 3.9, 1.2, -0.8, '#ffffff'), gSph(0.28, 3.4, 1.55, 0.2, '#ff7a1c'));
+      L.push(gCyl(0.36, 0.4, 0.2, 8, 4.3, 1.24, 0.52, '#c8a46e'), gCyl(0.32, 0.36, 0.18, 8, 4.3, 1.24, -0.52, '#c8a46e'), gBox(0.45, 0.14, 0.14, 5.05, 0.95, 0.42, '#2b2f33'), gBox(0.45, 0.14, 0.14, 5.05, 0.95, -0.42, '#2b2f33'));
+      L.push(gCyl(0.06, 0.06, 2.0, 5, -4.55, 2.0, 0, '#d8d4c8'), gCyl(0.06, 0.06, 1.6, 5, 5.3, 2.2, 0, '#d8d4c8'));
+      L.push(gCyl(0.07, 0.08, 3.0, 5, -4.2, 3.0, 1.05, '#c9c5b8'), gCyl(0.07, 0.08, 3.0, 5, -4.2, 3.0, -1.05, '#c9c5b8'), gBox(0.14, 0.14, 2.3, -4.2, 4.5, 0, '#c9c5b8'), gSph(0.2, -4.2, 4.2, 0, '#e0791f'));
+      L.push(gBox(0.8, 0.5, 0.7, 0.4, 1.3, 1.0, '#e0791f'), gBox(0.8, 0.5, 0.7, 0.4, 1.3, -1.0, '#e0791f'), gBox(0.8, 0.5, 0.7, 0.4, 1.78, 1.0, '#f2c230'), gBox(0.8, 0.5, 0.7, 0.4, 1.78, -1.0, '#3a7ec2'));
+      for (const x of [0.2, 3.2]) { L.push(gCyl(0.05, 0.05, 3.4, 5, x, 2.9, 1.55, '#c9c5b8'), gCyl(0.05, 0.05, 3.4, 5, x, 2.9, -1.55, '#c9c5b8')); LL.push(gSph(0.18, x, 4.6, 1.55, '#fff2c0'), gSph(0.18, x, 4.6, -1.55, '#fff2c0')); } // lamp poles (ışıkçı)
+      L.push(gBox(1.6, 0.5, 0.9, -5.6, 0.7, 0, '#e0791f')); // skiff riding on the stern
+      LL.push(gSph(0.2, 1.9, 6.7, 0, '#ffffff'), gSph(0.22, -3.0, 4.0, 0, '#ffd27a')); nav(1.2, 2.0);
+      rig.slots = [[-2.6, 1.05, 1.05], [-3.3, 1.05, -1.35], [1.8, 1.05, 0.9]];
+      rig.radar = lamMesh([gBox(0.22, 0.14, 1.25, 0, 0, 0, '#f6f8fa'), gBox(0.24, 0.08, 0.3, 0, -0.06, 0, '#1565C0')]); rig.radar.position.set(-1.15, 3.84, 0);
+    }
+    if (id === 'taka' || id === 'trol') { rig.radar = lamMesh([gBox(0.2, 0.12, 1.0, 0, 0, 0, '#f6f8fa')]); rig.radar.position.set(id === 'taka' ? -1.15 : 1.85, 3.84, 0); }
   }
+  const body = mergedMesh(L, new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide })); body.castShadow = true; rig.g.add(body);
+  rig.g.add(mergedMesh(LL, boatLightMat));
+  if (rig.radar) rig.g.add(rig.radar);
+  const glow = new THREE.Sprite(boatGlowMat); glow.position.set(...rig.glow); glow.scale.set(5.5, 5.5, 1); rig.g.add(glow);
+  rig.slots.forEach((p, i) => { const m = crewMesh(i); m.position.set(...p); m.userData.y0 = p[1]; m.castShadow = true; m.visible = false; rig.g.add(m); rig.crew.push(m); });
+  return rig;
+}
+function buildBoat() {
+  for (const b of BOATS) { const r = makeRig(b.id); r.g.scale.setScalar(b.scale); r.g.visible = false; boatGroup.add(r.g); RIGS.push(r); }
+  setBoatVisual();
+}
+function setBoatVisual() {
+  if (!RIGS.length) return; RIGS.forEach(r => { r.g.visible = false; }); RIG = RIGS[G.boatClass] || RIGS[0]; RIG.g.visible = true;
+  RIG.g.add(flagMesh); flagMesh.position.set(...RIG.flag); flagMesh.rotation.y = Math.PI / 2;
 }
 const _e = new THREE.Euler();
 function placeBoat(dt) {
   const b = G.boat; boatGroup.position.set(b.x, b.y + 0.12, b.z); _e.set(b.roll, -b.h, b.pitch, 'YZX'); boatGroup.rotation.copy(_e);
-  const nc = G.up.crew; crewMeshes.forEach((m, i) => { m.visible = i < nc; if (m.visible) { const hauling = G.net.phase === 'haul' || G.net.phase === 'set'; const ph = VT * 4 + i * 2; m.position.y = m.userData.y0 + (hauling ? Math.abs(Math.sin(ph)) * 0.12 : 0); m.rotation.x = hauling ? Math.sin(ph) * 0.35 : 0; m.rotation.z = hauling ? 0.15 : 0; } });
+  if (!RIG) return; const nc = G.up.crew; RIG.crew.forEach((m, i) => { m.visible = i < nc; if (m.visible) { const hauling = G.net.phase === 'haul' || G.net.phase === 'set'; const ph = VT * 4 + i * 2; m.position.y = m.userData.y0 + (hauling ? Math.abs(Math.sin(ph)) * 0.12 : 0); m.rotation.x = hauling ? Math.sin(ph) * 0.35 : 0; m.rotation.z = hauling ? 0.15 : 0; } });
   flagMesh.rotation.y = Math.PI / 2 + Math.sin(VT * 5) * 0.18; flagMesh.scale.x = 0.9 + Math.sin(VT * 7) * 0.08;
-  if (radarMesh) { radarMesh.visible = S.quality !== 'low'; if (radarMesh.visible) radarMesh.rotation.y = VT * 2.8; }
+  const rm = RIG.radar; if (rm) { rm.visible = S.quality !== 'low'; if (rm.visible) rm.rotation.y = VT * 2.8; }
 }
 function boatWaves(dt) {
   const b = G.boat, fx = Math.cos(b.h), fz = Math.sin(b.h), sxv = -fz, szv = fx;
@@ -1719,18 +1863,27 @@ const SKY = { zen: new THREE.Color(), hor: new THREE.Color(), fog: new THREE.Col
 const _sd = new THREE.Vector3();
 let skyT = 0;
 function updateEnv(dt) {
-  const tm = G.mode === 'menu' ? 520 : G.tmin, dayF = clamp((tm - T0) / (T1 - T0), 0, 1), el = 0.16 + 0.95 * Math.sin(Math.PI * dayF), az = dayF * Math.PI;
+  // 24 h sky: the sun is up 06:00-19:00, then a moon lights the sea; `dark` drives sky, light, water and lamps
+  const tm = G.mode === 'menu' ? 520 : G.tmin, hr = hourOf(tm), isDay = hr >= 6 && hr <= 19;
+  const dayF = (hr - 6) / 13, nf2 = (hr > 19 ? hr - 19 : hr + 5) / 11;
+  const el = isDay ? 0.03 + 0.95 * Math.sin(Math.PI * dayF) : -0.03 - 0.6 * Math.sin(Math.PI * nf2), az = isDay ? dayF * Math.PI : Math.PI + nf2 * Math.PI;
+  const sinEl = Math.sin(el), dark = 1 - sstep(-0.25, 0.12, sinEl); // sunset glow 18-19 h, dark from about 20:00 to 05:00
   const w = G.wx, over = clamp(w.s * 0.95 + w.fogMorning * 0.45, 0, 1);
-  const sd = _sd.set(Math.cos(el) * Math.cos(az), Math.sin(el), Math.cos(el) * Math.sin(az) * 0.8 + 0.1).normalize();
-  const warm = 1 - sstep(0.1, 0.5, Math.sin(el));
-  sun.color.setRGB(1, lerp(0.93, 0.68, warm), lerp(0.82, 0.42, warm)); sun.intensity = lerp(2.6, 0.5, over) * (0.45 + 0.55 * Math.sin(el));
-  hemi.intensity = lerp(0.9, 0.78, over); hemi.color.setRGB(lerp(0.72, 0.6, over), lerp(0.82, 0.7, over), lerp(0.92, 0.8, over)); hemi.groundColor.setRGB(0.2, 0.3, 0.27);
-  SKY.zen.setRGB(0.2, 0.38, 0.55).lerp(SKY.tmp.setRGB(0.86, 0.56, 0.4), warm * 0.45).lerp(SKY.tmp.setRGB(0.36, 0.43, 0.49), over);
+  const sd = _sd.set(Math.cos(el) * Math.cos(az), sinEl, Math.cos(el) * Math.sin(az) * 0.8 + 0.1).normalize();
+  const warm = (1 - sstep(0.1, 0.5, sinEl)) * (1 - 0.85 * dark);
+  sun.color.setRGB(1, lerp(0.93, 0.68, warm), lerp(0.82, 0.42, warm)).lerp(SKY.tmp.setRGB(0.55, 0.66, 0.95), dark);
+  sun.intensity = lerp(2.6, 0.5, over) * (0.45 + 0.55 * Math.max(0, sinEl)) * (1 - dark) + dark * 0.42 * (1 - 0.6 * over);
+  hemi.intensity = lerp(0.9, 0.78, over) * (1 - 0.7 * dark); hemi.color.setRGB(lerp(0.72, 0.6, over), lerp(0.82, 0.7, over), lerp(0.92, 0.8, over)).lerp(SKY.tmp.setRGB(0.32, 0.4, 0.62), dark); hemi.groundColor.setRGB(0.2, 0.3, 0.27).multiplyScalar(1 - 0.7 * dark);
+  SKY.zen.setRGB(0.2, 0.38, 0.55).lerp(SKY.tmp.setRGB(0.86, 0.56, 0.4), warm * 0.45).lerp(SKY.tmp.setRGB(0.36, 0.43, 0.49), over).lerp(SKY.tmp.setRGB(0.012, 0.022, 0.055), dark);
   SKY.hor.setRGB(0.62, 0.72, 0.76).lerp(SKY.tmp.setRGB(1.0, 0.72, 0.42), warm * 0.8).lerp(SKY.tmp.setRGB(0.5, 0.56, 0.6), over * 0.9);
   if (w.fogMorning > 0.2) SKY.hor.lerp(SKY.tmp.setRGB(0.36, 0.45, 0.5), w.fogMorning * 0.55); // slate-blue mist, never milky white
-  scene.fog.color.copy(SKY.hor); scene.fog.density = Math.min(w.fog, 0.0065) * (1 + 0.3 * warm);
-  waterBase.setRGB(0.04, 0.14, 0.19).multiplyScalar(lerp(1.05, 0.6, over) * (0.72 + 0.28 * Math.sin(el))); farSea.material.color.copy(waterBase).multiplyScalar(1.0);
-  cloudMesh.material.color.setRGB(lerp(1, 0.42, w.s), lerp(1, 0.44, w.s), lerp(1, 0.48, w.s)); cloudMesh.position.set(camera.position.x, 0, camera.position.z);
+  SKY.hor.lerp(SKY.tmp.setRGB(0.05, 0.075, 0.12), dark * 0.92);
+  scene.fog.color.copy(SKY.hor); scene.fog.density = Math.min(w.fog + dark * 0.0012, 0.0072) * (1 + 0.3 * warm);
+  waterBase.setRGB(0.04, 0.14, 0.19).multiplyScalar(lerp(1.05, 0.6, over) * (0.72 + 0.28 * Math.max(0, sinEl)) * lerp(1, 0.4, dark)); farSea.material.color.copy(waterBase).multiplyScalar(1.0);
+  cloudMesh.material.color.setRGB(lerp(1, 0.42, w.s), lerp(1, 0.44, w.s), lerp(1, 0.48, w.s)).multiplyScalar(lerp(1, 0.16, dark)); cloudMesh.position.set(camera.position.x, 0, camera.position.z);
+  foamCol.setRGB(0.9, 0.94, 0.95).multiplyScalar(lerp(1, 0.32, dark)); if (foam) { foam.m.material.color.setScalar(lerp(1, 0.35, dark)); spray.m.material.color.setScalar(lerp(1, 0.4, dark)); }
+  starPts.position.copy(camera.position); starPts.material.opacity = dark * (1 - over) * 0.9; starPts.visible = starPts.material.opacity > 0.02;
+  moonSprite.position.copy(camera.position).add(SKY_MOON); moonSprite.material.opacity = dark * (1 - 0.8 * over); moonSprite.visible = moonSprite.material.opacity > 0.03;
   skyT -= dt; if (skyT <= 0) {
     skyT = 0.25; const g = skyCtx.createLinearGradient(0, 0, 0, 128);
     g.addColorStop(0, '#' + SKY.zen.getHexString()); g.addColorStop(0.32, '#' + SKY.tmp.copy(SKY.zen).lerp(SKY.hor, 0.55).getHexString()); g.addColorStop(0.5, '#' + SKY.hor.getHexString()); g.addColorStop(1, '#' + SKY.hor.getHexString());
@@ -1738,11 +1891,12 @@ function updateEnv(dt) {
   }
   { const base = Math.min(0.62, 0.3 + 0.28 * w.fogMorning + 0.2 * w.s); for (const m of mistRings) { m.position.set(camera.position.x, m.userData.h * 0.22, camera.position.z); m.material.color.copy(SKY.hor).lerp(SKY.tmp.setRGB(0.23, 0.3, 0.35), 0.35); m.material.opacity = m.userData.op * base; m.userData.tex.offset.x += m.userData.sp * dt; }
     mistBankMat.color.copy(SKY.hor).lerp(SKY.tmp.setRGB(0.23, 0.3, 0.35), 0.3); mistBankMat.opacity = Math.min(0.32, 0.14 + 0.16 * w.fogMorning + 0.1 * w.s); for (const b of mistBanks) b.position.y += Math.sin(VT * 0.2 + b.userData.ph) * 0.004; }
-  sky.position.copy(camera.position); sunSprite.position.copy(camera.position).addScaledVector(sd, 3000); sunSprite.material.opacity = (1 - over) * 0.8; sunSprite.visible = sunSprite.material.opacity > 0.03 && sd.y > 0.02;
-  const b = G.boat; sun.position.set(b.x + sd.x * 90, sd.y * 90, b.z + sd.z * 90); sun.target.position.set(b.x, 0, b.z); sun.target.updateMatrixWorld();
-  { const dk = clamp(over * 0.9 + warm * 0.8 + w.fogMorning * 0.5, 0, 1); boatLightMat.color.setScalar(0.2 + 0.8 * dk); boatGlowMat.opacity = 0.04 + 0.3 * dk; }
-  lampGlowMat.opacity = 0.18 + 0.7 * clamp(over * 0.9 + warm * 0.8 + w.fogMorning * 0.5, 0, 1);
-  if (lighthouseLamp) { const on = Math.sin(VT * 2.6) > 0.1 || w.s > 0.2 ? 1 : 0.15; blinkMat.emissiveIntensity = (0.6 + 1.4 * (over + warm * 0.5)) * on; beaconMat.emissiveIntensity = 0.6 + 0.6 * Math.sin(VT * 3); }
+  sky.position.copy(camera.position); sunSprite.position.copy(camera.position).addScaledVector(sd, 3000); sunSprite.material.opacity = (1 - over) * 0.8 * (1 - dark); sunSprite.visible = sunSprite.material.opacity > 0.03 && sd.y > 0.02;
+  const ld = dark > 0.5 ? _sd.copy(SKY_MOON).normalize() : sd; // moonlight casts the shadows at night
+  const b = G.boat; sun.position.set(b.x + ld.x * 90, ld.y * 90, b.z + ld.z * 90); sun.target.position.set(b.x, 0, b.z); sun.target.updateMatrixWorld();
+  { const dk = clamp(over * 0.9 + warm * 0.8 + w.fogMorning * 0.5 + dark, 0, 1); boatLightMat.color.setScalar(0.2 + 0.8 * dk); boatGlowMat.opacity = 0.04 + 0.3 * dk + 0.35 * dark; boatGlowMat.color.setRGB(1, lerp(0.72, 0.92, dark), lerp(0.3, 0.7, dark)); }
+  lampGlowMat.opacity = 0.18 + 0.7 * clamp(over * 0.9 + warm * 0.8 + w.fogMorning * 0.5 + dark, 0, 1);
+  if (lighthouseLamp) { const on = Math.sin(VT * 2.6) > 0.1 || w.s > 0.2 ? 1 : 0.15; blinkMat.emissiveIntensity = (0.6 + 1.4 * (over + warm * 0.5 + dark)) * on; beaconMat.emissiveIntensity = 0.6 + 0.6 * Math.sin(VT * 3); }
   dockRing.visible = dockBeam.visible = (G.mode === 'play'); const pulse = 1 + Math.sin(VT * 3) * 0.06; dockRing.scale.set(pulse, 1, pulse); dockRing.material.opacity = canDock() ? 0.95 : 0.55; dockBeam.material.opacity = 0.18 + 0.08 * Math.sin(VT * 2);
 }
 function updateCamera(dt) {
@@ -1792,6 +1946,7 @@ function weatherInfo() {
   else if (w.phase === 'after') { icon = 'i-storm'; t1 = t('w_after'); }
   else if (w.fogMorning > 0.25) { icon = 'i-fog'; t1 = t('w_mist'); }
   else if (w.wind > 7.5) { icon = 'i-wind'; t1 = t('w_wind'); }
+  else if (nightF() > 0.5) { icon = 'i-moon'; t1 = t('w_night'); }
   return { icon, t1, t2, cls };
 }
 function refreshUI(force) {
@@ -1799,12 +1954,12 @@ function refreshUI(force) {
   setText('sDay', G.day + '/' + DAYS); setText('sClock', clockStr(G.tmin)); setText('sMoney', money(G.money)); setText('sLoan', money(G.loan));
   const wi = weatherInfo(); const wc = $('wcard'); ICON_USE(wc.querySelector('svg')).setAttribute('href', '#' + wi.icon); wc.className = 'glass ' + wi.cls; setText('wT1', wi.t1); setText('wT2', wi.t2);
   const [gv, gn] = goalProg(); setText('goalT', ' ' + goalText()); $('goalB').style.width = (clamp(gv / gn, 0, 1) * 100).toFixed(0) + '%'; $('goal').classList.toggle('done', !!(G.goal && G.goal.done));
-  const b = G.boat, tank = UPG.engine.tank[G.up.engine], cap = UPG.hold.cap[G.up.hold], hk = holdTotal();
+  const b = G.boat, tank = ST.tank(), cap = ST.hold(), hk = holdTotal();
   setText('gSpd', (Math.abs(b.v) * 1.944).toFixed(1)); setText('gSpdU', t('knots')); setText('gWindT', G.wx.wind.toFixed(0) + ' ' + t('ms'));
   setText('gFuel', G.fuel.toFixed(0) + t('unit_l')); setBar('gFuelB', G.fuel / tank, G.fuel / tank < 0.2);
   setText('gHold', Math.round(hk) + ''); setBar('gHoldB', hk / cap, false);
   setText('gFresh', hk > 0 ? Math.round(holdFresh()) + '%' : '-'); setBar('gFreshB', hk > 0 ? holdFresh() / 100 : 1, false);
-  setText('gIce', Math.round(G.ice) + ''); setBar('gIceB', G.ice / UPG.ice.cap[G.up.ice], G.ice < 15);
+  setText('gIce', Math.round(G.ice) + ''); setBar('gIceB', G.ice / ST.ice(), G.ice < 15);
   setText('gHull', Math.round(G.hull) + '%'); setBar('gHullB', G.hull / 100, G.hull < 30);
   // action buttons
   const n = G.net, dockable = canDock(), inB = inBasin(b.x, b.z), playing = G.mode === 'play';
@@ -1852,7 +2007,7 @@ function drawSonar(dt) {
   const sg = sctx.createLinearGradient(0, 0, 70, 0); sg.addColorStop(0, 'rgba(120,255,200,0)'); sg.addColorStop(1, 'rgba(120,255,200,.0)');
   sctx.beginPath(); sctx.moveTo(0, 0); sctx.arc(0, 0, rad, -0.5, 0); sctx.closePath(); const rg = sctx.createRadialGradient(0, 0, 0, 0, 0, rad); rg.addColorStop(0, 'rgba(0,230,118,.0)'); rg.addColorStop(1, 'rgba(0,230,118,.34)'); sctx.fillStyle = rg; sctx.fill(); sctx.restore();
   // fish
-  const nd = G.net.phase === 'stowed' ? UPG.net.dep[G.up.net] : G.net.depth;
+  const nd = G.net.phase === 'stowed' ? ST.netDep() : G.net.depth;
   for (const s of G.schools) {
     const col = SPECIES[s.sp].col;
     for (const f of s.mem) {
@@ -1923,26 +2078,34 @@ function drawMap() {
 let hTab = 'market';
 const SP_IC = ['i-fish', 'i-fish', 'i-fish', 'i-fish'];
 function svgIc(id, style) { return `<svg class="ic" ${style ? 'style="' + style + '"' : ''}><use href="#${id}"/></svg>`; }
-function expectedValue(i) { const h = G.hold[i]; if (h.kg < 0.5) return 0; const sp = SPECIES[i], d0 = G.mk.demand[i], d1 = Math.max(0.25, d0 - h.kg / sp.cap), fm = 0.35 + 0.65 * h.fresh / 100; return Math.round(h.kg * sp.price * G.mk.pm[i] * (d0 + d1) / 2 * fm); }
+function expectedValue(i) { const h = G.hold[i]; if (h.kg < 0.5) return 0; const sp = SPECIES[i], d0 = G.mk.demand[i], d1 = Math.max(0.15, d0 - h.kg / sp.cap), fm = 0.35 + 0.65 * h.fresh / 100; return Math.round(h.kg * sp.price * G.mk.pm[i] * (d0 + d1) / 2 * fm); }
 function renderHarbor() {
   const el = $('hBody'); const act = document.activeElement && document.activeElement.dataset ? (document.activeElement.dataset.act || '') + '|' + (document.activeElement.dataset.arg || '') : '';
   let h = '';
   if (hTab === 'market') {
-    let total = 0;
+    let total = 0; const open = marketOpen();
+    if (!open) h += `<div class="item"><div class="dot">${svgIc('i-clock')}</div><div><b>${t('market_closed')}</b></div><span></span></div>`;
     for (let i = 0; i < 4; i++) {
       const sp = SPECIES[i], hd = G.hold[i], p = unitPrice(i), pv = G.mk.prev[i], tr = p > pv * 1.02 ? 'up' : p < pv * 0.98 ? 'down' : '', ev = expectedValue(i); total += ev;
       const av = availability(i, G.day);
-      h += `<div class="item"><div class="dot" style="color:${sp.col}">${svgIc('i-fish')}</div><div><b>${t('sp_' + sp.id)}</b> <span class="pr ${tr}">${money(p)}/kg ${tr === 'up' ? '&#9650;' : tr === 'down' ? '&#9660;' : ''}</span><small>${hd.kg >= 0.5 ? t('inhold', { kg: Math.round(hd.kg), f: Math.round(hd.fresh) }) + ' · ' + money(ev) : t('empty')} · ${av > 0.7 ? t('season_hi') : av < 0.4 ? t('season_lo') : ''}</small><div class="dbar" title="${t('demand')}"><i style="width:${clamp(G.mk.demand[i] / 1.25, 0, 1) * 100}%"></i></div></div><button class="btn sm" data-act="sell" data-arg="${i}" ${hd.kg < 0.5 ? 'disabled' : ''}>${t('sell')}</button></div>`;
+      h += `<div class="item"><div class="dot" style="color:${sp.col}">${svgIc('i-fish')}</div><div><b>${t('sp_' + sp.id)}</b> <span class="pr ${tr}">${money(p)}/kg ${tr === 'up' ? '&#9650;' : tr === 'down' ? '&#9660;' : ''}</span><small>${hd.kg >= 0.5 ? t('inhold', { kg: Math.round(hd.kg), f: Math.round(hd.fresh) }) + ' · ' + money(ev) : t('empty')} · ${av > 0.7 ? t('season_hi') : av < 0.4 ? t('season_lo') : ''}</small><div class="dbar" title="${t('demand')}"><i style="width:${clamp(G.mk.demand[i] / 1.25, 0, 1) * 100}%"></i></div></div><button class="btn sm" data-act="sell" data-arg="${i}" ${hd.kg < 0.5 || !open ? 'disabled' : ''}>${t('sell')}</button></div>`;
     }
-    h += `<div class="item"><div class="dot">${svgIc('i-coin')}</div><div><b>${t('total_hold', { kg: Math.round(holdTotal()), cap: UPG.hold.cap[G.up.hold] })}</b><small>${money(total)}</small></div><button class="btn primary sm" data-act="sellall" ${total <= 0 ? 'disabled' : ''}>${t('sellall')}</button></div>`;
+    h += `<div class="item"><div class="dot">${svgIc('i-coin')}</div><div><b>${t('total_hold', { kg: Math.round(holdTotal()), cap: ST.hold() })}</b><small>${money(total)}</small></div><button class="btn primary sm" data-act="sellall" ${total <= 0 || !open ? 'disabled' : ''}>${t('sellall')}</button></div>`;
   } else if (hTab === 'upg') {
     for (const k of UP_ORDER) {
-      const lv = G.up[k], mx = upMax(k), cur = upDesc(k, lv), nxt = lv < mx ? upDesc(k, lv + 1) : '';
+      const lv = G.up[k], mx = upMax(k), cur = upDesc(k, lv), nxt = lv < mx ? upDesc(k, lv + 1) : '', capped = lv >= mx && lv < UPG[k].cost.length - 1;
       const ic = { net: 'i-net', sonar: 'i-sonar', engine: 'i-tool', hold: 'i-crate', ice: 'i-snow', crew: 'i-anchor' }[k];
-      h += `<div class="item"><div class="dot">${svgIc(ic)}</div><div><b>${t('up_' + k)} · ${t('lvl', { n: lv + 1 })}</b><small>${cur}${lv < mx ? ' &rarr; ' + nxt : ' · ' + t('maxed')}</small></div>${lv < mx ? `<button class="btn primary sm" data-act="buy" data-arg="${k}" ${G.money < upCost(k) ? 'disabled' : ''}>${money(upCost(k))}</button>` : `<span class="smallnote">${t('maxed')}</span>`}</div>`;
+      h += `<div class="item"><div class="dot">${svgIc(ic)}</div><div><b>${t('up_' + k)} · ${t('lvl', { n: lv + 1 })}</b><small>${cur}${lv < mx ? ' &rarr; ' + nxt : ' · ' + (capped ? t('lvl_cap') : t('maxed'))}</small></div>${lv < mx ? `<button class="btn primary sm" data-act="buy" data-arg="${k}" ${G.money < upCost(k) ? 'disabled' : ''}>${money(upCost(k))}</button>` : `<span class="smallnote">${capped ? t('lvl_cap') : t('maxed')}</span>`}</div>`;
     }
+  } else if (hTab === 'yard') {
+    BOATS.forEach((bt, i) => {
+      const d = boatDeal(i), own = i === G.boatClass, past = i < G.boatClass;
+      const btn = own ? `<span class="smallnote">${t('owned')}</span>` : past ? `<span class="smallnote">${t('sold_boat')}</span>`
+        : `<button class="btn primary sm" data-act="boat" data-arg="${i}" ${d.ok ? '' : 'disabled'}>${d.fin > 0 ? t('deal', { c: money(d.cash), f: money(d.fin) }) : t('deal_cash', { c: money(d.cash) })}</button>`;
+      h += `<div class="item"${own ? ' style="box-shadow:inset 3px 0 0 var(--sodium)"' : ''}><div class="dot">${svgIc(i === 0 ? 'i-anchor' : i === 3 ? 'i-net' : 'i-hull')}</div><div><b>${t('b_' + bt.id)} · ${money(bt.price)}</b><small>${boatDesc(i)}</small>${!own && !past ? `<small>${t('tradein', { m: money(tradeIn()) })}</small>` : ''}</div>${btn}</div>`;
+    });
   } else {
-    const tank = UPG.engine.tank[G.up.engine], fneed = tank - G.fuel, icap = UPG.ice.cap[G.up.ice], ineed = icap - G.ice, hneed = 100 - G.hull;
+    const tank = ST.tank(), fneed = tank - G.fuel, icap = ST.ice(), ineed = icap - G.ice, hneed = 100 - G.hull;
     h += `<div class="item"><div class="dot">${svgIc('i-fuel')}</div><div><b>${t('fuel')}</b><small>${t('refuelc', { a: G.fuel.toFixed(0), b: tank, c: money(fneed * FUEL_PRICE) })}</small></div><button class="btn sm" data-act="fuel" ${fneed < 0.5 ? 'disabled' : ''}>${fneed < 0.5 ? t('full') : t('refuel')}</button></div>`;
     h += `<div class="item"><div class="dot">${svgIc('i-snow')}</div><div><b>${t('ice')}</b><small>${Math.round(G.ice)}/${icap} · ${money(ineed * ICE_PRICE)}</small></div><button class="btn sm" data-act="ice" ${ineed < 1 ? 'disabled' : ''}>${ineed < 1 ? t('full') : t('addice')}</button></div>`;
     h += `<div class="item"><div class="dot">${svgIc('i-hull')}</div><div><b>${t('hull')}</b><small>${t('repairc', { h: Math.round(G.hull) })} · ${money(hneed * REPAIR_PRICE)}</small></div><button class="btn sm" data-act="repair" ${hneed < 0.5 ? 'disabled' : ''}>${t('repair')}</button></div>`;
@@ -1950,37 +2113,44 @@ function renderHarbor() {
   }
   el.innerHTML = h;
   $('hDay').textContent = G.day + '/' + DAYS + ' · ' + clockStr(G.tmin); $('hMoney').textContent = money(G.money); $('hLoan').textContent = money(G.loan);
-  $('hNote').textContent = hTab === 'market' ? t('note_market') : hTab === 'upg' ? t('note_up') : t('note_boat');
+  $('hNote').textContent = hTab === 'market' ? t('note_market') : hTab === 'upg' ? t('note_up') : hTab === 'yard' ? t('note_yard', { m: money(LOAN_MAX) }) : t('note_boat');
+  $('hTitle').textContent = t('harbor_title') + ' · ' + t('b_' + BC().id);
+  $('hWait').classList.toggle('hidden', G.tmin >= T_DUSK - 30);
   document.querySelectorAll('.tabs .btn').forEach(b => b.classList.toggle('sel', b.dataset.tab === hTab));
-  $('hSail').disabled = G.tmin >= T1 - 20;
+  $('hSail').disabled = G.tmin >= T_LIMIT - 60;
   if (act && act !== '|') { const [a, r] = act.split('|'); const n = el.querySelector(`[data-act="${a}"]${r ? `[data-arg="${r}"]` : ''}:not([disabled])`); if (n) n.focus(); }
 }
+function boatDesc(i) {
+  const b = BOATS[i], s = b.storm > 1.3 ? 'storm_lo' : b.storm > 0.85 ? 'storm_mid' : b.storm > 0.6 ? 'storm_hi' : 'storm_top';
+  return t('d_boat', { v: (b.vmax * 1.944).toFixed(0), h: b.hold, n: t('n_' + b.netId), l: b.net, d: b.dep, t: b.tank, c: b.crew, s: t(s), u: money(b.upkeep) });
+}
 function upDesc(k, lv) {
-  const U = UPG[k];
-  if (k === 'net') return t('d_net', { len: U.len[lv], dep: U.dep[lv] });
-  if (k === 'sonar') return t('d_sonar', { r: U.range[lv] });
-  if (k === 'engine') return t('d_engine', { v: (U.vmax[lv] * 1.944).toFixed(0), t: U.tank[lv] });
-  if (k === 'hold') return t('d_hold', { c: U.cap[lv] });
+  const U = UPG[k], B = BC();
+  if (k === 'net') return t('d_net', { len: Math.round(B.net * U.len[lv]), dep: B.dep + U.dep[lv] });
+  if (k === 'sonar') return t('d_sonar', { r: Math.round(B.sonar * U.range[lv]) });
+  if (k === 'engine') return t('d_engine', { v: (B.vmax * U.vmax[lv] * 1.944).toFixed(0), t: Math.round(B.tank * U.tank[lv]) });
+  if (k === 'hold') return t('d_hold', { c: Math.round(B.hold * U.cap[lv] / 10) * 10 });
   if (k === 'ice') return t('d_ice', { c: U.cap[lv] });
   return t('d_crew', { n: lv, s: U.haul[lv] });
 }
-function openHarbor(first) { if (first) hTab = 'market'; $('harbor').classList.add('show'); renderHarbor(); $('hTitle').textContent = t('harbor_title'); if (!first) toast(t('fish_market'), 'info'); Snd.chatter(); }
+function openHarbor(first) { if (first) hTab = 'market'; $('harbor').classList.add('show'); renderHarbor(); if (!first) toast(t('fish_market'), 'info'); Snd.chatter(); }
 function closeHarbor() { $('harbor').classList.remove('show'); }
 $('hBody').addEventListener('click', e => {
   const b = e.target.closest('[data-act]'); if (!b || b.disabled) return; const a = b.dataset.act, r = b.dataset.arg;
-  if (a === 'sell') sellSpecies(+r); else if (a === 'sellall') sellAll(); else if (a === 'buy') buyUpgrade(r); else if (a === 'fuel') buyFuel(); else if (a === 'ice') buyIce(); else if (a === 'repair') repairHull();
+  if (a === 'sell') sellSpecies(+r); else if (a === 'sellall') sellAll(); else if (a === 'buy') buyUpgrade(r); else if (a === 'boat') buyBoat(+r); else if (a === 'fuel') buyFuel(); else if (a === 'ice') buyIce(); else if (a === 'repair') repairHull();
   else if (a === 'pay') payLoan(r === 'all' ? 1e9 : +r);
   saveRun(); renderHarbor(); refreshUI(true);
 });
 document.querySelectorAll('.tabs .btn').forEach(b => b.addEventListener('click', () => { hTab = b.dataset.tab; Snd.click(); renderHarbor(); }));
 $('hSail').addEventListener('click', () => { Snd.click(); sailOut(); });
 $('hEnd').addEventListener('click', () => { Snd.click(); endDay('docked'); });
+$('hWait').addEventListener('click', () => { if (waitDusk()) { renderHarbor(); refreshUI(true); } });
 
 /* ---------- summary / ending */
 function showSummary() {
   const s = G.sum; $('sumT').textContent = t('sum_title', { d: s.day });
   const kg = s.catch.reduce((a, b) => a + b, 0);
-  const rows = [[t('sum_catch'), Math.round(kg) + ' kg'], [t('sum_sales'), '+' + money(s.sales), 'pos'], [t('sum_bonus'), s.bonus ? '+' + money(s.bonus) : '-', s.bonus ? 'pos' : ''], [t('sum_fuel'), '-' + money(s.fuel), 'neg'], [t('sum_interest'), '-' + money(s.interest), 'neg']];
+  const rows = [[t('sum_catch'), Math.round(kg) + ' kg'], [t('sum_sales'), '+' + money(s.sales), 'pos'], [t('sum_bonus'), s.bonus ? '+' + money(s.bonus) : '-', s.bonus ? 'pos' : ''], [t('sum_fuel'), '-' + money(s.fuel), 'neg'], [t('sum_interest'), '-' + money(s.interest), 'neg'], [t('sum_upkeep'), '-' + money(s.upkeep || 0), 'neg']];
   if (s.tow) rows.push([t('sum_tow'), '-' + money(s.tow), 'neg']);
   rows.push([t('sum_goal'), s.goalText + ' · ' + (s.goalOk ? t('ok') : t('fail')), s.goalOk ? 'pos' : 'neg'], [t('sum_money'), money(s.money)], [t('sum_loan'), money(s.loan), s.loan > 0 ? 'neg' : 'pos']);
   if (s.forecast) rows.push([t('sum_next'), t('sum_fc', { w: s.forecast })]);
@@ -1989,7 +2159,7 @@ function showSummary() {
 }
 function showEnding() {
   $('summary').classList.remove('show'); const reis = G.loan <= 0, worth = netWorth(); G.mode = 'end';
-  const stars = reis ? (worth >= 110000 ? 3 : worth >= 50000 ? 2 : 1) : 0;
+  const stars = reis ? (worth >= 300000 ? 3 : worth >= 150000 ? 2 : 1) : 0; // worth includes the boat (trade-in value)
   G.result = { reis, worth, stars };
   const prev = getBest(); const rec = !prev || (reis && !prev.reis) || (reis === prev.reis && worth > prev.worth); if (rec) store.set(KEY_BEST, JSON.stringify({ reis, worth, stars, day: G.day }));
   store.del(KEY_SAVE);
@@ -2025,7 +2195,7 @@ function toggleMap() {
 function toggleLang() { S.lang = S.lang === 'tr' ? 'en' : 'tr'; saveSettings(); applyLang(); if ($('harbor').classList.contains('show')) renderHarbor(); if (G.sum && $('summary').classList.contains('show')) showSummary(); Snd.click(); }
 function toggleMusic() { S.musicOn = !S.musicOn; Snd.vol(); toast(t('musict') + ': ' + (S.musicOn ? t('on') : t('off')), 'info'); refreshUI(true); }
 function toggleSfx() { S.sfxOn = !S.sfxOn; Snd.vol(); toast(t('sfxt') + ': ' + (S.sfxOn ? t('on') : t('off')), 'info'); refreshUI(true); }
-function cycleSpeed() { G.scale = G.scale === 1 ? 2 : G.scale === 2 ? 3 : 1; toast(t('fast') + ': x' + G.scale, 'info'); refreshUI(true); }
+function cycleSpeed() { G.scale = G.scale === 1 ? 2 : G.scale === 2 ? 4 : 1; toast(t('fast') + ': x' + G.scale, 'info'); refreshUI(true); }
 function netAction() {
   if (G.mode !== 'play' || G.paused || G.overlay) return; if (canDock()) { dockNow(); return; }
   const n = G.net; if (n.phase === 'stowed') trySetNet(); else if (n.phase === 'set') startHaul(); refreshUI(true);
@@ -2088,27 +2258,41 @@ addEventListener('resize', resize);
 /* ======================================================================================================
    BOT (?auto): uses the same controls and rules as a player (sonar data only, same harbour actions)
    ====================================================================================================== */
-const bot = { t: 0, timer: 0, target: null, dir: 1, swept: 0, lastAng: 0, startPt: null, wp: 0, log: [], R: 22, stat: '' };
+const bot = { t: 0, timer: 0, target: null, dir: 1, swept: 0, lastAng: 0, startPt: null, wp: 0, log: [], R: 22, stat: '', retBy: 690, yard: true, yardCash: 0.4, yardLoan: 170000 };
 const PATROL = [[120, -170], [120, 0], [120, 170], [235, 170], [235, 0], [235, -170], [330, -120], [330, 110], [180, 60], [170, -70]];
 const UP_PRIORITY = ['net', 'hold', 'sonar', 'crew', 'ice', 'engine'];
+// one trip a day like a human player: a morning trip (06:00 until about 11:30), or a night trip
+// (wait for dusk, 19:00 until about 22:45) every third day and on storm days, then sleep
+const botCapped = () => G.boatClass === 0 || UP_ORDER.every(k => G.up[k] >= upMax(k)); // leave the rowboat at once, fit out the others before moving up
+const botNightDay = () => G.day % 3 === 0 || !!(G.plan && G.plan.storm);
+function botShipyard() {
+  const nx = G.boatClass + 1; if (!bot.yard || nx >= BOATS.length || G.day > 22 || !botCapped()) return;
+  const d = boatDeal(nx); // move up when cash covers a good part of it; the rest goes on the loan
+  if (d.ok && d.cash >= d.cost * bot.yardCash && G.loan + d.fin <= bot.yardLoan) buyBoat(nx, true);
+}
 function botHarbor() {
   if (bot.timer > 0) { bot.timer -= 1 / 30; return; }
   bot.timer = 0.15;
-  for (let i = 0; i < 4; i++) sellSpecies(i, true);
-  const reserve = 900 + G.day * 25;
+  for (let i = 0; i < 4; i++) sellSpecies(i, true); // no-op while the market is closed
+  botShipyard();
+  const nx = G.boatClass + 1, saving = bot.yard && nx < BOATS.length && G.day <= 22 && botCapped() ? bot.yardCash * Math.max(0, BOATS[nx].price - tradeIn()) : 0; // save up for the next boat first
+  const reserve = 600 + ST.tank() * FUEL_PRICE + G.day * 20;
   buyFuel(); buyIce(); if (G.hull < 88) repairHull();
   // upgrades: cheapest useful first, never starve the fuel reserve
   for (const k of UP_PRIORITY) {
     if (G.up[k] >= upMax(k)) continue; const c = upCost(k);
     const worth = (k === 'engine' || k === 'ice') ? G.day >= 5 : true;
-    if (worth && G.money - c >= reserve && (G.day <= 24 || c < G.loan * 0.4)) { buyUpgrade(k, true); break; }
+    if (worth && G.money - c >= reserve + saving && (G.day <= 24 || c < G.loan * 0.4)) { buyUpgrade(k, true); break; }
   }
-  // loan: pay down once the boat is strong, and everything possible near the end
-  if (G.day >= 16 || G.money > 40000) { const keep = G.day >= 26 ? 600 : reserve + 3000; if (G.money > keep) payLoan(G.money - keep); }
+  // loan: everything above the fuel reserve and the savings for the next boat goes to the bank (interest is 0.6%/day)
+  { const keep = G.day >= 26 ? 600 : reserve + saving + 3000; if (G.money > keep) payLoan(G.money - keep); }
   if (G.day >= 29 && G.money > 600) payLoan(G.money - 400);
-  const hr = G.tmin / 60, p = G.plan, left = T1 - G.tmin;
-  const stormWindow = p.storm && hr > p.warn - 0.6 && hr < p.end + 0.2;
-  if (stormWindow || left < 130) { endDay('docked'); return; }
+  const trips = G.today.trips || 0, night = botNightDay();
+  if (trips > 0 || G.tmin >= T_LIMIT - 120) { endDay('docked'); return; }
+  if (night && G.tmin < T_DUSK - 30) { waitDusk(); return; }
+  bot.retBy = night ? 22.75 * 60 : 11.5 * 60;
+  const hr = G.tmin / 60, p = G.plan;
+  if (p.storm && hr > p.warn - 0.6 && hr < p.end + 0.2) { endDay('docked'); return; }
   sailOut();
 }
 function steerTo(tx, tz, thr) { const b = G.boat; const e = wrapA(Math.atan2(tz - b.z, tx - b.x) - b.h); inp.rud = clamp(e * 2.2, -1, 1); inp.thr = thr; }
@@ -2123,7 +2307,7 @@ function botGoHome() {
   if (b.x > -2 && dd > 40) { tx = 12; tz = -4; if (Math.hypot(b.x - 12, b.z + 4) < 14) bot.inHarbor = true; if (bot.inHarbor) { tx = MOUTH.x; tz = MOUTH.z; } }
   else if (b.x > -22 && dd > 30) { tx = MOUTH.x; tz = MOUTH.z; if (b.x < -16) { tx = DOCK.x; tz = DOCK.z; } }
   else { tx = DOCK.x; tz = DOCK.z; }
-  if (dd < 60) thr = 0.42; if (dd < 32) thr = 0.26;
+  const vm = ST.vmax(); if (dd < 60) thr = Math.min(0.42, 4.0 / vm); if (dd < 32) thr = Math.min(0.26, 2.5 / vm); // slow enough to dock with any engine
   if (Math.hypot(b.x - 12, b.z + 4) > 40 && b.x > 0) bot.inHarbor = false;
   steerTo(tx, tz, thr);
   if (dd < 15 && Math.abs(b.v) < 4.2) { inp.thr = 0; netAction(); }
@@ -2147,19 +2331,20 @@ function botSea(dt) {
   const b = G.boat, n = G.net, up = G.up, hr = G.tmin / 60, p = G.plan;
   if (n.phase === 'haul') { inp.thr = 0; inp.rud = 0; return; }
   if (n.phase === 'set') { botCircle(); return; }
-  const tank = UPG.engine.tank[up.engine], vmax = UPG.engine.vmax[up.engine];
-  const holdFrac = holdTotal() / UPG.hold.cap[up.hold], dd = Math.hypot(b.x - DOCK.x, b.z - DOCK.z);
-  const needMin = dd / (vmax * 0.8) * MIN_PER_SEC + 20, lateness = T1 - G.tmin;
-  const stormSoon = p.storm && hr + (needMin + 175) / 60 > p.start && hr < p.end + 0.3;
-  const home = stormSoon || holdFrac > 0.8 || G.fuel < 0.2 * tank || lateness < needMin + 235 || G.hull < 28 || G.wx.wave > 1.95;
+  const tank = ST.tank(), vmax = ST.vmax();
+  const holdFrac = holdTotal() / ST.hold(), dd = Math.hypot(b.x - DOCK.x, b.z - DOCK.z);
+  const needMin = dd / (vmax * 0.8) * MIN_PER_SEC + 20;
+  const stormSoon = p.storm && hr + (needMin + 60) / 60 > p.start && hr < p.end + 0.3;
+  const fuelHome = dd / (vmax * 0.8) * 0.125 * ST.eff() * 1.4 + 0.08 * tank;
+  const home = stormSoon || holdFrac > 0.8 || G.fuel < fuelHome || G.tmin > bot.retBy - needMin || G.tmin > T_LIMIT - needMin - 60 || G.hull < 28 || G.wx.wave > BC().rough;
   if (home) { bot.target = null; botGoHome(); return; }
   // pick a school from sonar contacts (never from hidden state)
-  const cs = sonarContacts().filter(c => c.depth <= UPG.net.dep[up.net] - 2 && c.n >= Math.min(8, c.total * 0.6));
+  const cs = sonarContacts().filter(c => c.depth <= ST.netDep() - 2 && c.n >= Math.min(8, c.total * 0.6));
   let best = null, bs = -1;
-  for (const c of cs) { const val = SPECIES[c.sp].price * G.mk.pm[c.sp] * G.mk.demand[c.sp] * Math.min(c.kg, UPG.hold.cap[up.hold] - holdTotal()) * (1 + (bot.target === c.s ? 0.4 : 0)); const sc = val * (1 - SPECIES[c.sp].skit / 90) / (c.dist + 70); if (sc > bs) { bs = sc; best = c; } }
+  for (const c of cs) { const val = SPECIES[c.sp].price * G.mk.pm[c.sp] * G.mk.demand[c.sp] * Math.min(c.kg, ST.hold() - holdTotal()) * (1 + (bot.target === c.s ? 0.4 : 0)); const sc = val * (1 - SPECIES[c.sp].skit / 90) / (c.dist + 70); if (sc > bs) { bs = sc; best = c; } }
   if (!best) { bot.target = null; const w = PATROL[bot.wp % PATROL.length]; if (Math.hypot(b.x - w[0], b.z - w[1]) < 30) bot.wp++; const w2 = PATROL[bot.wp % PATROL.length]; botNavOut(w2[0], w2[1], 0.9); return; }
   const first = bot.target !== best.s; bot.target = best.s;
-  const maxR = UPG.net.len[up.net] * 0.8 / TAU; bot.R = clamp(Math.min(best.rad * 1.2 + 4, maxR), 11, 40);
+  const maxR = ST.netLen() * 0.8 / TAU; bot.R = clamp(Math.min(best.rad * 1.2 + 4, maxR), 11, 40);
   const rx = b.x - best.x, rz = b.z - best.z, dist = Math.hypot(rx, rz) || 1;
   if (dist > bot.R + 8) { // run to a point on the circle nearest to us
     botNavOut(best.x + rx / dist * bot.R, best.z + rz / dist * bot.R, 1.0);
@@ -2213,7 +2398,7 @@ function simSeconds(sec) {
   refreshUI(true); return { mode: G.mode, day: G.day, money: Math.round(G.money), loan: Math.round(G.loan) };
 }
 window.hamsi = G; G.assets = { mode: FLAG.noassets ? 'noassets' : 'procedural', loaded: [], note: 'everything is generated in code' }; G.errors = errors; G.bot = bot;
-G.api = { sonarContacts, sellAll, buyUpgrade, startNewGame, netAction, endDay, nextDay, sailOut, dockNow };
+G.api = { setBoatVisual, sonarContacts, sellAll, buyUpgrade, startNewGame, netAction, endDay, nextDay, sailOut, dockNow, buyBoat, boatDeal, waitDusk, marketOpen, nightF, ST, BOATS, UPG, saveRun, loadRun, continueGame: () => continueGame() };
 window.hamsiSim = simSeconds; G.audio = { state: () => Snd.state(), level: () => Snd.level() };
 Object.defineProperty(G, 'fps', { get: () => fps });
 Object.defineProperty(G, 'calls', { get: () => renderer ? renderer.info.render.calls : 0 });
