@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#0d2230">
 <title>Hamsi</title>
+<meta name="arena-game" content="hamsi">
 <meta name="description" content="A 3D fishing and boat-management game on the Black Sea, redesigned with a dark-steel instrument UI: find the schools on the sonar, set the net and pay off the boat in 30 days. Plays in the browser.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Hamsi · Black Sea Fisher">
@@ -273,6 +274,8 @@ input[type=range]{accent-color:var(--sonar)}
 .rec{color:var(--sodium)}
 button.btn:focus-visible{outline:3px solid var(--sonar);outline-offset:2px} /* A11y: high-contrast focus ring */
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important}#lens,#wcard.warn{animation:none!important}} /* A11y: disable infinite animations */
+html[data-arena-reduced-motion] :is(#lens,#wcard.warn){animation:none!important} /* the same when "Reduce motion" is on in the Arena panel */
+a.btn{text-decoration:none;color:inherit;display:inline-flex;align-items:center;justify-content:center}
 </style>
 <script>/*ARENA-KIT:BEGIN v1.0.0 sha256:a9b9a8b52b3e*/
 /* ARENA-KIT v1 — shared layer for the 21 Claude Game Arena games.
@@ -714,6 +717,7 @@ button.btn:focus-visible{outline:3px solid var(--sonar);outline-offset:2px} /* A
     <div class="col">
       <button class="btn primary" id="tPlay" disabled data-i18n="play">Oyna</button>
       <button class="btn" id="tCont" data-i18n="cont">Devam et</button>
+      <button class="btn" id="tDaily"><svg class="ic"><use href="#i-sun"/></svg><span data-i18n="daily">Günün Meydan Okuması</span> <small id="tDailyInfo"></small></button>
       <div class="row"><button class="btn" id="tSet"><svg class="ic"><use href="#i-gear"/></svg><span data-i18n="settings">Ayarlar</span></button><button class="btn" id="tLang"><svg class="ic"><use href="#i-globe"/></svg><span id="tLangT">TR / EN</span></button></div>
     </div>
     <div class="best" id="tBest"></div>
@@ -731,9 +735,9 @@ button.btn:focus-visible{outline:3px solid var(--sonar);outline-offset:2px} /* A
   </div>
 </div>
 
-<div class="screen dim" id="summary"><div class="card glass"><h2 id="sumT"></h2><div id="sumBody"></div><div class="col"><button class="btn primary" id="sumNext"></button></div></div></div>
+<div class="screen dim" id="summary"><div class="card glass"><h2 id="sumT"></h2><div id="sumBody"></div><div class="col"><button class="btn primary" id="sumNext"></button><button class="btn" id="sumShare" data-i18n="share">Paylaş</button></div></div></div>
 
-<div class="screen dim" id="ending"><div class="card glass"><h2 id="endT"></h2><p id="endSub"></p><div class="stars" id="endStars"></div><div id="endBody"></div><div class="row" style="margin-top:12px"><button class="btn primary" id="endAgain" data-i18n="again">Tekrar oyna</button><button class="btn" id="endMenu" data-i18n="menu">Ana menü</button></div></div></div>
+<div class="screen dim" id="ending"><div class="card glass"><h2 id="endT"></h2><p id="endSub"></p><div class="stars" id="endStars"></div><div id="endBody"></div><div class="row" style="margin-top:12px"><button class="btn primary" id="endAgain" data-i18n="again">Tekrar oyna</button><button class="btn" id="endShare" data-i18n="share">Paylaş</button><a class="btn" id="endOther" href="https://furkiozknn.github.io/" target="_blank" rel="noopener" data-i18n="another">Başka oyun</a><button class="btn" id="endMenu" data-i18n="menu">Ana menü</button></div></div></div>
 
 <div class="screen dim" id="pause"><div class="card glass"><h2 data-i18n="paused">Duraklatıldı</h2><div class="col"><button class="btn primary" id="pResume" data-i18n="resume">Devam</button><button class="btn" id="pRestart" data-i18n="restart">Yeniden başla</button><button class="btn" id="pSet" data-i18n="settings">Ayarlar</button><button class="btn" id="pMenu" data-i18n="menu">Ana menü</button></div></div></div>
 
@@ -746,7 +750,7 @@ button.btn:focus-visible{outline:3px solid var(--sonar);outline-offset:2px} /* A
     <label data-i18n="quality">Kalite</label><div class="seg"><button class="btn" id="sLow" data-i18n="low">Düşük</button><button class="btn" id="sHigh" data-i18n="high">Yüksek</button></div>
     <label data-i18n="screen">Ekran</label><div class="seg"><button class="btn" id="sFull"><svg class="ic"><use href="#i-full"/></svg><span data-i18n="fullscreen">Tam ekran</span></button></div>
   </div>
-  <div class="col"><button class="btn primary" id="setBack" data-i18n="back">Geri</button></div></div></div>
+  <div class="col"><button class="btn" id="setA11y" data-i18n="a11y">Erişilebilirlik</button><button class="btn primary" id="setBack" data-i18n="back">Geri</button></div></div></div>
 
 <div class="screen dim" id="mapscr"><div class="card glass wide"><h2 data-i18n="map">Harita</h2><canvas id="mapc" width="640" height="520"></canvas><p class="smallnote" id="mapNote"></p><div class="col"><button class="btn primary" id="mapClose" data-i18n="close">Kapat</button></div></div></div>
 
@@ -785,6 +789,9 @@ const Q = new URLSearchParams(location.search);
 const FLAG = { auto: Q.has('auto'), debug: Q.has('debug'), low: Q.has('low'), noassets: Q.has('noassets'),
   sim: parseFloat(Q.get('sim') || '0') || 0, lang: Q.get('lang') };
 const $ = id => document.getElementById(id);
+// Arena shared layer (inline classic script above the import map); every use below is optional
+const ARENA = window.Arena && window.Arena.version ? window.Arena : null;
+const ARENA_URL = 'https://furkiozknn.github.io/hamsi/';
 const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
 const lerp = (a, b, t) => a + (b - a) * t;
 const sstep = (a, b, v) => { const t = clamp((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
@@ -870,6 +877,12 @@ const L = {
     loan_full: 'Kredi limiti dolu ({m})', toast_newboat: 'Hayırlı olsun: yeni teknen {b}!', lvl_cap: 'bu teknede sınır', boatcls: 'Tekne',
     trend_up: 'yükseliyor', trend_down: 'düşüyor', season_hi: 'sezonu', season_lo: 'azaldı',
     ai: 'Otomatik pilot', fishfinder: 'Derinlik', depth: '{d} m', est: '~{k} kg',
+    // Arena (ortak katman)
+    daily: 'Günün Meydan Okuması', daily_info: 'seri {s} · en iyi {b}', daily_done: 'bugün tamam', daily_title: 'Günün Meydan Okuması · {d}',
+    daily_note: 'Tek gün, sandalla: hava, pazar ve hedef bugünün tohumundan. Sezon kaydına dokunmaz.', daily_score: 'Günün satışı', daily_streak: 'Seri',
+    daily_streak_v: '{s} gün (en iyi {b})', share: 'Paylaş', another: 'Başka oyun', a11y: 'Erişilebilirlik',
+    share_day: 'Gün {d}: {kg} kg · satış {m}', share_daily: 'Günün Meydan Okuması {d} · seri {s}', share_end: '{r} · net değer {w} · {st}/3 yıldız',
+    badge_reis: 'Limanın reisi', badge_3star: 'Üç yıldızlı sezon', badge_girgir: 'Gırgır sahibi',
   },
   en: {
     day: 'Day', time: 'Time', money: 'Cash', loan: 'Loan', goal: "Today's goal", sonar: 'Sonar', dock: 'Dock',
@@ -921,6 +934,12 @@ const L = {
     loan_full: 'Loan limit reached ({m})', toast_newboat: 'New boat: {b}!', lvl_cap: 'cap on this boat', boatcls: 'Boat',
     trend_up: 'rising', trend_down: 'falling', season_hi: 'in season', season_lo: 'scarce',
     ai: 'Autopilot', fishfinder: 'Depth', depth: '{d} m', est: '~{k} kg',
+    // Arena (shared layer)
+    daily: 'Daily challenge', daily_info: 'streak {s} · best {b}', daily_done: 'done today', daily_title: 'Daily challenge · {d}',
+    daily_note: 'One day in the rowboat: weather, market and goal come from today\'s seed. Your season save is untouched.', daily_score: 'Today\'s sales', daily_streak: 'Streak',
+    daily_streak_v: '{s} days (best {b})', share: 'Share', another: 'Another game', a11y: 'Accessibility',
+    share_day: 'Day {d}: {kg} kg · sales {m}', share_daily: 'Daily challenge {d} · streak {s}', share_end: '{r} · net worth {w} · {st}/3 stars',
+    badge_reis: 'Harbour chief', badge_3star: 'Three-star season', badge_girgir: 'Purse seiner owner',
   },
 };
 function t(k, v) {
@@ -929,7 +948,7 @@ function t(k, v) {
   return s;
 }
 function applyLang() {
-  document.documentElement.lang = S.lang;
+  document.documentElement.lang = S.lang; if (ARENA) ARENA.lang(S.lang);
   document.querySelectorAll('[data-i18n]').forEach(e => { e.textContent = t(e.dataset.i18n); });
   $('tLangT').textContent = S.lang === 'tr' ? 'Türkçe · EN' : 'English · TR';
   $('sTR').classList.toggle('sel', S.lang === 'tr'); $('sEN').classList.toggle('sel', S.lang === 'en');
@@ -1164,9 +1183,11 @@ const G = {
   net: { phase: 'stowed', pts: [], len: 0, ht: 0, depth: 24, maxLen: 170, kg: [0, 0, 0, 0], full: false, fullT: 0, gap: 0, ringBoat: null },
   today: null, tot: { catch: 0, storms: 0, sales: 0 }, goal: null, sum: null, result: null,
   flags: {}, stormDays: new Set(),
+  daily: null, // Arena.daily() of the running daily challenge (one day), null in a season
+  share: null, reduced: false, // what the Share button on the open screen shares; Arena "Reduce motion"
 };
 const inp = { thr: 0, rud: 0, kU: false, kD: false, kL: false, kR: false, touchThr: null, touchRud: null };
-const rand = Math.random;
+let rand = Math.random; // the daily challenge swaps in Arena.daily().rng, so its sea starts with the same schools
 // current boat class and its stats with upgrades applied (single place for every gameplay number)
 const BC = () => BOATS[G.boatClass] || BOATS[0];
 const hourOf = tm => ((tm / 60) % 24 + 24) % 24;
@@ -1494,6 +1515,7 @@ function freshRun() {
   G.fuel = ST.tank(); G.hull = 100; G.ice = ST.ice(); G.hold.forEach(h => { h.kg = 0; h.fresh = 100; });
   G.tot = { catch: 0, storms: 0, sales: 0 }; G.seed = FLAG.auto ? SEED : (Math.random() * 1e9) | 0; G.stormDays = pickStormDays(G.seed);
   G.mk = { demand: [1, 1, 1, 1], pm: [1, 1, 1, 1], prev: [1, 1, 1, 1] }; G.result = null;
+  G.daily = null; rand = Math.random;
 }
 function startDay() {
   const loaded = !!G.flags.loaded; G.tmin = T0; G.plan = genWeather(G.day); G.flags = {}; G.wx.s = 0; updateWx(); refreshMarket(G.day > 1 && !loaded);
@@ -1549,13 +1571,15 @@ function endDay(reason) {
   const goalOk = !!(G.goal && G.goal.done);
   G.sum = { day: G.day, catch: td.catch.slice(), sales: td.sales, fuel: Math.round(td.fuelCost), interest, upkeep, tow: td.tow, bonus: td.bonus, goalOk, goalText: goalText(), reason, money: G.money, loan: G.loan, forecast: null };
   (G.log = G.log || []).push({ d: G.day, kg: Math.round(td.catch.reduce((a, b) => a + b, 0)), sales: td.sales, money: G.money, loan: G.loan, why: reason, goal: goalOk, hull: Math.round(G.hull), up: Object.values(G.up).join(''), boat: BC().id, trips: td.trips || 0, end: clockStr(G.tmin), st: G.plan.storm ? 1 : 0, sets: td.sets || 0, hauls: td.hauls || 0, mem: td.mem || 0, gap: Math.round((td.gaps || 0) / Math.max(1, td.hauls || 1)) });
-  if (G.day >= DAYS) { settle(); G.mode = 'summary'; G.sum.last = true; }
+  if (G.daily) { G.mode = 'summary'; G.sum.daily = G.daily.complete(Math.round(td.sales)); } // one day: the day's sales are the score
+  else if (G.day >= DAYS) { settle(); G.mode = 'summary'; G.sum.last = true; }
   else { G.sum.forecast = wxLabel(genWeather(G.day + 1)); G.mode = 'summary'; }
   G.sum.money = G.money; G.sum.loan = G.loan;
   G.boat.v = 0; closeHarbor(); showSummary(); refreshUI(true);
 }
 function settle() { const pay = Math.min(G.money, G.loan); G.money -= pay; G.loan -= pay; }
 function nextDay() {
+  if (G.daily) { toTitle(); return; } // the daily challenge is a single day
   if (G.sum && G.sum.last) { showEnding(); return; }
   G.day++; startDay(); $('summary').classList.remove('show');
 }
@@ -1566,7 +1590,7 @@ function netWorth() { return Math.round(G.money - G.loan + boatValue()); }
 
 /* ---------------------------------------------------------------- save / load */
 function saveRun() {
-  if (G.mode === 'menu' || G.mode === 'end') return;
+  if (G.mode === 'menu' || G.mode === 'end' || G.daily) return; // a daily challenge never overwrites the season save
   const o = { v: 2, day: G.day, money: G.money, loan: G.loan, boat: BC().id, up: G.up, fuel: G.fuel, hull: G.hull, ice: G.ice, hold: G.hold, demand: G.mk.demand, seed: G.seed, tot: G.tot };
   store.set(KEY_SAVE, JSON.stringify(o));
 }
@@ -1602,6 +1626,7 @@ function buyBoat(i, silent) {
   const d = boatDeal(i); if (!d.ok) { if (!silent) toast(t('loan_full', { m: money(LOAN_MAX) }), 'bad'); return false; }
   G.money -= d.cash; G.loan += d.fin; G.boatClass = i; G.hull = 100; G.fuel = Math.min(G.fuel, ST.tank()); G.ice = Math.min(G.ice, ST.ice());
   setBoatVisual(); if (!silent) { toast(t('toast_newboat', { b: t('b_' + BOATS[i].id) }), 'good'); Snd.horn(); }
+  if (i === BOATS.length - 1) arenaAward('hamsi-girgir', 'badge_girgir');
   (G.buys = G.buys || []).push({ d: G.day, boat: BOATS[i].id, cash: d.cash, fin: d.fin }); saveRun(); return true;
 }
 function buyFuel(full) {
@@ -1630,6 +1655,12 @@ const canvas = $('gl');
 let renderer = null, glFail = false;
 try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' }); }
 catch (e) { glFail = true; errors.push('WebGL: ' + e.message); $('loadmsg').textContent = 'WebGL is not available / WebGL kullanılamıyor'; }
+// Arena: dynamic pixel ratio for weak GPUs under the quality tier's cap; resize() resets the ratio, so it re-attaches there
+let arenaPerf = null;
+function arenaPerfAttach() {
+  if (!ARENA || !renderer) return; if (arenaPerf) arenaPerf.stop();
+  arenaPerf = ARENA.perf.attach(renderer, { max: Math.min(devicePixelRatio || 1, S.quality === 'low' ? 1 : 1.5) });
+}
 const scene = new THREE.Scene();
 scene.fog = new THREE.FogExp2(0x9fb2b8, 0.0034);
 const camera = new THREE.PerspectiveCamera(58, 1, 0.5, 7000);
@@ -1643,7 +1674,7 @@ function setupShadows() {
 }
 function resize() {
   if (!renderer) return; const w = innerWidth, h = innerHeight; renderer.setPixelRatio(Math.min(devicePixelRatio || 1, S.quality === 'low' ? 1 : 1.5));
-  renderer.setSize(w, h, false); camera.aspect = w / h; camera.fov = w / h < 0.8 ? 72 : 58; camera.updateProjectionMatrix();
+  renderer.setSize(w, h, false); arenaPerfAttach(); camera.aspect = w / h; camera.fov = w / h < 0.8 ? 72 : 58; camera.updateProjectionMatrix();
   detectTouch(); const bar = $('topbar'); if (bar) document.documentElement.style.setProperty('--barh', bar.offsetHeight + 'px');
 }
 
@@ -2267,7 +2298,7 @@ function updateCamera(dt) {
   const k = 1 - Math.exp(-dt * 5);
   cam.pos.x += (cx - cam.pos.x) * k; cam.pos.y += (cy - cam.pos.y) * k; cam.pos.z += (cz - cam.pos.z) * k;
   cam.look.x += (tx - cam.look.x) * k; cam.look.y += (tgtY - cam.look.y) * k; cam.look.z += (tz - cam.look.z) * k;
-  const shake = G.mode === 'play' ? G.wx.s * 0.25 : 0;
+  const shake = G.mode === 'play' && !G.reduced ? G.wx.s * 0.25 : 0;
   camera.position.set(cam.pos.x + (Math.random() - 0.5) * shake, cam.pos.y + (Math.random() - 0.5) * shake, cam.pos.z + (Math.random() - 0.5) * shake); camera.lookAt(cam.look);
 }
 let flashT = 0;
@@ -2277,7 +2308,7 @@ function renderFrame(dt) {
   if (G.mode !== 'play' && !G.paused) { WAVE_T += dt; WAVE_AMP = G.wx.wave; boatWaves(dt); }
   updateCamera(dt); updateEnv(dt); updateOcean(camera.position.x, camera.position.z); placeBoat(dt); updateGulls(dt); updateSeaLife(dt); updateNet(); updateParticles(dt); updatePing(dt);
   { const lens = $('lens'); if (lens) { const o = G.mode === 'menu' ? 0 : G.wx.rain * 0.85; if (lens._o !== o) { lens._o = o; lens.style.opacity = o.toFixed(2); } } }
-  if (G.wx.s > 0.6 && Math.random() < dt * 0.25) { $('flash').style.opacity = 0.55; setTimeout(() => { $('flash').style.opacity = 0; }, 90); Snd.thunder(); }
+  if (G.wx.s > 0.6 && Math.random() < dt * 0.25) { if (!G.reduced) $('flash').style.opacity = 0.55; setTimeout(() => { $('flash').style.opacity = 0; }, 90); Snd.thunder(); }
   renderer.render(scene, camera);
 }
 
@@ -2508,8 +2539,12 @@ function showSummary() {
   if (s.tow) rows.push([t('sum_tow'), '-' + money(s.tow), 'neg']);
   rows.push([t('sum_goal'), s.goalText + ' · ' + (s.goalOk ? t('ok') : t('fail')), s.goalOk ? 'pos' : 'neg'], [t('sum_money'), money(s.money)], [t('sum_loan'), money(s.loan), s.loan > 0 ? 'neg' : 'pos']);
   if (s.forecast) rows.push([t('sum_next'), t('sum_fc', { w: s.forecast })]);
+  if (s.daily) rows.push([t('daily_score'), money(s.sales), 'pos'], [t('daily_streak'), t('daily_streak_v', { s: s.daily.streak, b: s.daily.best }), 'pos']);
   $('sumBody').innerHTML = '<div class="kv">' + rows.map(r => `<span>${r[0]}</span><span class="${r[2] || ''}">${r[1]}</span>`).join('') + '</div>';
-  $('sumNext').textContent = s.last ? t('finish') : t('nextday'); $('summary').classList.add('show'); bot.timer = 0.3; Snd.bell();
+  if (s.daily) $('sumT').textContent = t('daily_title', { d: dayText(s.daily.last) });
+  const lines = [t('share_day', { d: s.day, kg: Math.round(kg), m: money(s.sales) })]; if (s.daily) lines.unshift(t('share_daily', { d: dayText(s.daily.last), s: s.daily.streak }));
+  G.share = { title: 'Hamsi', lines, url: ARENA_URL }; $('sumShare').classList.toggle('hidden', !ARENA);
+  $('sumNext').textContent = s.daily ? t('menu') : s.last ? t('finish') : t('nextday'); $('summary').classList.add('show'); bot.timer = 0.3; Snd.bell();
 }
 function showEnding() {
   $('summary').classList.remove('show'); const reis = G.loan <= 0, worth = netWorth(); G.mode = 'end';
@@ -2520,20 +2555,33 @@ function showEnding() {
   $('endT').textContent = reis ? t('end_reis') : t('end_bank'); $('endSub').textContent = reis ? t('end_sub_reis') : t('end_sub_bank');
   $('endStars').innerHTML = [0, 1, 2].map(i => `<svg viewBox="0 0 24 24" class="${i < stars ? 'on' : ''}"><use href="#i-star"/></svg>`).join('');
   $('endBody').innerHTML = `<div class="kv"><span>${t('end_worth')}</span><span class="${worth >= 0 ? 'pos' : 'neg'}">${money(worth)}</span><span>${t('end_money')}</span><span>${money(G.money)}</span><span>${t('end_loan')}</span><span class="${G.loan > 0 ? 'neg' : 'pos'}">${money(G.loan)}</span><span>${t('end_boat')}</span><span>${money(boatValue())}</span><span>${t('end_kg')}</span><span>${Math.round(G.tot.catch)} kg</span><span>${t('end_days')}</span><span>${G.tot.storms}</span></div>${rec ? `<p class="rec">${t('end_best')}</p>` : ''}`;
+  G.share = { title: 'Hamsi', lines: [t('share_end', { r: reis ? t('end_reis') : t('end_bank'), w: money(worth), st: stars })], url: ARENA_URL };
+  if (reis) arenaAward('hamsi-reis', 'badge_reis'); if (stars === 3) arenaAward('hamsi-3star', 'badge_3star');
   $('ending').classList.add('show'); Snd.bell(); refreshBest(); refreshUI(true);
 }
 function refreshBest() {
   const b = getBest(); $('tBest').textContent = b ? t('best', { r: b.reis ? t('rank2') : t('rank1'), s: money(b.worth) }) : t('nobest');
   $('tCont').disabled = !hasSave(); $('tCont').classList.toggle('hidden', !hasSave());
+  $('tDaily').classList.toggle('hidden', !ARENA);
+  if (ARENA) { const d = ARENA.daily('hamsi'); $('tDailyInfo').textContent = '(' + (d.done ? t('daily_done') + ' · ' : '') + t('daily_info', { s: d.streak, b: d.best }) + ')'; $('tDaily').title = t('daily_note'); }
 }
 $('sumNext').addEventListener('click', () => { Snd.click(); nextDay(); });
 
 /* ---------- screen flow */
 function hideAll() { for (const id of ['title', 'harbor', 'summary', 'ending', 'pause', 'settings', 'mapscr']) $(id).classList.remove('show'); }
-function toTitle() { hideAll(); G.mode = 'menu'; G.paused = false; G.overlay = null; $('hud').classList.add('hidden'); $('title').classList.add('show'); stowNet(); G.schools = []; refreshBest(); }
+function toTitle() { hideAll(); G.daily = null; rand = Math.random; G.mode = 'menu'; G.paused = false; G.overlay = null; $('hud').classList.add('hidden'); $('title').classList.add('show'); stowNet(); G.schools = []; refreshBest(); }
 function enterGame() { $('title').classList.remove('show'); $('hud').classList.remove('hidden'); resize(); Snd.init(); }
 function startNewGame() { freshRun(); enterGame(); startDay(); }
 function continueGame() { if (!loadRun()) { startNewGame(); return; } enterGame(); startDay(); }
+// Daily challenge: one day at sea in a fresh rowboat; the UTC day's seed sets the weather, the market, the day's goal
+// and the dawn schools (?d=YYYYMMDD replays another day). The day's sales are the score; the season save is untouched.
+function startDaily() {
+  if (!ARENA) return; const d = ARENA.daily('hamsi');
+  freshRun(); G.daily = d; G.seed = d.seed; G.stormDays = pickStormDays(G.seed); rand = d.rng;
+  enterGame(); startDay(); toast(t('daily_note'), 'info');
+}
+function dayText(k) { return `${k % 100}.${Math.floor(k / 100) % 100}.${Math.floor(k / 10000)}`; }
+function arenaAward(id, key) { if (ARENA && !G.auto) ARENA.award(id, t(key)); }
 let settingsFrom = 'title';
 function openSettings(from) { settingsFrom = from; $('pause').classList.remove('show'); $('settings').classList.add('show'); G.overlay = 'settings'; syncSettings(); }
 function closeSettings() { $('settings').classList.remove('show'); G.overlay = null; if (settingsFrom === 'pause') $('pause').classList.add('show'); saveSettings(); }
@@ -2560,10 +2608,21 @@ $('tPlay').addEventListener('click', () => { Snd.init(); Snd.click(); startNewGa
 $('tCont').addEventListener('click', () => { Snd.init(); Snd.click(); continueGame(); });
 $('tSet').addEventListener('click', () => { Snd.init(); Snd.click(); openSettings('title'); });
 $('tLang').addEventListener('click', toggleLang);
+$('tDaily').addEventListener('click', () => { Snd.init(); Snd.click(); startDaily(); });
+$('setA11y').addEventListener('click', () => { Snd.click(); if (ARENA) ARENA.openSettings(); });
+for (const id of ['sumShare', 'endShare']) $(id).addEventListener('click', () => { Snd.click(); if (ARENA && G.share) ARENA.share(G.share); });
+if (ARENA) {
+  // The ♿ corner button would sit on the gauges (bottom right), so the panel opens from Settings > Accessibility.
+  // A hidden tab already freezes the loop and the audio (below); at sea it also opens the game's own pause menu.
+  ARENA.on('pause', () => { if (G.mode === 'play' && !G.auto && !G.overlay) setPause(true); });
+  ARENA.on('settings', s => { G.reduced = !!s.reducedMotion; });
+  G.reduced = !!ARENA.settings.reducedMotion;
+  const others = ARENA.games.filter(g => g !== 'hamsi'); $('endOther').href = 'https://furkiozknn.github.io/' + others[Math.floor(Date.now() / 86400000) % others.length] + '/';
+} else for (const id of ['setA11y', 'endShare', 'endOther']) $(id).classList.add('hidden');
 $('bLang').addEventListener('click', toggleLang); $('bSound').addEventListener('click', () => { const on = !(S.musicOn || S.sfxOn); S.musicOn = S.sfxOn = on; Snd.vol(); refreshUI(true); });
 $('bSpeed').addEventListener('click', cycleSpeed); $('bMap').addEventListener('click', toggleMap); $('bPause').addEventListener('click', () => setPause(true));
 $('bNet').addEventListener('click', () => { Snd.click(); netAction(); }); $('bDock').addEventListener('click', () => { dockNow(); });
-$('pResume').addEventListener('click', () => setPause(false)); $('pRestart').addEventListener('click', () => { setPause(false); hideAll(); store.del(KEY_SAVE); startNewGame(); });
+$('pResume').addEventListener('click', () => setPause(false)); $('pRestart').addEventListener('click', () => { setPause(false); hideAll(); if (G.daily) { startDaily(); return; } store.del(KEY_SAVE); startNewGame(); }); // a daily restarts the daily, the season save stays
 $('pSet').addEventListener('click', () => openSettings('pause')); $('pMenu').addEventListener('click', () => { toTitle(); });
 $('setBack').addEventListener('click', closeSettings); $('mapClose').addEventListener('click', toggleMap);
 $('endAgain').addEventListener('click', () => { hideAll(); startNewGame(); }); $('endMenu').addEventListener('click', toTitle);
