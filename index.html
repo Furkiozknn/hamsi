@@ -118,7 +118,7 @@ body.touch #goal{top:calc(var(--barh,56px) + max(8px,env(safe-area-inset-top)) +
 body.touch #gauges{bottom:auto;top:calc(var(--barh,56px) + max(8px,env(safe-area-inset-top)) + 70px);width:170px;grid-template-columns:auto 64px 44px;font-size:11px;padding:6px 8px}
 body.touch #actions{bottom:calc(max(14px,env(safe-area-inset-bottom)) + 150px);left:auto;right:max(10px,env(safe-area-inset-right));transform:none;align-items:flex-end}
 body.touch #actions .btn{min-height:52px;padding:8px 16px}
-body.touch #actions .hint{display:none}
+body.touch #actions .hint{font-size:11.5px;padding:3px 10px;max-width:calc(100vw - 100px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:700px){
   #topbar{gap:8px}
   #topbar .brand span{display:none}
@@ -144,9 +144,17 @@ body.touch #actions .hint{display:none}
   body.touch #tWheel svg{width:92px;height:92px}
   body.touch #actions{bottom:max(14px,env(safe-area-inset-bottom));right:calc(max(10px,env(safe-area-inset-right)) + 124px)}
 }
-@media (orientation:portrait){
+@media (orientation:portrait) and (max-height:700px){
   body.touch #sonar{top:auto;bottom:max(14px,env(safe-area-inset-bottom));left:calc(max(10px,env(safe-area-inset-left)) + 74px)}
   body.touch #sonar canvas{width:min(262px,calc(100vw - 250px));height:auto;aspect-ratio:600/344} /* subtract 14px #sonar padding+border so right edge clears #tWheel */
+}
+@media (orientation:portrait) and (min-height:701px){
+  /* portrait phone: the sonar is the main information source, so it takes the width under the weather/goal row (as tall as
+     the space above the action buttons allows); the gauges and the toasts move under it */
+  body.touch{--sonw:min(356px,calc(100vw - 36px),calc((100vh - 601px) * 600 / 344))}
+  body.touch #sonar{top:calc(var(--barh,56px) + max(8px,env(safe-area-inset-top)) + 70px);bottom:auto;left:max(10px,env(safe-area-inset-left))}
+  body.touch #sonar canvas{width:var(--sonw);height:calc(var(--sonw) * 344 / 600)}
+  body.touch #gauges,body.touch #toasts{top:calc(var(--barh,56px) + max(8px,env(safe-area-inset-top)) + 70px + var(--sonw) * 344 / 600 + 22px)}
 }
 /* screens */
 .screen{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:20;padding:12px;overflow:auto;touch-action:pan-y}
@@ -277,11 +285,12 @@ button.btn:focus-visible{outline:3px solid var(--sonar);outline-offset:2px} /* A
 html[data-arena-reduced-motion] :is(#lens,#wcard.warn){animation:none!important} /* the same when "Reduce motion" is on in the Arena panel */
 a.btn{text-decoration:none;color:inherit;display:inline-flex;align-items:center;justify-content:center}
 </style>
-<script>/*ARENA-KIT:BEGIN v1.0.1 sha256:bc575c398c95*/
+<script>/*ARENA-KIT:BEGIN v1.1.0 sha256:3bea83137e26*/
 /* ARENA-KIT v1 — shared layer for the 21 Claude Game Arena games.
  *
  * Injected inline into each game's index.html (between begin/end marker comments) by
- * arena-kit/inject.py, so every game stays a single file. Plain script, no imports, no network.
+ * arena-kit/inject.py, so every game stays a single file. Plain script, no imports; the kit itself opens no
+ * connection (v1.1 play events are handed to the page's existing GoatCounter counter, if it is there).
  * Everything is optional: a game that never calls Arena.* behaves exactly as before.
  *
  *   Arena.perf.attach(renderer)        dynamic pixel ratio for weak GPUs (Intel UHD)
@@ -292,6 +301,10 @@ a.btn{text-decoration:none;color:inherit;display:inline-flex;align-items:center;
  *   Arena.share({...})                 Web Share / clipboard text + optional PNG card
  *   Arena.profile(), Arena.award(id)   cross-game passport (shared origin localStorage)
  *   Arena.settings / openSettings()    accessibility panel (text size, contrast, motion, vibration, auto-pause)
+ *   Arena.complete({mount, feedback})  v1.1: "completed" event + one-tap 👍/👎 (once a day per game), inline in `mount`
+ *   Arena.track(name)                  v1.1: one GoatCounter event "<game>/<name>" per page load; automatic:
+ *                                      "start" (first real input) and "return" (played this game on an earlier day)
+ *                                      Nothing is sent or shown on quiet runs; no cookies, no ids, no new service.
  *
  * Storage: every key starts with "arena." and is versioned; every access is wrapped in try/catch
  * (private mode, quota, portals). Pure logic lives in Arena._core so it can be tested in Node.
@@ -299,7 +312,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-flex;align-items:center;
 (function (root) {
   'use strict';
   if (root.Arena && root.Arena.version) return; // injected twice (e.g. iframe) -> keep the first
-  var VERSION = '1.0.1';
+  var VERSION = '1.1.0';
   var hasDOM = typeof document !== 'undefined';
 
   /* ---------- core (pure, Node-testable) ---------- */
@@ -319,6 +332,12 @@ a.btn{text-decoration:none;color:inherit;display:inline-flex;align-items:center;
     var y = Math.floor(key / 10000), m = Math.floor(key / 100) % 100, d = key % 100;
     return core.dayKey(new Date(Date.UTC(y, m - 1, d) - 86400000));
   };
+  // v1.1: a player is "returning" if this game was last played on an earlier day (old profiles: any earlier play)
+  core.isReturn = function (lastDay, plays, lastAnyAt, today) {
+    if (lastDay) return lastDay < today;
+    return !!(plays > 0 && lastAnyAt && core.dayKey(new Date(lastAnyAt)) < today);
+  };
+  core.eventName = function (name) { return String(name || '').replace(/[^a-z0-9-]/gi, '').slice(0, 24).toLowerCase(); };
   core.hash = function (str) { // FNV-1a 32-bit
     var h = 0x811c9dc5;
     for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
@@ -387,10 +406,12 @@ a.btn{text-decoration:none;color:inherit;display:inline-flex;align-items:center;
   var STR = {
     tr: { again: 'Bir daha', another: 'Başka bir oyun dene', close: 'Kapat', settings: 'Erişilebilirlik',
       textSize: 'Yazı boyutu', contrast: 'Yüksek karşıtlık', motion: 'Hareketi azalt', vibration: 'Titreşim',
-      autoPause: 'Sekme değişince duraklat', copied: 'Panoya kopyalandı', streak: 'Seri', days: 'gün', share: 'Paylaş' },
+      autoPause: 'Sekme değişince duraklat', copied: 'Panoya kopyalandı', streak: 'Seri', days: 'gün', share: 'Paylaş',
+      fbAsk: 'Beğendin mi?', like: 'Beğendim', dislike: 'Beğenmedim', thanks: 'Teşekkürler!' },
     en: { again: 'Play again', another: 'Try another game', close: 'Close', settings: 'Accessibility',
       textSize: 'Text size', contrast: 'High contrast', motion: 'Reduce motion', vibration: 'Vibration',
-      autoPause: 'Pause when the tab is hidden', copied: 'Copied to clipboard', streak: 'Streak', days: 'days', share: 'Share' },
+      autoPause: 'Pause when the tab is hidden', copied: 'Copied to clipboard', streak: 'Streak', days: 'days', share: 'Share',
+      fbAsk: 'Did you enjoy it?', like: 'I liked it', dislike: 'I did not like it', thanks: 'Thanks!' },
   };
   var lang = 'en';
   try { lang = /^tr/i.test((hasDOM && document.documentElement.lang) || (root.navigator && navigator.language) || '') ? 'tr' : 'en'; } catch (e) {}
@@ -407,9 +428,13 @@ a.btn{text-decoration:none;color:inherit;display:inline-flex;align-items:center;
     gameId = (meta && meta.content) || (GAMES.indexOf(seg) >= 0 ? seg : 'unknown');
   } catch (e) {}
   function profile() { return get('profile.v1', { plays: {}, badges: {}, last: null, first: null }); }
+  var returning = false;
   function touchProfile() {
-    var p = profile(), now = Date.now();
+    var p = profile(), now = Date.now(), today = core.dayKey();
+    p.lastDay = p.lastDay || {};
+    returning = core.isReturn(p.lastDay[gameId], p.plays[gameId] || 0, p.last && p.last.at, today);
     p.plays[gameId] = (p.plays[gameId] || 0) + 1; p.last = { game: gameId, at: now }; p.first = p.first || now;
+    p.lastDay[gameId] = today;
     set('profile.v1', p); return p;
   }
   function award(id, label) {
@@ -462,6 +487,13 @@ a.btn{text-decoration:none;color:inherit;display:inline-flex;align-items:center;
     'width:40px;height:40px;border-radius:50%;border:0;background:rgba(14,13,11,.7);color:#f6f1e6;font:20px/40px system-ui;cursor:pointer;opacity:.7}' +
     '.arena-gear:hover,.arena-gear:focus-visible{opacity:1}' +
     'html[data-arena-contrast] body{filter:contrast(1.25) saturate(1.1)}' +
+    '.arena-fb{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top));transform:translateX(-50%);z-index:2147483000;white-space:nowrap;' +
+    'display:flex;align-items:center;gap:8px;padding:6px 6px 6px 14px;border-radius:999px;background:rgba(14,13,11,.9);color:#f6f1e6;' +
+    'font:600 calc(15px*var(--arena-text-scale,1))/1.2 system-ui,sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.35)}' +
+    '.arena-fb button{min-width:44px;min-height:44px;border:0;border-radius:50%;background:#2b2722;color:#f6f1e6;font:22px/1 system-ui;cursor:pointer}' +
+    '.arena-fb button.arena-fb-x{font-size:16px;background:transparent}' +
+    '.arena-fb.arena-fb-inline{position:static;transform:none;margin:12px auto 0;width:max-content;max-width:100%;box-shadow:none}' +
+    '.arena-fb button:focus-visible{outline:3px solid #3fd4dc;outline-offset:2px}' +
     'html[data-arena-reduced-motion] *{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}';
   var styled = false;
   function style() {
@@ -530,6 +562,55 @@ a.btn{text-decoration:none;color:inherit;display:inline-flex;align-items:center;
     var close = modal(el('div', { class: 'arena-card' }, kids));
     again.addEventListener('click', function () { close(); if (o.onAgain) o.onAgain(); });
     return close;
+  }
+
+  /* ---------- play events (v1.1) ---------- */
+  // Handed to the page's own GoatCounter (`window.goatcounter.count`, already on 20 of 21 pages). The kit opens no
+  // connection itself; without the counter (or on ?auto / ?nosave / ?demo) the events are simply dropped.
+  var sent = {}, pending = [];
+  function gcSend(path, title) {
+    var gc = root.goatcounter;
+    if (!gc || typeof gc.count !== 'function') return false;
+    try { gc.count({ path: path, title: title || path, event: true }); } catch (e) {}
+    return true;
+  }
+  function flush(tries) {
+    pending = pending.filter(function (e) { return !gcSend(e[0], e[1]); });
+    if (pending.length && tries < 20) setTimeout(function () { flush(tries + 1); }, 500); // count.js loads async
+  }
+  function track(name, title) {
+    name = core.eventName(name);
+    if (quiet || !hasDOM || !name || sent[name]) return false;
+    sent[name] = 1;
+    var path = gameId + '/' + name;
+    if (!gcSend(path, title)) { pending.push([path, title]); if (pending.length === 1) flush(0); }
+    return true;
+  }
+  var fbEl = null;
+  function complete(o) {
+    o = o || {};
+    track('complete');
+    if (quiet || !hasDOM || !document.body || o.feedback === false || fbEl) return;
+    var asked = get('feedback.v1', {}), today = core.dayKey();
+    if (asked[gameId] === today) return;
+    style();
+    var up = el('button', { type: 'button', 'aria-label': t('like'), title: t('like'), text: '👍' });
+    var down = el('button', { type: 'button', 'aria-label': t('dislike'), title: t('dislike'), text: '👎' });
+    var x = el('button', { type: 'button', class: 'arena-fb-x', 'aria-label': t('close'), title: t('close'), text: '✕' });
+    var label = el('span', { text: t('fbAsk') });
+    var mount = o.mount && o.mount.appendChild ? o.mount : null;   // inline in the game's own end screen if given
+    fbEl = el('div', { class: mount ? 'arena-fb arena-fb-inline' : 'arena-fb', role: 'group', 'aria-label': t('fbAsk') }, [label, up, down, x]);
+    function done() { if (fbEl && fbEl.parentNode) fbEl.parentNode.removeChild(fbEl); fbEl = null; }
+    function vote(v) {
+      track(v); var a = get('feedback.v1', {}); a[gameId] = today; set('feedback.v1', a);
+      [up, down, x].forEach(function (b) { b.remove(); }); label.textContent = t('thanks'); announce(t('thanks'));
+      setTimeout(done, 1500);
+    }
+    up.addEventListener('click', function () { vote('like'); });
+    down.addEventListener('click', function () { vote('dislike'); });
+    x.addEventListener('click', done);
+    (mount || document.body).appendChild(fbEl);
+    if (!mount) setTimeout(done, o.ms || 20000);   // floating panel fades out; an inline one stays with the end screen
   }
 
   function daily(game, opts) {
@@ -628,7 +709,16 @@ a.btn{text-decoration:none;color:inherit;display:inline-flex;align-items:center;
       if (!settings.autoPause) return;
       emit(document.hidden ? 'pause' : 'resume');
     });
-    var boot = function () { applySettings(); touchProfile(); };
+    var boot = function () {
+      applySettings(); touchProfile();
+      if (quiet) return;
+      var first = function (e) {
+        if (e && e.isTrusted === false) return;
+        ['pointerdown', 'keydown', 'touchstart'].forEach(function (n) { document.removeEventListener(n, first, true); });
+        track('start'); if (returning) track('return');
+      };
+      ['pointerdown', 'keydown', 'touchstart'].forEach(function (n) { document.addEventListener(n, first, true); });
+    };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
   }
 
@@ -636,6 +726,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-flex;align-items:center;
     version: VERSION, quiet: quiet, game: gameId, games: GAMES.slice(), lang: function (l) { if (l) lang = l === 'tr' ? 'tr' : 'en'; return lang; },
     perf: perf, hint: hint, toast: toast, endCard: endCard, daily: daily, share: share, shareCard: shareCard,
     profile: profile, award: award, settings: settings, openSettings: openSettings, mountSettingsButton: mountSettingsButton,
+    track: track, complete: complete,
     on: function (name, fn) { (listeners[name] = listeners[name] || []).push(fn); },
     _core: core, _store: { get: get, set: set },
   };
@@ -698,7 +789,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-flex;align-items:center;
       <button class="btn icon" id="bLang" aria-label="Language" title="L"><svg class="ic"><use href="#i-globe"/></svg></button>
     </div>
   </div>
-  <div id="toasts"></div>
+  <div id="toasts" role="status" aria-live="polite"></div>
   <div id="wcard" class="glass"><svg class="ic"><use href="#i-sun"/></svg><div><div class="t1" id="wT1"></div><div class="t2" id="wT2"></div></div></div>
   <div id="goal" class="glass"><small data-i18n="goal">Günün hedefi</small><span id="goalT"></span><div class="gb"><i id="goalB"></i></div></div>
   <div id="sonar" class="glass"><canvas id="sonarc" width="600" height="344"></canvas><span class="cap" data-i18n="sonar">Sonar</span></div>
@@ -841,7 +932,7 @@ const L = {
     day: 'Gün', time: 'Saat', money: 'Para', loan: 'Kredi', goal: 'Günün hedefi', sonar: 'Sonar', dock: 'Yanaş',
     subtitle: "Karadeniz'de hamsi avı ve balıkçı teknesi yönetimi",
     how: 'Sandalla başla, sonarla sürüyü bul, ağı sürünün çevresinde daire çizerek at, balığı tazeyken sat. Taka, trol ve gırgıra yüksel; gece hamsi yüzeye çıkar. 30 günde krediyi öde ve limanın reisi ol.',
-    play: 'Yeni sezon', cont: 'Devam et', settings: 'Ayarlar', keys: 'W/S gaz · A/D dümen · Boşluk ağ · M harita · P duraklat',
+    play: 'Yeni sezon', cont: 'Devam et', settings: 'Ayarlar', keys: 'W/S gaz · A/D dümen · Boşluk ağ · M harita · P duraklat', keysTouch: 'Sol kol gaz · çark dümen · düğmeyle ağ at ve yanaş · harita ve duraklat üst çubukta',
     endday: 'Sabaha kadar uyu', sail: 'Denize çık', waitdusk: 'Akşamı bekle (19:00)', again: 'Tekrar oyna', menu: 'Ana menü', paused: 'Duraklatıldı', resume: 'Devam', restart: 'Yeniden başla',
     vmaster: 'Ana ses', vmusic: 'Müzik', vsfx: 'Efektler', language: 'Dil', quality: 'Kalite', low: 'Düşük', high: 'Yüksek', screen: 'Ekran', fullscreen: 'Tam ekran',
     back: 'Geri', map: 'Harita', close: 'Kapat', loading: 'Yükleniyor… {n}/{N}',
@@ -849,7 +940,7 @@ const L = {
     sp_hamsi: 'Hamsi', sp_istavrit: 'İstavrit', sp_palamut: 'Palamut', sp_lufer: 'Lüfer',
     net_set: 'Ağı at', net_haul: 'Ağı çek', net_hauling: 'Ağ çekiliyor…', net_full: 'Ağ tamam: çek!',
     hint_set: 'Balık sürüsünün çevresinde daire çiz', hint_haul: 'Daireyi kapat, sonra çek ({m} m ağ)', hint_dock: 'Limana yanaşmak için yavaşla',
-    hint_dockok: 'Yanaşmak için Boşluk', hint_harbor: 'Limanda ağ atılmaz',
+    hint_dockok: 'Yanaşmak için Boşluk', hint_dockokTouch: 'Yanaşmak için Yanaş düğmesi', hint_harbor: 'Limanda ağ atılmaz',
     w_clear: 'Açık hava', w_mist: 'Sisli', w_wind: 'Rüzgârlı', w_warn: 'Fırtına uyarısı!', w_storm: 'FIRTINA', w_after: 'Deniz yatışıyor',
     w_wind_line: 'Rüzgâr {w} m/s · Dalga {h} m', w_storm_in: 'Fırtınaya {t} · Limana dön!', w_storm_on: 'Limana dön! Tekne hasar alıyor', w_storm_exp: 'Bugün fırtına bekleniyor',
     t_gull: 'Martılar bir sürü üzerinde dönüyor',
@@ -898,7 +989,7 @@ const L = {
     day: 'Day', time: 'Time', money: 'Cash', loan: 'Loan', goal: "Today's goal", sonar: 'Sonar', dock: 'Dock',
     subtitle: 'Anchovy fishing and boat management on the Black Sea',
     how: 'Start in a rowboat, find schools on the sonar, circle the net around them and sell the catch fresh. Move up to a taka, a trawler and a purse seiner; at night the anchovy rise. Pay off the loan in 30 days and become reis of the harbour.',
-    play: 'New season', cont: 'Continue', settings: 'Settings', keys: 'W/S throttle · A/D rudder · Space net · M map · P pause',
+    play: 'New season', cont: 'Continue', settings: 'Settings', keys: 'W/S throttle · A/D rudder · Space net · M map · P pause', keysTouch: 'Left lever throttle · wheel steers · buttons set the net and dock · map and pause on the top bar',
     endday: 'Sleep till morning', sail: 'Sail out', waitdusk: 'Wait for dusk (19:00)', again: 'Play again', menu: 'Main menu', paused: 'Paused', resume: 'Resume', restart: 'Restart',
     vmaster: 'Master', vmusic: 'Music', vsfx: 'Effects', language: 'Language', quality: 'Quality', low: 'Low', high: 'High', screen: 'Screen', fullscreen: 'Fullscreen',
     back: 'Back', map: 'Map', close: 'Close', loading: 'Loading… {n}/{N}',
@@ -906,7 +997,7 @@ const L = {
     sp_hamsi: 'Anchovy', sp_istavrit: 'Horse mackerel', sp_palamut: 'Bonito', sp_lufer: 'Bluefish',
     net_set: 'Set net', net_haul: 'Haul net', net_hauling: 'Hauling…', net_full: 'Net full: haul!',
     hint_set: 'Circle the net around a school', hint_haul: 'Close the circle, then haul ({m} m of net)', hint_dock: 'Slow down to dock',
-    hint_dockok: 'Press Space to dock', hint_harbor: 'No fishing in the harbour',
+    hint_dockok: 'Press Space to dock', hint_dockokTouch: 'Tap Dock to dock', hint_harbor: 'No fishing in the harbour',
     w_clear: 'Clear', w_mist: 'Misty', w_wind: 'Windy', w_warn: 'Storm warning!', w_storm: 'STORM', w_after: 'Seas calming',
     w_wind_line: 'Wind {w} m/s · Waves {h} m', w_storm_in: 'Storm in {t} · Head home!', w_storm_on: 'Head home! The boat is taking damage', w_storm_exp: 'A storm is forecast today',
     t_gull: 'Gulls are circling over a school',
@@ -953,7 +1044,7 @@ const L = {
   },
 };
 function t(k, v) {
-  let s = (L[S.lang] && L[S.lang][k]); if (s === undefined) s = L.en[k]; if (s === undefined) { if (FLAG.debug) errors.push('missing i18n ' + k); return k; }
+  let s = (IS_TOUCH && L[S.lang] && L[S.lang][k + 'Touch']) || (L[S.lang] && L[S.lang][k]); if (s === undefined) s = L.en[k]; if (s === undefined) { if (FLAG.debug) errors.push('missing i18n ' + k); return k; }
   if (v) for (const kk in v) s = s.split('{' + kk + '}').join(v[kk]);
   return s;
 }
@@ -1586,6 +1677,7 @@ function endDay(reason) {
   else { G.sum.forecast = wxLabel(genWeather(G.day + 1)); G.mode = 'summary'; }
   G.sum.money = G.money; G.sum.loan = G.loan;
   G.boat.v = 0; closeHarbor(); showSummary(); refreshUI(true);
+  if (window.Arena && Arena.complete) Arena.complete({ mount: $('summary').querySelector('.col') });   // arena-kit v1.1: hamsi/complete + one-tap 👍/👎 (nothing on ?auto)
 }
 function settle() { const pay = Math.min(G.money, G.loan); G.money -= pay; G.loan -= pay; }
 function nextDay() {
