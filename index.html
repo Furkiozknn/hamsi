@@ -118,7 +118,7 @@ body.touch #goal{top:calc(var(--barh,56px) + max(8px,env(safe-area-inset-top)) +
 body.touch #gauges{bottom:auto;top:calc(var(--barh,56px) + max(8px,env(safe-area-inset-top)) + 70px);width:170px;grid-template-columns:auto 64px 44px;font-size:11px;padding:6px 8px}
 body.touch #actions{bottom:calc(max(14px,env(safe-area-inset-bottom)) + 150px);left:auto;right:max(10px,env(safe-area-inset-right));transform:none;align-items:flex-end}
 body.touch #actions .btn{min-height:52px;padding:8px 16px}
-body.touch #actions .hint{display:none}
+body.touch #actions .hint{font-size:11.5px;padding:3px 10px;max-width:calc(100vw - 100px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:700px){
   #topbar{gap:8px}
   #topbar .brand span{display:none}
@@ -144,9 +144,17 @@ body.touch #actions .hint{display:none}
   body.touch #tWheel svg{width:92px;height:92px}
   body.touch #actions{bottom:max(14px,env(safe-area-inset-bottom));right:calc(max(10px,env(safe-area-inset-right)) + 124px)}
 }
-@media (orientation:portrait){
+@media (orientation:portrait) and (max-height:700px){
   body.touch #sonar{top:auto;bottom:max(14px,env(safe-area-inset-bottom));left:calc(max(10px,env(safe-area-inset-left)) + 74px)}
   body.touch #sonar canvas{width:min(262px,calc(100vw - 250px));height:auto;aspect-ratio:600/344} /* subtract 14px #sonar padding+border so right edge clears #tWheel */
+}
+@media (orientation:portrait) and (min-height:701px){
+  /* portrait phone: the sonar is the main information source, so it takes the width under the weather/goal row (as tall as
+     the space above the action buttons allows); the gauges and the toasts move under it */
+  body.touch{--sonw:min(356px,calc(100vw - 36px),calc((100vh - 601px) * 600 / 344))}
+  body.touch #sonar{top:calc(var(--barh,56px) + max(8px,env(safe-area-inset-top)) + 70px);bottom:auto;left:max(10px,env(safe-area-inset-left))}
+  body.touch #sonar canvas{width:var(--sonw);height:calc(var(--sonw) * 344 / 600)}
+  body.touch #gauges,body.touch #toasts{top:calc(var(--barh,56px) + max(8px,env(safe-area-inset-top)) + 70px + var(--sonw) * 344 / 600 + 22px)}
 }
 /* screens */
 .screen{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:20;padding:12px;overflow:auto;touch-action:pan-y}
@@ -698,7 +706,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-flex;align-items:center;
       <button class="btn icon" id="bLang" aria-label="Language" title="L"><svg class="ic"><use href="#i-globe"/></svg></button>
     </div>
   </div>
-  <div id="toasts"></div>
+  <div id="toasts" role="status" aria-live="polite"></div>
   <div id="wcard" class="glass"><svg class="ic"><use href="#i-sun"/></svg><div><div class="t1" id="wT1"></div><div class="t2" id="wT2"></div></div></div>
   <div id="goal" class="glass"><small data-i18n="goal">Günün hedefi</small><span id="goalT"></span><div class="gb"><i id="goalB"></i></div></div>
   <div id="sonar" class="glass"><canvas id="sonarc" width="600" height="344"></canvas><span class="cap" data-i18n="sonar">Sonar</span></div>
@@ -841,7 +849,7 @@ const L = {
     day: 'Gün', time: 'Saat', money: 'Para', loan: 'Kredi', goal: 'Günün hedefi', sonar: 'Sonar', dock: 'Yanaş',
     subtitle: "Karadeniz'de hamsi avı ve balıkçı teknesi yönetimi",
     how: 'Sandalla başla, sonarla sürüyü bul, ağı sürünün çevresinde daire çizerek at, balığı tazeyken sat. Taka, trol ve gırgıra yüksel; gece hamsi yüzeye çıkar. 30 günde krediyi öde ve limanın reisi ol.',
-    play: 'Yeni sezon', cont: 'Devam et', settings: 'Ayarlar', keys: 'W/S gaz · A/D dümen · Boşluk ağ · M harita · P duraklat',
+    play: 'Yeni sezon', cont: 'Devam et', settings: 'Ayarlar', keys: 'W/S gaz · A/D dümen · Boşluk ağ · M harita · P duraklat', keysTouch: 'Sol kol gaz · çark dümen · düğmeyle ağ at ve yanaş · harita ve duraklat üst çubukta',
     endday: 'Sabaha kadar uyu', sail: 'Denize çık', waitdusk: 'Akşamı bekle (19:00)', again: 'Tekrar oyna', menu: 'Ana menü', paused: 'Duraklatıldı', resume: 'Devam', restart: 'Yeniden başla',
     vmaster: 'Ana ses', vmusic: 'Müzik', vsfx: 'Efektler', language: 'Dil', quality: 'Kalite', low: 'Düşük', high: 'Yüksek', screen: 'Ekran', fullscreen: 'Tam ekran',
     back: 'Geri', map: 'Harita', close: 'Kapat', loading: 'Yükleniyor… {n}/{N}',
@@ -849,7 +857,7 @@ const L = {
     sp_hamsi: 'Hamsi', sp_istavrit: 'İstavrit', sp_palamut: 'Palamut', sp_lufer: 'Lüfer',
     net_set: 'Ağı at', net_haul: 'Ağı çek', net_hauling: 'Ağ çekiliyor…', net_full: 'Ağ tamam: çek!',
     hint_set: 'Balık sürüsünün çevresinde daire çiz', hint_haul: 'Daireyi kapat, sonra çek ({m} m ağ)', hint_dock: 'Limana yanaşmak için yavaşla',
-    hint_dockok: 'Yanaşmak için Boşluk', hint_harbor: 'Limanda ağ atılmaz',
+    hint_dockok: 'Yanaşmak için Boşluk', hint_dockokTouch: 'Yanaşmak için Yanaş düğmesi', hint_harbor: 'Limanda ağ atılmaz',
     w_clear: 'Açık hava', w_mist: 'Sisli', w_wind: 'Rüzgârlı', w_warn: 'Fırtına uyarısı!', w_storm: 'FIRTINA', w_after: 'Deniz yatışıyor',
     w_wind_line: 'Rüzgâr {w} m/s · Dalga {h} m', w_storm_in: 'Fırtınaya {t} · Limana dön!', w_storm_on: 'Limana dön! Tekne hasar alıyor', w_storm_exp: 'Bugün fırtına bekleniyor',
     t_gull: 'Martılar bir sürü üzerinde dönüyor',
@@ -898,7 +906,7 @@ const L = {
     day: 'Day', time: 'Time', money: 'Cash', loan: 'Loan', goal: "Today's goal", sonar: 'Sonar', dock: 'Dock',
     subtitle: 'Anchovy fishing and boat management on the Black Sea',
     how: 'Start in a rowboat, find schools on the sonar, circle the net around them and sell the catch fresh. Move up to a taka, a trawler and a purse seiner; at night the anchovy rise. Pay off the loan in 30 days and become reis of the harbour.',
-    play: 'New season', cont: 'Continue', settings: 'Settings', keys: 'W/S throttle · A/D rudder · Space net · M map · P pause',
+    play: 'New season', cont: 'Continue', settings: 'Settings', keys: 'W/S throttle · A/D rudder · Space net · M map · P pause', keysTouch: 'Left lever throttle · wheel steers · buttons set the net and dock · map and pause on the top bar',
     endday: 'Sleep till morning', sail: 'Sail out', waitdusk: 'Wait for dusk (19:00)', again: 'Play again', menu: 'Main menu', paused: 'Paused', resume: 'Resume', restart: 'Restart',
     vmaster: 'Master', vmusic: 'Music', vsfx: 'Effects', language: 'Language', quality: 'Quality', low: 'Low', high: 'High', screen: 'Screen', fullscreen: 'Fullscreen',
     back: 'Back', map: 'Map', close: 'Close', loading: 'Loading… {n}/{N}',
@@ -906,7 +914,7 @@ const L = {
     sp_hamsi: 'Anchovy', sp_istavrit: 'Horse mackerel', sp_palamut: 'Bonito', sp_lufer: 'Bluefish',
     net_set: 'Set net', net_haul: 'Haul net', net_hauling: 'Hauling…', net_full: 'Net full: haul!',
     hint_set: 'Circle the net around a school', hint_haul: 'Close the circle, then haul ({m} m of net)', hint_dock: 'Slow down to dock',
-    hint_dockok: 'Press Space to dock', hint_harbor: 'No fishing in the harbour',
+    hint_dockok: 'Press Space to dock', hint_dockokTouch: 'Tap Dock to dock', hint_harbor: 'No fishing in the harbour',
     w_clear: 'Clear', w_mist: 'Misty', w_wind: 'Windy', w_warn: 'Storm warning!', w_storm: 'STORM', w_after: 'Seas calming',
     w_wind_line: 'Wind {w} m/s · Waves {h} m', w_storm_in: 'Storm in {t} · Head home!', w_storm_on: 'Head home! The boat is taking damage', w_storm_exp: 'A storm is forecast today',
     t_gull: 'Gulls are circling over a school',
@@ -953,7 +961,7 @@ const L = {
   },
 };
 function t(k, v) {
-  let s = (L[S.lang] && L[S.lang][k]); if (s === undefined) s = L.en[k]; if (s === undefined) { if (FLAG.debug) errors.push('missing i18n ' + k); return k; }
+  let s = (IS_TOUCH && L[S.lang] && L[S.lang][k + 'Touch']) || (L[S.lang] && L[S.lang][k]); if (s === undefined) s = L.en[k]; if (s === undefined) { if (FLAG.debug) errors.push('missing i18n ' + k); return k; }
   if (v) for (const kk in v) s = s.split('{' + kk + '}').join(v[kk]);
   return s;
 }
