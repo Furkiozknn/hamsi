@@ -26,6 +26,8 @@
 html,body{margin:0;height:100%;overflow:hidden;background:#0c161c;color:var(--ink);
   font:700 var(--fs)/1.3 "Segoe UI","Trebuchet MS",system-ui,sans-serif;touch-action:none;user-select:none;-webkit-user-select:none}
 canvas#gl{position:fixed;inset:0;width:100%;height:100%;display:block}
+@keyframes catchFlash{0%{filter:brightness(1.35) contrast(1.08)}100%{filter:none}}
+canvas#gl.catch-flash,canvas#gl.screen-flash{animation:catchFlash .25s ease-out;filter:brightness(1.35) contrast(1.08)}
 .hidden{display:none!important}
 svg.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .glass{background:var(--glass);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--glass-b);
@@ -281,8 +283,8 @@ ul.feat li::before{background:var(--sonar);border-radius:1px}
 input[type=range]{accent-color:var(--sonar)}
 .rec{color:var(--sodium)}
 button.btn:focus-visible{outline:3px solid var(--sonar);outline-offset:2px} /* A11y: high-contrast focus ring */
-@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important}#lens,#wcard.warn{animation:none!important}} /* A11y: disable infinite animations */
-html[data-arena-reduced-motion] :is(#lens,#wcard.warn){animation:none!important} /* the same when "Reduce motion" is on in the Arena panel */
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important}#lens,#wcard.warn,canvas#gl.catch-flash,canvas#gl.screen-flash{animation:none!important;filter:none!important}} /* A11y: disable infinite animations */
+html[data-arena-reduced-motion] :is(#lens,#wcard.warn,canvas#gl.catch-flash,canvas#gl.screen-flash){animation:none!important;filter:none!important} /* the same when "Reduce motion" is on in the Arena panel */
 a.btn{text-decoration:none;color:inherit;display:inline-flex;align-items:center;justify-content:center}
 </style>
 <script>/*ARENA-KIT:BEGIN v1.1.0 sha256:3bea83137e26*/
@@ -1523,6 +1525,22 @@ function startHaul() {
   if (G.today && n.gap < 7 && n.members > 3) { G.today.ring = 1; checkGoal(); }
   Snd.splash();
 }
+function catchJuice() {
+  // Haptic vibration feedback with safe fallback if unsupported
+  try {
+    if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
+      navigator.vibrate([50, 30, 100]);
+    }
+  } catch (e) {}
+  // Visual catch juice: brief screen flash CSS class on the canvas
+  const cv = $('gl');
+  if (cv && (!G || !G.reduced)) {
+    cv.classList.remove('catch-flash', 'screen-flash');
+    void cv.offsetWidth; // force reflow so animation restarts reliably
+    cv.classList.add('catch-flash', 'screen-flash');
+    setTimeout(() => { cv.classList.remove('catch-flash', 'screen-flash'); }, 250);
+  }
+}
 function finishHaul() {
   const n = G.net; let any = 0;
   for (let i = 0; i < 4; i++) {
@@ -1533,7 +1551,12 @@ function finishHaul() {
     toast(t('toast_caught', { kg: Math.round(r.add), sp: spName }), 'good');
     if (r.lost > 1) toast(t('toast_hold', { kg: Math.round(r.lost) }), 'bad');
   }
-  if (!any) toast(t('toast_empty'), 'info'); else Snd.haulDone();
+  if (!any) {
+    toast(t('toast_empty'), 'info');
+  } else {
+    Snd.haulDone();
+    catchJuice();
+  }
   stowNet(); checkGoal();
 }
 function stepNet(dt) {
@@ -2944,7 +2967,7 @@ function simSeconds(sec) {
   refreshUI(true); return { mode: G.mode, day: G.day, money: Math.round(G.money), loan: Math.round(G.loan) };
 }
 window.hamsi = G; G.assets = { mode: FLAG.noassets ? 'noassets' : 'procedural', loaded: [], note: 'everything is generated in code' }; G.errors = errors; G.bot = bot;
-G.api = { setBoatVisual, sonarContacts, sellAll, buyUpgrade, startNewGame, netAction, endDay, nextDay, sailOut, dockNow, buyBoat, boatDeal, waitDusk, marketOpen, nightF, ST, BOATS, UPG, saveRun, loadRun, continueGame: () => continueGame() };
+G.api = { setBoatVisual, sonarContacts, sellAll, buyUpgrade, startNewGame, netAction, endDay, nextDay, sailOut, dockNow, buyBoat, boatDeal, waitDusk, marketOpen, nightF, ST, BOATS, UPG, saveRun, loadRun, catchJuice, continueGame: () => continueGame() };
 window.hamsiSim = simSeconds; G.audio = { state: () => Snd.state(), level: () => Snd.level() };
 Object.defineProperty(G, 'fps', { get: () => fps });
 Object.defineProperty(G, 'calls', { get: () => renderer ? renderer.info.render.calls : 0 });
