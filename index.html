@@ -59,7 +59,7 @@ button:focus-visible,input:focus-visible,a:focus-visible,[tabindex]:focus-visibl
 #topbar .btns{margin-left:auto;display:flex;gap:6px}
 #toasts{position:absolute;left:50%;transform:translateX(-50%);top:calc(var(--barh,56px) + max(8px,env(safe-area-inset-top)) + 8px);display:flex;flex-direction:column;gap:6px;align-items:center;width:min(92vw,520px);z-index:30}
 .toast{padding:8px 16px;border-radius:12px;background:var(--glass);border:1px solid var(--glass-b);backdrop-filter:blur(10px);font-weight:800;text-align:center;animation:tin .25s ease-out;box-shadow:0 4px 14px rgba(0,0,0,.3)}
-.toast.good{border-color:var(--good);color:#dbffe6}.toast.bad{border-color:var(--bad);color:#ffddd6}.toast.info{border-color:var(--accent-l);color:var(--ink)}
+.toast.good{border-color:var(--good);color:#dbffe6}.toast.bad{border-color:var(--bad);color:#ffddd6}.toast.warn{border-color:var(--warn);color:#ffeacc}.toast.info{border-color:var(--accent-l);color:var(--ink)}
 .toast.out{opacity:0;transform:translateY(-6px);transition:all .35s}
 @keyframes tin{from{opacity:0;transform:translateY(-8px) scale(.96)}to{opacity:1;transform:none}}
 #wcard{position:absolute;left:max(8px,env(safe-area-inset-left));top:calc(var(--barh,56px) + max(8px,env(safe-area-inset-top)) + 8px);padding:8px 12px;min-width:176px;display:flex;gap:10px;align-items:center}
@@ -930,8 +930,8 @@ function saveSettings() { const { master, music, sfx, lang, quality } = S; store
 const L = {
   tr: {
     day: 'Gün', time: 'Saat', money: 'Para', loan: 'Kredi', goal: 'Günün hedefi', sonar: 'Sonar', dock: 'Yanaş',
-    subtitle: "Karadeniz'de hamsi avı ve balıkçı teknesi yönetimi",
-    how: 'Sandalla başla, sonarla sürüyü bul, ağı sürünün çevresinde daire çizerek at, balığı tazeyken sat. Taka, trol ve gırgıra yüksel; gece hamsi yüzeye çıkar. 30 günde krediyi öde ve limanın reisi ol.',
+    subtitle: "Karadeniz'de gırgır ile hamsi avı ve balıkçı teknesi yönetimi",
+    how: 'Sandalla başla, sonarla sürüyü bul, gırgır ağıyla sürüyü çevir, balığı tazeyken sat. Taka, trol ve gırgır teknesine yüksel; gece hamsi yüzeye çıkar. 30 günde krediyi öde ve limanın reisi ol.',
     play: 'Yeni sezon', cont: 'Devam et', settings: 'Ayarlar', keys: 'W/S gaz · A/D dümen · Boşluk ağ · M harita · P duraklat', keysTouch: 'Sol kol gaz · çark dümen · düğmeyle ağ at ve yanaş · harita ve duraklat üst çubukta',
     endday: 'Sabaha kadar uyu', sail: 'Denize çık', waitdusk: 'Akşamı bekle (19:00)', again: 'Tekrar oyna', menu: 'Ana menü', paused: 'Duraklatıldı', resume: 'Devam', restart: 'Yeniden başla',
     vmaster: 'Ana ses', vmusic: 'Müzik', vsfx: 'Efektler', language: 'Dil', quality: 'Kalite', low: 'Düşük', high: 'Yüksek', screen: 'Ekran', fullscreen: 'Tam ekran',
@@ -950,8 +950,10 @@ const L = {
     sold: '{kg} kg {sp} satıldı: +{m}', nothing: 'Satacak balık yok', total_hold: 'Ambar: {kg}/{cap} kg',
     refuel: 'Yakıt doldur', refuelc: 'Depo {a}/{b} L · {c}', addice: 'Buz doldur', repair: 'Tamir et', repairc: 'Gövde %{h}', payloan: 'Kredi öde', pay5: '{m} öde', payall: 'Tümünü öde',
     full: 'Dolu', maxed: 'En üst seviye', buy: 'Satın al', lvl: 'Seviye {n}', need: 'Para yetmiyor',
-    up_net: 'Ağ', up_sonar: 'Sonar', up_engine: 'Motor', up_hold: 'Ambar', up_ice: 'Buz kasası', up_crew: 'Tayfa',
+    up_net: 'Ağ', up_sonar: 'Sonar', up_engine: 'Motor', up_hold: 'Ambar', up_ice: 'Buz kasası', up_crew: 'Tayfa & Ağ Ustası',
     d_net: '{len} m ağ · {dep} m derinlik', d_sonar: '{r} m menzil', d_engine: '{v} kn · tank {t} L', d_hold: '{c} kg', d_ice: '{c} birim buz · yavaş erime', d_crew: '{n} tayfa · çekme {s} sn',
+    d_crew_0: '1 tayfa (yalnız) · çekme {s} sn', d_crew_1: '2 tayfa · çekme {s} sn', d_crew_2: 'Ağ ustası ve tayfa · çekme {s} sn', d_crew_3: 'Ağ ustası & vantrik vinci (hidrolik makara) · {s} sn',
+    lidaki: 'Lidaki', lidaki_tag: 'Lidaki (-%80)', toast_lidaki_pen: 'Lidaki uyarısı: erken sezonda küçük boy balık %80 değer kaybetti',
     goal_kg: 'Bugün {n} kg balık tut', goal_sp: 'Bugün {n} kg {sp} tut', goal_cash: 'Bugün {n} satış yap', goal_fresh: '%80 üstü tazelikte {n} kg sat', goal_ring: 'Ağı {g} m aralıktan az açıklıkla kapat',
     goal_done: 'Hedef tamam! +{m}', goal_fail: 'Hedef tutmadı',
     toast_storm_warn: 'Fırtına geliyor! Limana dön.', toast_storm_on: 'Fırtına başladı!', toast_storm_end: 'Fırtına geçti.',
@@ -968,10 +970,10 @@ const L = {
     rank: 'Rütbe', rank0: 'Tayfa', rank1: 'Kaptan', rank2: 'Reis',
     fast: 'Hız', on: 'Açık', off: 'Kapalı', musict: 'Müzik', sfxt: 'Efekt', saved: 'Kaydedildi',
     wait: 'Bekleyin', sail_storm: 'Fırtına var: denize çıkmak tehlikeli!', sail_dusk: 'Gün bitti', held: 'Ambar {kg} kg',
-    cap: '{a}/{b}', unit_l: 'L', notnow: 'Şimdi değil', note_market: 'Fiyatlar talebe göre değişir; taze balık daha değerli.', note_up: 'Geliştirmeler yeni tekneye taşınır; her teknenin bir üst sınırı var.', note_boat: 'Yakıt, buz ve tamir ücretleri anında ödenir.',
+    cap: '{a}/{b}', unit_l: 'L', notnow: 'Şimdi değil', note_market: 'Fiyatlar talebe göre değişir; taze balık daha değerlidir. Erken sezonda boy yasağı altı küçük balık (lidaki) %80 değer kaybeder.', note_up: 'Geliştirmeler yeni tekneye taşınır; her teknenin bir üst sınırı var.', note_boat: 'Yakıt, buz ve tamir ücretleri anında ödenir.',
     note_yard: 'Eski tekne liste fiyatının %60\'ına takas edilir; peşin yetmezse fark krediye eklenir (en çok {m}).',
-    b_sandal: 'Sandal', b_taka: 'Taka', b_trol: 'Trol teknesi', b_girgir: 'Gırgır',
-    n_cevirme: 'çevirme ağı', n_girgir_k: 'küçük gırgır ağı', n_trol: 'derin trol ağı', n_girgir: 'gırgır ağı',
+    b_sandal: 'Sandal', b_taka: 'Taka', b_trol: 'Trol teknesi', b_girgir: 'Gırgır (çevirme teknesi)',
+    n_cevirme: 'çevirme ağı', n_girgir_k: 'küçük gırgır ağı', n_trol: 'derin trol ağı', n_girgir: 'büyük gırgır ağı',
     d_boat: '{v} kn · ambar {h} kg · {n} {l} m / {d} m · depo {t} L · tayfa {c} · fırtına {s} · bakım {u}/gün',
     storm_lo: 'zayıf', storm_mid: 'orta', storm_hi: 'iyi', storm_top: 'çok iyi',
     deal: '{c} peşin + {f} kredi', deal_cash: '{c} peşin', owned: 'Teknen', sold_boat: 'Geride kaldı', tradein: 'Takas değeri {m}',
@@ -987,8 +989,8 @@ const L = {
   },
   en: {
     day: 'Day', time: 'Time', money: 'Cash', loan: 'Loan', goal: "Today's goal", sonar: 'Sonar', dock: 'Dock',
-    subtitle: 'Anchovy fishing and boat management on the Black Sea',
-    how: 'Start in a rowboat, find schools on the sonar, circle the net around them and sell the catch fresh. Move up to a taka, a trawler and a purse seiner; at night the anchovy rise. Pay off the loan in 30 days and become reis of the harbour.',
+    subtitle: 'Black Sea purse seine (gırgır) fishing and boat management',
+    how: 'Start in a rowboat, find schools on the sonar, encircle with the gırgır purse seine and sell fresh. Move up to a taka, a trawler and a gırgır seiner; at night anchovy rise. Pay off the loan in 30 days and become reis.',
     play: 'New season', cont: 'Continue', settings: 'Settings', keys: 'W/S throttle · A/D rudder · Space net · M map · P pause', keysTouch: 'Left lever throttle · wheel steers · buttons set the net and dock · map and pause on the top bar',
     endday: 'Sleep till morning', sail: 'Sail out', waitdusk: 'Wait for dusk (19:00)', again: 'Play again', menu: 'Main menu', paused: 'Paused', resume: 'Resume', restart: 'Restart',
     vmaster: 'Master', vmusic: 'Music', vsfx: 'Effects', language: 'Language', quality: 'Quality', low: 'Low', high: 'High', screen: 'Screen', fullscreen: 'Fullscreen',
@@ -1007,8 +1009,10 @@ const L = {
     sold: 'Sold {kg} kg {sp}: +{m}', nothing: 'Nothing to sell', total_hold: 'Hold: {kg}/{cap} kg',
     refuel: 'Refuel', refuelc: 'Tank {a}/{b} L · {c}', addice: 'Fill ice', repair: 'Repair', repairc: 'Hull {h}%', payloan: 'Pay loan', pay5: 'Pay {m}', payall: 'Pay max',
     full: 'Full', maxed: 'Max level', buy: 'Buy', lvl: 'Level {n}', need: 'Not enough cash',
-    up_net: 'Net', up_sonar: 'Sonar', up_engine: 'Engine', up_hold: 'Hold', up_ice: 'Ice box', up_crew: 'Crew',
+    up_net: 'Net', up_sonar: 'Sonar', up_engine: 'Engine', up_hold: 'Hold', up_ice: 'Ice box', up_crew: 'Crew & Net Master',
     d_net: '{len} m net · {dep} m deep', d_sonar: '{r} m range', d_engine: '{v} kn · {t} L tank', d_hold: '{c} kg', d_ice: '{c} ice units · slower melt', d_crew: '{n} crew · haul {s} s',
+    d_crew_0: '1 crew (solo) · haul {s} s', d_crew_1: '2 crew · haul {s} s', d_crew_2: 'Net master & crew · haul {s} s', d_crew_3: 'Net master & vantrik (power block winch) · {s} s',
+    lidaki: 'Lidaki', lidaki_tag: 'Lidaki (-80%)', toast_lidaki_pen: 'Lidaki warning: undersized catch sold at 80% reduced value',
     goal_kg: 'Catch {n} kg of fish today', goal_sp: 'Catch {n} kg of {sp} today', goal_cash: 'Sell for {n} today', goal_fresh: 'Sell {n} kg at 80%+ freshness', goal_ring: 'Close the net with a gap under {g} m',
     goal_done: 'Goal done! +{m}', goal_fail: 'Goal missed',
     toast_storm_warn: 'A storm is coming! Head home.', toast_storm_on: 'The storm has hit!', toast_storm_end: 'The storm has passed.',
@@ -1025,10 +1029,10 @@ const L = {
     rank: 'Rank', rank0: 'Deckhand', rank1: 'Captain', rank2: 'Reis',
     fast: 'Speed', on: 'On', off: 'Off', musict: 'Music', sfxt: 'Effects', saved: 'Saved',
     wait: 'Wait', sail_storm: 'A storm is out there: sailing is dangerous!', sail_dusk: 'Day over', held: 'Hold {kg} kg',
-    cap: '{a}/{b}', unit_l: 'L', notnow: 'Not now', note_market: 'Prices follow demand; fresh fish is worth more.', note_up: 'Upgrades carry over to a new boat; each boat has a cap.', note_boat: 'Fuel, ice and repairs are paid on the spot.',
+    cap: '{a}/{b}', unit_l: 'L', notnow: 'Not now', note_market: 'Prices follow demand; fresh fish is worth more. Undersized catches (lidaki) lose 80% value in early season.', note_up: 'Upgrades carry over to a new boat; each boat has a cap.', note_boat: 'Fuel, ice and repairs are paid on the spot.',
     note_yard: 'Your old boat is traded in at 60% of its list price; what cash cannot cover goes on the loan (up to {m}).',
-    b_sandal: 'Rowboat (sandal)', b_taka: 'Taka', b_trol: 'Trawler', b_girgir: 'Purse seiner',
-    n_cevirme: 'ring net', n_girgir_k: 'small seine', n_trol: 'deep trawl net', n_girgir: 'purse seine',
+    b_sandal: 'Rowboat (sandal)', b_taka: 'Taka', b_trol: 'Trawler', b_girgir: 'Purse seiner (gırgır)',
+    n_cevirme: 'ring net', n_girgir_k: 'small gırgır seine', n_trol: 'deep trawl net', n_girgir: 'purse seine (gırgır net)',
     d_boat: '{v} kn · hold {h} kg · {n} {l} m / {d} m · tank {t} L · crew {c} · storms {s} · upkeep {u}/day',
     storm_lo: 'weak', storm_mid: 'fair', storm_hi: 'good', storm_top: 'very good',
     deal: '{c} cash + {f} loan', deal_cash: '{c} cash', owned: 'Your boat', sold_boat: 'Left behind', tradein: 'Trade-in {m}',
@@ -1352,17 +1356,30 @@ function sellSpecies(i, silent) {
   const h = G.hold[i]; if (h.kg < 0.5) return 0;
   if (!marketOpen()) { if (!silent) toast(t('market_closed'), 'bad'); return 0; }
   const sp = SPECIES[i], d0 = G.mk.demand[i], d1 = Math.max(0.15, d0 - h.kg / sp.cap), fm = 0.35 + 0.65 * h.fresh / 100;
-  const rev = Math.round(h.kg * sp.price * G.mk.pm[i] * (d0 + d1) / 2 * fm);
+  const lidMult = h.lidaki ? 0.2 : 1.0; // lidaki: early-season undersized school penalty (-80%)
+  const rev = Math.round(h.kg * sp.price * G.mk.pm[i] * (d0 + d1) / 2 * fm * lidMult);
   G.money += rev; G.today.sales += rev; G.tot.sales += rev; G.mk.demand[i] = d1;
   if (h.fresh >= 80) G.today.freshKg += h.kg;
-  const kg = Math.round(h.kg); h.kg = 0; h.fresh = 100;
-  if (!silent) { toast(t('sold', { kg, sp: t('sp_' + sp.id), m: money(rev) }), 'good'); Snd.coin(); }
+  const wasLidaki = !!h.lidaki;
+  const kg = Math.round(h.kg); h.kg = 0; h.fresh = 100; h.lidaki = false; h.lidKg = 0;
+  if (!silent) {
+    const spName = t('sp_' + sp.id) + (wasLidaki ? ' [' + t('lidaki') + ']' : '');
+    toast(t('sold', { kg, sp: spName, m: money(rev) }), 'good');
+    if (wasLidaki) toast(t('toast_lidaki_pen'), 'warn');
+    Snd.coin();
+  }
   checkGoal(); return rev;
 }
 function sellAll() { if (!marketOpen()) { toast(t('market_closed'), 'bad'); return 0; } let r = 0; for (let i = 0; i < 4; i++) r += sellSpecies(i, true); if (r > 0) { toast('+' + money(r), 'good'); Snd.coin(); } else toast(t('nothing'), 'info'); saveRun(); return r; }
-function addToHold(i, kg, fresh) {
+function addToHold(i, kg, fresh, isLid) {
   const cap = ST.hold(); const space = Math.max(0, cap - holdTotal()); const add = Math.min(kg, space);
-  const h = G.hold[i]; if (add > 0) { h.fresh = (h.fresh * h.kg + fresh * add) / (h.kg + add); h.kg += add; }
+  const h = G.hold[i];
+  if (add > 0) {
+    h.fresh = (h.fresh * h.kg + fresh * add) / (h.kg + add);
+    h.lidKg = (h.lidKg || 0) + (isLid ? add : 0);
+    h.kg += add;
+    h.lidaki = (h.lidKg / h.kg) >= 0.35;
+  }
   return { add, lost: kg - add };
 }
 
@@ -1410,7 +1427,10 @@ function spawnSchool(near) {
     if (G.schools.some(o => Math.hypot(o.x - px, o.z - pz) < 70)) continue;
     const sb = seabed(px, pz); const dep0 = clamp(sp.dep[0] + rand() * (sp.dep[1] - sp.dep[0]), 3, sb - 4);
     const n = Math.round(sp.n * (0.8 + rand() * 0.4)), kg0 = (sp.kg[0] + rand() * (sp.kg[1] - sp.kg[0])) * (si === 0 ? 1 + 0.25 * nf : 1), rad = sp.rad[0] + rand() * (sp.rad[1] - sp.rad[0]);
-    const s = { id: G.nextId++, sp: si, x: px, z: pz, hd: rand() * TAU, dep: dep0, dep0, kg0, n0: n, kgPer: kg0 / n, rad, mem: [], age: 0, rot: rand() * TAU };
+    const isEarly = G.day <= 10;
+    const sizeRatio = (kg0 - sp.kg[0]) / Math.max(1, sp.kg[1] - sp.kg[0]);
+    const isLidaki = isEarly && sizeRatio < 0.30; // lidaki: early-season undersized school check
+    const s = { id: G.nextId++, sp: si, x: px, z: pz, hd: rand() * TAU, dep: dep0, dep0, kg0, n0: n, kgPer: kg0 / n, rad, mem: [], age: 0, rot: rand() * TAU, ratio: kg0 / sp.kg[1], lidaki: isLidaki };
     for (let i = 0; i < n; i++) {
       const a = rand() * TAU, r = Math.sqrt(rand()) * rad;
       s.mem.push({ x: Math.cos(a) * r, z: Math.sin(a) * r, y: (rand() - 0.5) * 6, vx: 0, vz: 0, vy: 0, r: Math.sqrt(0.15 + rand() * 0.85) * rad, th: a, om: (0.12 + rand() * 0.25) * (rand() < 0.5 ? -1 : 1), b: rand() });
@@ -1457,28 +1477,28 @@ function sonarContacts() {
     for (const f of s.mem) { const wx = s.x + f.x, wz = s.z + f.z; if (Math.hypot(wx - b.x, wz - b.z) <= R) { n++; sx += wx; sz += wz; sd += s.dep + f.y; } }
     if (n > 0) {
       const cx = sx / n, cz = sz / n; let rr = 0; for (const f of s.mem) rr = Math.max(rr, Math.hypot(s.x + f.x - cx, s.z + f.z - cz));
-      out.push({ s, sp: s.sp, x: cx, z: cz, depth: sd / n, n, total: s.mem.length, kg: s.mem.length * s.kgPer, rad: Math.max(rr, 4), dist: Math.hypot(cx - b.x, cz - b.z) });
+      out.push({ s, sp: s.sp, x: cx, z: cz, depth: sd / n, n, total: s.mem.length, kg: s.mem.length * s.kgPer, rad: Math.max(rr, 4), dist: Math.hypot(cx - b.x, cz - b.z), lidaki: !!s.lidaki, ratio: s.ratio || 1 });
     }
   }
   return out;
 }
 
 /* ---------------------------------------------------------------- net */
-function stowNet() { G.net.phase = 'stowed'; G.net.pts = []; G.net.len = 0; G.net.ht = 0; G.net.full = false; }
+function stowNet() { G.net.phase = 'stowed'; G.net.pts = []; G.net.len = 0; G.net.ht = 0; G.net.full = false; G.net.lidaki = [false, false, false, false]; G.net.lidKg = [0, 0, 0, 0]; }
 function netNear() { const b = G.boat; return Math.hypot(b.x - DOCK.x, b.z - DOCK.z); }
 function canDock() { const b = G.boat; return G.mode === 'play' && netNear() < 17 && Math.abs(b.v) < 4.5 && G.net.phase === 'stowed'; }
 function trySetNet() {
   const b = G.boat; if (G.net.phase !== 'stowed') return;
   if (inBasin(b.x, b.z)) { toast(t('toast_nonet'), 'bad'); return; }
   if (G.wx.wave > BC().rough) { toast(t('toast_rough'), 'bad'); return; }
-  const n = G.net; n.phase = 'set'; n.pts = []; n.len = 0; n.ht = 0; n.full = false; n.fullT = 0; n.maxLen = ST.netLen(); n.depth = ST.netDep();
+  const n = G.net; n.phase = 'set'; n.pts = []; n.len = 0; n.ht = 0; n.full = false; n.fullT = 0; n.maxLen = ST.netLen(); n.depth = ST.netDep(); n.lidaki = [false, false, false, false]; n.lidKg = [0, 0, 0, 0];
   n.pts.push({ x: b.x - Math.cos(b.h) * 3.2, z: b.z - Math.sin(b.h) * 3.2 }); Snd.netSet(); G.today.sets = (G.today.sets || 0) + 1;
 }
 function startHaul() {
   const n = G.net; if (n.phase !== 'set') return;
   if (n.pts.length < 8) { stowNet(); toast(t('toast_empty'), 'info'); return; }
   const P = n.pts, a = P[0], z = P[P.length - 1]; n.gap = Math.hypot(a.x - z.x, a.z - z.z);
-  const mid = { x: (a.x + z.x) / 2, z: (a.z + z.z) / 2 }; n.kg = [0, 0, 0, 0]; n.members = 0;
+  const mid = { x: (a.x + z.x) / 2, z: (a.z + z.z) / 2 }; n.kg = [0, 0, 0, 0]; n.members = 0; n.lidaki = [false, false, false, false]; n.lidKg = [0, 0, 0, 0];
   if (n.gap > 22) toast(t('toast_gap'), 'bad');
   for (const s of G.schools) {
     const sp = SPECIES[s.sp]; const keep = [];
@@ -1489,7 +1509,12 @@ function startHaul() {
         let esc = false; if (n.gap > 3 && dg < reach) { const pe = clamp((n.gap - 3) / 28, 0, 0.95) * (1 - dg / reach) * sp.slip; esc = f.b < pe; }
         caught = !esc;
       }
-      if (caught) { n.kg[s.sp] += s.kgPer * (0.9 + rand() * 0.2); n.members++; } else keep.push(f);
+      if (caught) {
+        const kgCaught = s.kgPer * (0.9 + rand() * 0.2);
+        n.kg[s.sp] += kgCaught;
+        n.members++;
+        if (s.lidaki) { n.lidaki[s.sp] = true; n.lidKg[s.sp] += kgCaught; }
+      } else keep.push(f);
     }
     s.mem = keep;
   }
@@ -1502,8 +1527,10 @@ function finishHaul() {
   const n = G.net; let any = 0;
   for (let i = 0; i < 4; i++) {
     if (n.kg[i] < 1) continue; const kg = Math.round(n.kg[i]);
-    const r = addToHold(i, kg, 97); G.today.catch[i] += r.add; G.tot.catch += r.add; any += kg;
-    toast(t('toast_caught', { kg: Math.round(r.add), sp: t('sp_' + SPECIES[i].id) }), 'good');
+    const isLid = !!(n.lidKg && n.lidKg[i] && (n.lidKg[i] / n.kg[i] >= 0.35)) || !!(n.lidaki && n.lidaki[i]);
+    const r = addToHold(i, kg, 97, isLid); G.today.catch[i] += r.add; G.tot.catch += r.add; any += kg;
+    const spName = t('sp_' + SPECIES[i].id) + (isLid ? ' [' + t('lidaki') + ']' : '');
+    toast(t('toast_caught', { kg: Math.round(r.add), sp: spName }), 'good');
     if (r.lost > 1) toast(t('toast_hold', { kg: Math.round(r.lost) }), 'bad');
   }
   if (!any) toast(t('toast_empty'), 'info'); else Snd.haulDone();
@@ -1613,7 +1640,7 @@ function advance(dt) {
 function freshRun() {
   G.runId++; G.day = 1; G.money = START_MONEY; G.loan = START_LOAN; G.up = { net: 0, sonar: 0, engine: 0, hold: 0, ice: 0, crew: 0 }; G.boatClass = 0; G.log = []; G.buys = []; setBoatVisual();
   Object.assign(bot, { target: null, inHarbor: false, wp: 0, timer: 0 });
-  G.fuel = ST.tank(); G.hull = 100; G.ice = ST.ice(); G.hold.forEach(h => { h.kg = 0; h.fresh = 100; });
+  G.fuel = ST.tank(); G.hull = 100; G.ice = ST.ice(); G.hold.forEach(h => { h.kg = 0; h.fresh = 100; h.lidaki = false; h.lidKg = 0; });
   G.tot = { catch: 0, storms: 0, sales: 0 }; G.seed = FLAG.auto ? SEED : (Math.random() * 1e9) | 0; G.stormDays = pickStormDays(G.seed);
   G.mk = { demand: [1, 1, 1, 1], pm: [1, 1, 1, 1], prev: [1, 1, 1, 1] }; G.result = null;
   G.daily = null; rand = Math.random;
@@ -1661,7 +1688,7 @@ function endDay(reason) {
   const td = G.today; let note = '';
   if (reason === 'tired' || reason === 'sunk') {
     stowNet();
-    if (reason === 'sunk') { G.hold.forEach(h => { h.kg = 0; h.fresh = 100; }); const fee = Math.min(G.money, 4000); G.money -= fee; td.tow = fee; G.hull = 45; toast(t('toast_sunk'), 'bad'); }
+    if (reason === 'sunk') { G.hold.forEach(h => { h.kg = 0; h.fresh = 100; h.lidaki = false; h.lidKg = 0; }); const fee = Math.min(G.money, 4000); G.money -= fee; td.tow = fee; G.hull = 45; toast(t('toast_sunk'), 'bad'); }
     else { const fee = Math.min(G.money, Math.max(300, Math.round(G.money * 0.05))); G.money -= fee; td.tow = fee; G.hold.forEach(h => { h.fresh = Math.max(0, h.fresh - 15); }); toast(t('toast_tired'), 'bad'); }
   }
   // overnight: the hours until 06:00 tomorrow (at most 10 h: the catch waits in the hal's cold room)
@@ -1703,7 +1730,7 @@ function loadRun() {
     freshRun(); G.day = o.day; G.money = o.money; G.loan = o.loan; G.up = Object.assign(G.up, o.up);
     // v1 (before boat classes): the old boat had the taka's base stats; its upgrade levels are kept even above the taka cap
     const bi = BOATS.findIndex(b => b.id === o.boat); G.boatClass = o.v === 1 ? 1 : Math.max(0, bi); setBoatVisual(); G.fuel = o.fuel; G.hull = o.hull; G.ice = o.ice;
-    o.hold.forEach((h, i) => { G.hold[i].kg = h.kg; G.hold[i].fresh = h.fresh; }); G.mk.demand = o.demand.slice(); G.seed = o.seed; G.stormDays = pickStormDays(G.seed); G.tot = o.tot || G.tot;
+    o.hold.forEach((h, i) => { G.hold[i].kg = h.kg; G.hold[i].fresh = h.fresh; G.hold[i].lidaki = !!h.lidaki; G.hold[i].lidKg = h.lidaki ? h.kg : 0; }); G.mk.demand = o.demand.slice(); G.seed = o.seed; G.stormDays = pickStormDays(G.seed); G.tot = o.tot || G.tot;
     G.flags = { loaded: true }; return true;
   } catch (e) { return false; }
 }
@@ -2510,7 +2537,8 @@ function drawSonar(dt) {
   const cs = sonarContacts().sort((a, c) => a.dist - c.dist).slice(0, 4); const labels = [];
   for (const c of cs) {
     const cx0 = px(c.x, c.z), cy0 = py(c.x, c.z), r = Math.max(10, c.rad * sc); sctx.strokeStyle = SPECIES[c.sp].col; sctx.lineWidth = 2; sctx.setLineDash([6, 5]); sctx.beginPath(); sctx.arc(cx0, cy0, r + 4, 0, TAU); sctx.stroke(); sctx.setLineDash([]);
-    labels.push({ x: cx0, y: cy0, r, lbl: t('sp_' + SPECIES[c.sp].id) + ' ' + t('depth', { d: Math.round(c.depth) }) + (G.up.sonar >= 1 ? ' ' + t('est', { k: Math.round(c.kg / 10) * 10 }) : '') });
+    const tag = c.lidaki ? ' [' + t('lidaki') + ']' : '';
+    labels.push({ x: cx0, y: cy0, r, lbl: t('sp_' + SPECIES[c.sp].id) + tag + ' ' + t('depth', { d: Math.round(c.depth) }) + (G.up.sonar >= 1 ? ' ' + t('est', { k: Math.round(c.kg / 10) * 10 }) : '') });
   }
   sctx.restore();
   sctx.font = '700 22px "Segoe UI",Arial,sans-serif'; sctx.textAlign = 'center';
@@ -2565,7 +2593,7 @@ function drawMap() {
 let hTab = 'market';
 const SP_IC = ['i-fish', 'i-fish', 'i-fish', 'i-fish'];
 function svgIc(id, style) { return `<svg class="ic" ${style ? 'style="' + style + '"' : ''}><use href="#${id}"/></svg>`; }
-function expectedValue(i) { const h = G.hold[i]; if (h.kg < 0.5) return 0; const sp = SPECIES[i], d0 = G.mk.demand[i], d1 = Math.max(0.15, d0 - h.kg / sp.cap), fm = 0.35 + 0.65 * h.fresh / 100; return Math.round(h.kg * sp.price * G.mk.pm[i] * (d0 + d1) / 2 * fm); }
+function expectedValue(i) { const h = G.hold[i]; if (h.kg < 0.5) return 0; const sp = SPECIES[i], d0 = G.mk.demand[i], d1 = Math.max(0.15, d0 - h.kg / sp.cap), fm = 0.35 + 0.65 * h.fresh / 100; const lidMult = h.lidaki ? 0.2 : 1.0; return Math.round(h.kg * sp.price * G.mk.pm[i] * (d0 + d1) / 2 * fm * lidMult); }
 function renderHarbor() {
   const el = $('hBody'); const act = document.activeElement && document.activeElement.dataset ? (document.activeElement.dataset.act || '') + '|' + (document.activeElement.dataset.arg || '') : '';
   let h = '';
@@ -2575,7 +2603,9 @@ function renderHarbor() {
     for (let i = 0; i < 4; i++) {
       const sp = SPECIES[i], hd = G.hold[i], p = unitPrice(i), pv = G.mk.prev[i], tr = p > pv * 1.02 ? 'up' : p < pv * 0.98 ? 'down' : '', ev = expectedValue(i); total += ev;
       const av = availability(i, G.day);
-      h += `<div class="item"><div class="dot" style="color:${sp.col}">${svgIc('i-fish')}</div><div><b>${t('sp_' + sp.id)}</b> <span class="pr ${tr}">${money(p)}/kg ${tr === 'up' ? '&#9650;' : tr === 'down' ? '&#9660;' : ''}</span><small>${hd.kg >= 0.5 ? t('inhold', { kg: Math.round(hd.kg), f: Math.round(hd.fresh) }) + ' · ' + money(ev) : t('empty')} · ${av > 0.7 ? t('season_hi') : av < 0.4 ? t('season_lo') : ''}</small><div class="dbar" title="${t('demand')}"><i style="width:${clamp(G.mk.demand[i] / 1.25, 0, 1) * 100}%"></i></div></div><button class="btn sm" data-act="sell" data-arg="${i}" ${hd.kg < 0.5 || !open ? 'disabled' : ''}>${t('sell')}</button></div>`;
+      const isLid = !!hd.lidaki;
+      const lidBadge = isLid ? ` · <span style="color:var(--warn);font-weight:700">${t('lidaki_tag')}</span>` : '';
+      h += `<div class="item"><div class="dot" style="color:${sp.col}">${svgIc('i-fish')}</div><div><b>${t('sp_' + sp.id)}</b> <span class="pr ${tr}">${money(p)}/kg ${tr === 'up' ? '&#9650;' : tr === 'down' ? '&#9660;' : ''}</span><small>${hd.kg >= 0.5 ? t('inhold', { kg: Math.round(hd.kg), f: Math.round(hd.fresh) }) + lidBadge + ' · ' + money(ev) : t('empty')} · ${av > 0.7 ? t('season_hi') : av < 0.4 ? t('season_lo') : ''}</small><div class="dbar" title="${t('demand')}"><i style="width:${clamp(G.mk.demand[i] / 1.25, 0, 1) * 100}%"></i></div></div><button class="btn sm" data-act="sell" data-arg="${i}" ${hd.kg < 0.5 || !open ? 'disabled' : ''}>${t('sell')}</button></div>`;
     }
     h += `<div class="item"><div class="dot">${svgIc('i-coin')}</div><div><b>${t('total_hold', { kg: Math.round(holdTotal()), cap: ST.hold() })}</b><small>${money(total)}</small></div><button class="btn primary sm" data-act="sellall" ${total <= 0 || !open ? 'disabled' : ''}>${t('sellall')}</button></div>`;
   } else if (hTab === 'upg') {
@@ -2618,7 +2648,8 @@ function upDesc(k, lv) {
   if (k === 'engine') return t('d_engine', { v: (B.vmax * U.vmax[lv] * 1.944).toFixed(0), t: Math.round(B.tank * U.tank[lv]) });
   if (k === 'hold') return t('d_hold', { c: Math.round(B.hold * U.cap[lv] / 10) * 10 });
   if (k === 'ice') return t('d_ice', { c: U.cap[lv] });
-  return t('d_crew', { n: lv, s: U.haul[lv] });
+  const cd = t('d_crew_' + lv, { n: lv, s: U.haul[lv] });
+  return (cd && cd !== 'd_crew_' + lv) ? cd : t('d_crew', { n: lv, s: U.haul[lv] });
 }
 function openHarbor(first) { if (first) hTab = 'market'; $('harbor').classList.add('show'); renderHarbor(); if (!first) toast(t('fish_market'), 'info'); Snd.chatter(); }
 function closeHarbor() { $('harbor').classList.remove('show'); }
@@ -2856,7 +2887,7 @@ function botSea(dt) {
   // pick a school from sonar contacts (never from hidden state)
   const cs = sonarContacts().filter(c => c.depth <= ST.netDep() - 2 && c.n >= Math.min(8, c.total * 0.6));
   let best = null, bs = -1;
-  for (const c of cs) { const val = SPECIES[c.sp].price * G.mk.pm[c.sp] * G.mk.demand[c.sp] * Math.min(c.kg, ST.hold() - holdTotal()) * (1 + (bot.target === c.s ? 0.4 : 0)); const sc = val * (1 - SPECIES[c.sp].skit / 90) / (c.dist + 70); if (sc > bs) { bs = sc; best = c; } }
+  for (const c of cs) { const lidMult = c.lidaki ? 0.2 : 1.0; const val = SPECIES[c.sp].price * G.mk.pm[c.sp] * G.mk.demand[c.sp] * Math.min(c.kg, ST.hold() - holdTotal()) * lidMult * (1 + (bot.target === c.s ? 0.4 : 0)); const sc = val * (1 - SPECIES[c.sp].skit / 90) / (c.dist + 70); if (sc > bs) { bs = sc; best = c; } }
   if (!best) { bot.target = null; const w = PATROL[bot.wp % PATROL.length]; if (Math.hypot(b.x - w[0], b.z - w[1]) < 30) bot.wp++; const w2 = PATROL[bot.wp % PATROL.length]; botNavOut(w2[0], w2[1], 0.9); return; }
   const first = bot.target !== best.s; bot.target = best.s;
   const maxR = ST.netLen() * 0.8 / TAU; bot.R = clamp(Math.min(best.rad * 1.2 + 4, maxR), 11, 40);
