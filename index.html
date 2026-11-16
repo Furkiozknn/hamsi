@@ -19,7 +19,7 @@
 <style>
 :root{
   --accent:#1E88E5; --accent-l:#64B5F6; --accent-d:#1565C0; --ink:#e6f0f2; --dim:#9db1b8; --sonar:#00E676; --steel:#24343F; --sodium:#FFB74D;
-  --glass:rgba(14,22,27,.86); --glass-b:rgba(0,230,118,.26); --bad:#ff7a66; --good:#00E676; --warn:#FFB74D;
+  --glass:rgba(14,22,27,.56); --glass-b:rgba(0,230,118,.26); --bad:#ff7a66; --good:#00E676; --warn:#FFB74D;
   --r:6px; --fs:15px; --mono:"Cascadia Mono",Consolas,"Lucida Console",monospace; --head:Bahnschrift,"Segoe UI Semibold","Segoe UI",system-ui,sans-serif;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -33,16 +33,16 @@ svg.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;strok
 .glass{background:var(--glass);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--glass-b);
   border-radius:var(--r);box-shadow:0 8px 24px rgba(0,0,0,.28)}
 body.lowq .glass,body.lowq .screen.dim{backdrop-filter:none;-webkit-backdrop-filter:none}
-body.lowq .glass{background:rgba(10,30,44,.84)}
+body.lowq .glass{background:rgba(10,30,44,.7)}
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible,input:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:3px solid #bfe3ff;outline-offset:2px}
 .btn{min-height:44px;min-width:44px;padding:10px 18px;border-radius:14px;border:2px solid var(--glass-b);background:rgba(255,255,255,.08);
   display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:800;letter-spacing:.2px;transition:transform .08s,background .15s}
 .btn:hover{background:rgba(255,255,255,.17)}
 .btn:active{transform:scale(.97)}
-.btn.primary{background:var(--accent);color:#fff;border-color:#a8d4ff;box-shadow:0 4px 0 var(--accent-d)}
+.btn.primary{background:rgba(30,136,229,.74);color:#fff;border-color:#a8d4ff;box-shadow:0 4px 0 var(--accent-d)}
 .btn.primary:hover{background:#2f97f2}
-.btn.warn{background:#b8472f;border-color:#ffb3a3;box-shadow:0 4px 0 #7d2c1b}
+.btn.warn{background:rgba(184,71,47,.78);border-color:#ffb3a3;box-shadow:0 4px 0 #7d2c1b}
 .btn[disabled]{opacity:.42;pointer-events:none}
 .btn.icon{padding:0;width:44px}
 .btn.sm{min-height:44px;padding:6px 12px;font-size:14px}
@@ -92,7 +92,7 @@ button:focus-visible,input:focus-visible,a:focus-visible,[tabindex]:focus-visibl
 #gauges .spd small{color:var(--dim);font-size:11px}
 #actions{position:absolute;left:50%;transform:translateX(-50%);bottom:max(14px,env(safe-area-inset-bottom));display:flex;gap:10px;align-items:center;flex-direction:column}
 #actions .row{display:flex;gap:10px}
-#actions .btn{pointer-events:auto;min-height:52px;padding:10px 22px;font-size:17px}
+#actions .btn{pointer-events:auto;min-height:44px;padding:7px 16px;font-size:15px}
 #actions .hint{pointer-events:none;font-size:12.5px;color:var(--dim);background:var(--glass);padding:4px 12px;border-radius:999px;border:1px solid var(--glass-b)}
 #netbar{width:220px;height:8px;border-radius:5px;background:rgba(255,255,255,.18);overflow:hidden}
 #netbar i{display:block;height:100%;width:0;background:var(--warn)}
@@ -105,13 +105,13 @@ button:focus-visible,input:focus-visible,a:focus-visible,[tabindex]:focus-visibl
 /* touch */
 #touch{position:absolute;inset:0;display:none}
 body.touch #touch{display:block}
-#tThr{position:absolute;left:max(10px,env(safe-area-inset-left));bottom:max(14px,env(safe-area-inset-bottom));width:64px;height:190px;border-radius:32px;pointer-events:auto;touch-action:none;background:var(--glass);border:1px solid var(--glass-b)}
+#tThr{position:absolute;left:max(10px,env(safe-area-inset-left));bottom:max(14px,env(safe-area-inset-bottom));width:56px;height:168px;border-radius:28px;pointer-events:auto;touch-action:none;background:var(--glass);border:1px solid var(--glass-b)}
 #tThr::before{content:"";position:absolute;left:50%;top:18px;bottom:18px;width:4px;margin-left:-2px;border-radius:2px;background:rgba(255,255,255,.28)}
 #tThr u{position:absolute;left:8px;right:8px;top:50%;height:2px;background:rgba(255,255,255,.45)}
-#tThr i{position:absolute;left:6px;width:52px;height:52px;top:50%;margin-top:-26px;border-radius:50%;background:var(--accent);box-shadow:0 4px 0 var(--accent-d);border:2px solid #a8d4ff}
+#tThr i{position:absolute;left:6px;width:44px;height:44px;top:50%;margin-top:-22px;border-radius:50%;background:var(--accent);box-shadow:0 4px 0 var(--accent-d);border:2px solid #a8d4ff}
 #tThr small{position:absolute;left:0;right:0;text-align:center;font-size:10px;color:var(--dim);bottom:-1px;display:none}
-#tWheel{position:absolute;right:max(10px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));width:132px;height:132px;border-radius:50%;pointer-events:auto;touch-action:none;display:flex;align-items:center;justify-content:center;background:var(--glass);border:1px solid var(--glass-b)}
-#tWheel svg{width:112px;height:112px;color:var(--accent-l);pointer-events:none}
+#tWheel{position:absolute;right:max(10px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));width:114px;height:114px;border-radius:50%;pointer-events:auto;touch-action:none;display:flex;align-items:center;justify-content:center;background:var(--glass);border:1px solid var(--glass-b)}
+#tWheel svg{width:96px;height:96px;color:var(--accent-l);pointer-events:none}
 body.touch #sonar{left:max(8px,env(safe-area-inset-left));bottom:auto;top:calc(var(--barh,56px) + max(8px,env(safe-area-inset-top)) + 70px)}
 body.touch #sonar canvas{width:196px;height:112px}
 body.touch #wcard{min-width:0;padding:6px 10px}
@@ -119,7 +119,7 @@ body.touch #wcard svg.ic{width:24px;height:24px}
 body.touch #goal{top:calc(var(--barh,56px) + max(8px,env(safe-area-inset-top)) + 8px);max-width:180px;padding:6px 10px;font-size:12px}
 body.touch #gauges{bottom:auto;top:calc(var(--barh,56px) + max(8px,env(safe-area-inset-top)) + 70px);width:170px;grid-template-columns:auto 64px 44px;font-size:11px;padding:6px 8px}
 body.touch #actions{bottom:calc(max(14px,env(safe-area-inset-bottom)) + 150px);left:auto;right:max(10px,env(safe-area-inset-right));transform:none;align-items:flex-end}
-body.touch #actions .btn{min-height:52px;padding:8px 16px}
+body.touch #actions .btn{min-height:44px;padding:6px 13px;font-size:14px}
 body.touch #actions .hint{font-size:11.5px;padding:3px 10px;max-width:calc(100vw - 100px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:700px){
   #topbar{gap:8px}
@@ -1348,7 +1348,7 @@ function updateWx() {
   w.s = s; w.phase = phase; w.wind = base + s * (15 - base); w.windDir = p.windDir + s * 0.3;
   w.wave = clamp(0.5 + w.wind * 0.085 + s * 0.45, 0.4, 2.1);
   w.fogMorning = p.fogMorning * (1 - sstep(p.fogEnd - 1.6, p.fogEnd, hr));
-  w.fog = 0.0028 + w.fogMorning * p.fogDens + s * 0.005;
+  w.fog = 0.0017 + w.fogMorning * p.fogDens + s * 0.005; // clear day: the horizon stays visible
   w.rain = sstep(0.62, 1, s);
   if (phase === 'warn' && !G.flags.warned) { G.flags.warned = true; toast(t('toast_storm_warn'), 'bad'); Snd.horn(); }
   if (phase === 'storm' && !G.flags.stormOn) { G.flags.stormOn = true; toast(t('toast_storm_on'), 'bad'); Snd.thunder(); }
@@ -1983,7 +1983,7 @@ function setupShadows() {
 }
 function resize() {
   if (!renderer) return; const w = innerWidth, h = innerHeight; renderer.setPixelRatio(Math.min(devicePixelRatio || 1, S.quality === 'low' ? 1 : 1.5));
-  renderer.setSize(w, h, false); arenaPerfAttach(); camera.aspect = w / h; camera.fov = w / h < 0.8 ? 72 : 58; camera.updateProjectionMatrix();
+  renderer.setSize(w, h, false); arenaPerfAttach(); camera.aspect = w / h; camera.fov = w / h < 0.8 ? 76 : 60; // portrait: wider so the horizon and the water around the boat fit camera.updateProjectionMatrix();
   detectTouch(); const bar = $('topbar'); if (bar) document.documentElement.style.setProperty('--barh', bar.offsetHeight + 'px');
 }
 
@@ -2060,13 +2060,21 @@ function buildMistBanks() { const r = rng(31); for (let i = 0; i < 9; i++) { con
 const OC = { size: 240, seg: 80 };
 const ocGeo = new THREE.PlaneGeometry(OC.size, OC.size, OC.seg, OC.seg); ocGeo.rotateX(-Math.PI / 2);
 const ocBase = ocGeo.attributes.position.array.slice(); ocGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(ocGeo.attributes.position.count * 3), 3));
-const ocean = new THREE.Mesh(ocGeo, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.66, metalness: 0.0 })); ocean.receiveShadow = true; ocean.frustumCulled = false; scene.add(ocean);
+// open-sea look: water reflects the sky by angle (Fresnel), strongest at grazing angles near the horizon; uSky follows the sky
+const SEA_U = { uSky: { value: new THREE.Color(0.4, 0.5, 0.58) } };
+const seaFresnel = (amt) => (sh) => {
+  sh.uniforms.uSky = SEA_U.uSky;
+  sh.fragmentShader = 'uniform vec3 uSky;\n' + sh.fragmentShader.replace('#include <fog_fragment>',
+    'float seaFr = pow(1.0 - clamp(dot(normalize(vViewPosition), normal), 0.0, 1.0), 4.0);\n gl_FragColor.rgb = mix(gl_FragColor.rgb, uSky, seaFr * ' + amt.toFixed(2) + ');\n#include <fog_fragment>');
+};
+const ocean = new THREE.Mesh(ocGeo, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.66, metalness: 0.0 }));
+ocean.material.onBeforeCompile = seaFresnel(0.55); ocean.receiveShadow = true; ocean.frustumCulled = false; scene.add(ocean);
 const farGeo = (() => {
   const h = OC.size / 2 - 0.5, F = 3600, P = [], mk = (x0, z0, x1, z1) => { P.push(x0, 0, z0, x0, 0, z1, x1, 0, z0, x1, 0, z0, x0, 0, z1, x1, 0, z1); };
   mk(-F, -F, F, -h); mk(-F, h, F, F); mk(-F, -h, -h, h); mk(h, -h, F, h);
   const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); const n = []; for (let i = 0; i < P.length / 3; i++) n.push(0, 1, 0); g.setAttribute('normal', new THREE.Float32BufferAttribute(n, 3)); return g;
 })();
-const farSea = new THREE.Mesh(farGeo, new THREE.MeshStandardMaterial({ color: 0x24343f, roughness: 0.4, side: THREE.DoubleSide })); farSea.frustumCulled = false; scene.add(farSea);
+const farSea = new THREE.Mesh(farGeo, new THREE.MeshStandardMaterial({ color: 0x24343f, roughness: 0.4, side: THREE.DoubleSide })); farSea.material.onBeforeCompile = seaFresnel(0.7); farSea.frustumCulled = false; scene.add(farSea);
 const waterBase = new THREE.Color(0.05, 0.14, 0.19), foamCol = new THREE.Color(0.9, 0.94, 0.95), shallowCol = new THREE.Color(0.2, 0.44, 0.38); // Black Sea slate #24343F, foam #E6F0F2
 let oceanCx = 1e9, oceanCz = 1e9;
 function updateOcean(cx, cz) {
@@ -2605,7 +2613,7 @@ const dockBeam = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.9, 40, 10, 1, 
 dockBeam.position.set(DOCK.x, 20, DOCK.z); scene.add(dockBeam);
 
 /* ---------- camera + environment per frame */
-const cam = { yaw: 0, pitch: 0.3, dist: 31, drag: false, idle: 0, h: 0, pos: new THREE.Vector3(-40, 14, 20), look: new THREE.Vector3(-40, 2, -5), orbit: 0 };
+const cam = { yaw: 0, pitch: 0.21, dist: 35, drag: false, idle: 0, h: 0, pos: new THREE.Vector3(-40, 14, 20), look: new THREE.Vector3(-40, 2, -5), orbit: 0 };
 const SKY = { zen: new THREE.Color(), hor: new THREE.Color(), fog: new THREE.Color(), tmp: new THREE.Color() };
 const _sd = new THREE.Vector3();
 let skyT = 0;
@@ -2626,6 +2634,7 @@ function updateEnv(dt) {
   if (w.fogMorning > 0.2) SKY.hor.lerp(SKY.tmp.setRGB(0.36, 0.45, 0.5), w.fogMorning * 0.55); // slate-blue mist, never milky white
   SKY.hor.lerp(SKY.tmp.setRGB(0.05, 0.075, 0.12), dark * 0.92);
   scene.fog.color.copy(SKY.hor); scene.fog.density = Math.min(w.fog + dark * 0.0012, 0.0072) * (1 + 0.3 * warm);
+  SEA_U.uSky.value.copy(SKY.hor).lerp(SKY.zen, 0.4).multiplyScalar(0.88);
   waterBase.setRGB(0.04, 0.14, 0.19).multiplyScalar(lerp(1.05, 0.6, over) * (0.72 + 0.28 * Math.max(0, sinEl)) * lerp(1, 0.4, dark)); farSea.material.color.copy(waterBase).multiplyScalar(1.0);
   cloudMesh.material.color.setRGB(lerp(1, 0.42, w.s), lerp(1, 0.44, w.s), lerp(1, 0.48, w.s)).multiplyScalar(lerp(1, 0.16, dark)); cloudMesh.position.set(camera.position.x, 0, camera.position.z);
   foamCol.setRGB(0.9, 0.94, 0.95).multiplyScalar(lerp(1, 0.32, dark)); if (foam) { foam.m.material.color.setScalar(lerp(1, 0.35, dark)); spray.m.material.color.setScalar(lerp(1, 0.4, dark)); }
@@ -2636,8 +2645,8 @@ function updateEnv(dt) {
     g.addColorStop(0, '#' + SKY.zen.getHexString()); g.addColorStop(0.32, '#' + SKY.tmp.copy(SKY.zen).lerp(SKY.hor, 0.55).getHexString()); g.addColorStop(0.5, '#' + SKY.hor.getHexString()); g.addColorStop(1, '#' + SKY.hor.getHexString());
     skyCtx.fillStyle = g; skyCtx.fillRect(0, 0, 2, 128); skyTex.needsUpdate = true;
   }
-  { const base = Math.min(0.62, 0.3 + 0.28 * w.fogMorning + 0.2 * w.s); for (const m of mistRings) { m.position.set(camera.position.x, m.userData.h * 0.22, camera.position.z); m.material.color.copy(SKY.hor).lerp(SKY.tmp.setRGB(0.23, 0.3, 0.35), 0.35); m.material.opacity = m.userData.op * base; m.userData.tex.offset.x += m.userData.sp * dt; }
-    mistBankMat.color.copy(SKY.hor).lerp(SKY.tmp.setRGB(0.23, 0.3, 0.35), 0.3); mistBankMat.opacity = Math.min(0.32, 0.14 + 0.16 * w.fogMorning + 0.1 * w.s); for (const b of mistBanks) b.position.y += Math.sin(VT * 0.2 + b.userData.ph) * 0.004; }
+  { const base = Math.min(0.62, 0.18 + 0.4 * w.fogMorning + 0.2 * w.s); for (const m of mistRings) { m.position.set(camera.position.x, m.userData.h * 0.22, camera.position.z); m.material.color.copy(SKY.hor).lerp(SKY.tmp.setRGB(0.23, 0.3, 0.35), 0.35); m.material.opacity = m.userData.op * base; m.userData.tex.offset.x += m.userData.sp * dt; }
+    mistBankMat.color.copy(SKY.hor).lerp(SKY.tmp.setRGB(0.23, 0.3, 0.35), 0.3); mistBankMat.opacity = Math.min(0.32, 0.05 + 0.25 * w.fogMorning + 0.12 * w.s); for (const b of mistBanks) b.position.y += Math.sin(VT * 0.2 + b.userData.ph) * 0.004; }
   sky.position.copy(camera.position); sunSprite.position.copy(camera.position).addScaledVector(sd, 3000); sunSprite.material.opacity = (1 - over) * 0.8 * (1 - dark); sunSprite.visible = sunSprite.material.opacity > 0.03 && sd.y > 0.02;
   const ld = dark > 0.5 ? _sd.copy(SKY_MOON).normalize() : sd; // moonlight casts the shadows at night
   const b = G.boat; sun.position.set(b.x + ld.x * 90, ld.y * 90, b.z + ld.z * 90); sun.target.position.set(b.x, 0, b.z); sun.target.updateMatrixWorld();
@@ -3033,13 +3042,13 @@ canvas.addEventListener('wheel', e => { cam.dist = clamp(cam.dist + e.deltaY * 0
 // touch: throttle lever + rudder wheel
 (function touchControls() {
   const thr = $('tThr'), knob = thr.querySelector('i'), wheel = $('tWheel'), ws = $('wheelSvg');
-  const setLever = y => { const r = thr.getBoundingClientRect(); const f = clamp((y - r.top - 26) / (r.height - 52), 0, 1); let v = lerp(1, -0.35, f); if (Math.abs(v) < 0.06) v = 0; inp.thr = v; };
+  const setLever = y => { const r = thr.getBoundingClientRect(); const f = clamp((y - r.top - 22) / (r.height - 44), 0, 1); let v = lerp(1, -0.35, f); if (Math.abs(v) < 0.06) v = 0; inp.thr = v; };
   thr.addEventListener('pointerdown', e => { thr.setPointerCapture(e.pointerId); setLever(e.clientY); thr._d = true; }); thr.addEventListener('pointermove', e => { if (thr._d) setLever(e.clientY); });
   const up = () => { thr._d = false; }; thr.addEventListener('pointerup', up); thr.addEventListener('pointercancel', up);
   const setWheel = e => { const r = wheel.getBoundingClientRect(), dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2); let a = Math.atan2(dx, -dy); a = clamp(a, -1.3, 1.3); inp.touchRud = clamp(a / 1.0, -1, 1); ws.style.transform = `rotate(${a}rad)`; };
   wheel.addEventListener('pointerdown', e => { wheel.setPointerCapture(e.pointerId); wheel._d = true; setWheel(e); }); wheel.addEventListener('pointermove', e => { if (wheel._d) setWheel(e); });
   const wu = () => { wheel._d = false; inp.touchRud = null; ws.style.transform = ''; }; wheel.addEventListener('pointerup', wu); wheel.addEventListener('pointercancel', wu);
-  window.__syncLever = () => { const f = (1 - inp.thr) / 1.35; knob.style.top = (26 + f * (thr.clientHeight - 52)) + 'px'; };
+  window.__syncLever = () => { const f = (1 - inp.thr) / 1.35; knob.style.top = (22 + f * (thr.clientHeight - 44)) + 'px'; };
 })();
 document.addEventListener('visibilitychange', () => { if (document.hidden) Snd.suspend(); else Snd.resume(); });
 addEventListener('resize', resize);
