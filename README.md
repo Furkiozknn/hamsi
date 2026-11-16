@@ -31,6 +31,7 @@
 
 - **Purse-seine fishing & sonar:** Track underwater boid schools on the sonar with depth and species readouts; circle a school to deploy the net and haul before fish escape, pursuing calm hamsi and istavrit or fast, nervous and valuable palamut and lüfer.
 - **Boat classes:** Start in a sandal (rowboat), then buy a taka, a trawler (trol) and a gırgır (purse seiner) at the shipyard; each has its own speed, hold, net, tank, crew slots, storm tolerance, daily upkeep and look. The old hull is traded in at 60% and the rest can go on the loan (up to ₺240,000). The six upgrades carry over to the next boat, capped per class.
+- **Fishing gear:** Besides the boat's own encircling net (voli on the sandal and taka, the big gırgır net on the purse seiner), the sandal and taka carry straight nets (hamsi-istavrit ağı, çinekop-lüfer ağı, uzatma palamut ağı) and the trawler tows a midwater (orta su) or bottom (dip) trawl. Straight nets are laid along your track, straight or curved, left to soak and lifted from either buoy; only the fish that swim through the wall inside its depth band are caught, with the mesh's species selectivity, so a 100 kg school on the sonar can give the whole 100 kg or 10 kg depending on where and how the net was laid. Trawls only fish at towing speed (about 2-5 kn).
 - **24-hour day & night fishing:** One in-game day is 24 real minutes (1 minute = 1 hour). Sail whenever you like, wait for dusk for a night trip (anchovy rise to the deck lights, more schools, longer sonar range, but riskier collisions), and sleep in the harbour to start the next day at 06:00. The fish market is open 04:00–23:00.
 - **Dynamic weather & harbour economy:** Face misty mornings and forecast storms that damage the hull across a 30-day season; sell fresh catch as seasonal market prices fall, refuel, buy ice, pay crew wages and upkeep, and upgrade the net, sonar, engine, hold, ice box, and crew to pay off the loan and become harbour reis.
 - **Realistic boat handling & maritime world:** Inertial throttle, rudder bite that depends on forward speed, wave pitch and roll, tea-terraced coastline with harbour moles and lighthouse, circling gulls, and an authentic kemençe-style horon tune in 7/8 synthesized with Web Audio.
@@ -52,6 +53,9 @@
 
 - **School behavior:** Hamsi and istavrit are calm and slow; palamut and lüfer are fast, nervous, and significantly more valuable.
 - **Purse-seine net:** A tight circle catches most of the school; gaps allow fish to slip out, and fish swimming deeper than the net line escape underneath.
+- **Straight nets (gillnets):** Each fish that swims through the net inside its depth band has one chance to be gilled: the chance is the mesh's selectivity for its species (anchovy-scad net, bluefish net, bonito drift net) times visibility, which is lower by day than at night. A school that swims along the net is not caught; lay it across the school's path. The net holds up to its capacity, then stops fishing.
+- **Trawls:** The mouth follows your track about 26 m behind the stern. The midwater trawl fishes at the depth you choose (`Q`/`E` or ▲/▼); the bottom trawl runs just above the seabed and cannot reach bottoms deeper than the warps allow. Faster than ~5 kn lifts the net, slower than ~2 kn collapses it; a slow, steady tow scares the schools far less than a fast boat.
+- **The gırgır:** A Black Sea purse seiner of the Sürmene type: long hull with a high bow, superstructure forward, the main mast with the boom and power block over the long aft deck. The net heap on deck shrinks as the net is paid out, and the gırgır botu (skiff) is let go with the net's start and waits there while you close the ring.
 - **Weather hazards:** Morning mist obscures vision, while forecast storms cause progressive hull damage outside the safety of the harbour.
 - **Coast guard tow:** Out of fuel, or still at sea at 05:00 the next morning, the coast guard tows your boat back to port for a fee.
 - **Market prices:** Fish prices follow seasonal supply and drop as you sell larger volumes; fresher fish fetches premium market rates.
@@ -66,6 +70,8 @@
 | Throttle | `W` / `S` (the lever stays where you leave it) | Throttle slider |
 | Rudder | `A` / `D` or arrow keys | Rudder wheel |
 | Set net / haul net / dock | `Space` | Net / Dock buttons |
+| Change fishing gear (while the net is on board) | `G` | Gear button |
+| Midwater trawl shallower / deeper | `Q` / `E` | ▲ / ▼ buttons |
 | Map | `M` | Map button |
 | Pause / back | `P` or `Esc` | Pause button |
 | Music on/off | `N` | Sound button (mutes all) |
