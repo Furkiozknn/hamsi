@@ -806,7 +806,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-flex;align-items:center;
   <div id="actions">
     <div class="hint" id="actHint"></div>
     <div id="netbar" class="hidden"><i></i></div>
-    <div class="row"><button class="btn primary" id="bNet"><svg class="ic"><use href="#i-net"/></svg><span id="bNetT"></span></button><button class="btn warn hidden" id="bDock"><svg class="ic"><use href="#i-anchor"/></svg><span data-i18n="dock">Yanaş</span></button></div>
+    <div class="row"><button class="btn hidden" id="bGear" aria-label="Gear"><svg class="ic"><use href="#i-net"/></svg><span id="bGearT"></span></button><button class="btn hidden" id="bUp" aria-label="Shallower">▲</button><button class="btn hidden" id="bDn" aria-label="Deeper">▼</button><button class="btn primary" id="bNet"><svg class="ic"><use href="#i-net"/></svg><span id="bNetT"></span></button><button class="btn warn hidden" id="bDock"><svg class="ic"><use href="#i-anchor"/></svg><span data-i18n="dock">Yanaş</span></button></div>
   </div>
   <div id="touch"><div id="tThr"><u></u><i></i><small>W/S</small></div><div id="tWheel"><svg viewBox="0 0 64 64" id="wheelSvg"><use href="#i-wheel"/></svg></div></div>
 </div>
@@ -941,6 +941,13 @@ const L = {
     best: 'En iyi: {r} · {s}', nobest: 'Henüz sezon bitirilmedi', knots: 'kn', ms: 'm/s',
     sp_hamsi: 'Hamsi', sp_istavrit: 'İstavrit', sp_palamut: 'Palamut', sp_lufer: 'Lüfer',
     net_set: 'Ağı at', net_haul: 'Ağı çek', net_hauling: 'Ağ çekiliyor…', net_full: 'Ağ tamam: çek!',
+    net_leave: 'Ağı bırak', net_lift: 'Ağı topla', net_heave: 'Trolü vira et', gear_btn: 'Ağ: {g}',
+    g_duz_hamsi: 'hamsi-istavrit ağı', g_duz_cinekop: 'çinekop-lüfer ağı', g_uzatma_palamut: 'uzatma palamut ağı', g_trol_orta: 'orta su trolü', g_trol_dip: 'dip trolü',
+    hint_gear: '{g}: Space ile ser · G ağ değiştir', hint_gill: 'Dümenle düz ya da kıvrımlı ser · {m} m kaldı · Space: ağı bırak',
+    hint_soak: 'Ağ suda: {kg} kg · bir şamandıraya yaklaş, yavaşla ve topla', hint_tow: 'Trol {d} m · torbada {kg} kg', hint_qe: 'Q/E derinlik',
+    tow_fast: 'çok hızlı, ağ yüzüyor', tow_slow: 'çok yavaş, ağ çöküyor', tow_deep: 'dip çok derin',
+    toast_gillfar: 'Toplamak için bir şamandıraya yaklaş ve yavaşla', toast_gillfull: 'Ağ doldu: topla!', toast_gillout: 'Ağ bitti, suya bırakıldı',
+    toast_codfull: 'Torba doldu: vira et!', toast_deep: 'Burası dip trolü için çok derin',
     hint_set: 'Balık sürüsünün çevresinde daire çiz', hint_haul: 'Daireyi kapat, sonra çek ({m} m ağ)', hint_dock: 'Limana yanaşmak için yavaşla',
     hint_dockok: 'Yanaşmak için Boşluk', hint_dockokTouch: 'Yanaşmak için Yanaş düğmesi', hint_harbor: 'Limanda ağ atılmaz',
     w_clear: 'Açık hava', w_mist: 'Sisli', w_wind: 'Rüzgârlı', w_warn: 'Fırtına uyarısı!', w_storm: 'FIRTINA', w_after: 'Deniz yatışıyor',
@@ -1000,6 +1007,13 @@ const L = {
     best: 'Best: {r} · {s}', nobest: 'No season finished yet', knots: 'kn', ms: 'm/s',
     sp_hamsi: 'Anchovy', sp_istavrit: 'Horse mackerel', sp_palamut: 'Bonito', sp_lufer: 'Bluefish',
     net_set: 'Set net', net_haul: 'Haul net', net_hauling: 'Hauling…', net_full: 'Net full: haul!',
+    net_leave: 'Leave net', net_lift: 'Lift net', net_heave: 'Heave trawl', gear_btn: 'Gear: {g}',
+    g_duz_hamsi: 'anchovy & scad gillnet', g_duz_cinekop: 'bluefish gillnet', g_uzatma_palamut: 'bonito drift net', g_trol_orta: 'midwater trawl', g_trol_dip: 'bottom trawl',
+    hint_gear: '{g}: Space to set · G to change gear', hint_gill: 'Steer it straight or curved · {m} m left · Space: leave the net',
+    hint_soak: 'Net soaking: {kg} kg · come to a buoy, slow down and lift it', hint_tow: 'Trawl {d} m · {kg} kg in the bag', hint_qe: 'Q/E depth',
+    tow_fast: 'too fast, the net lifts', tow_slow: 'too slow, the net collapses', tow_deep: 'bottom too deep',
+    toast_gillfar: 'Come to a buoy and slow down to lift the net', toast_gillfull: 'Net is full: lift it!', toast_gillout: 'Net fully out and left in the water',
+    toast_codfull: 'Cod end full: heave!', toast_deep: 'Too deep here for the bottom trawl',
     hint_set: 'Circle the net around a school', hint_haul: 'Close the circle, then haul ({m} m of net)', hint_dock: 'Slow down to dock',
     hint_dockok: 'Press Space to dock', hint_dockokTouch: 'Tap Dock to dock', hint_harbor: 'No fishing in the harbour',
     w_clear: 'Clear', w_mist: 'Misty', w_wind: 'Windy', w_warn: 'Storm warning!', w_storm: 'STORM', w_after: 'Seas calming',
@@ -1450,7 +1464,7 @@ function stepSchool(s, dt) {
   s.hd += (rand() - 0.5) * dt * 1.1;
   let vx = Math.cos(s.hd) * sp.spd * 0.3, vz = Math.sin(s.hd) * sp.spd * 0.3;
   const dx = s.x - b.x, dz = s.z - b.z, d = Math.hypot(dx, dz) || 1;
-  const bs = Math.abs(b.v) / 9, thr = sp.skit * (0.4 + 0.6 * clamp(bs, 0, 1)) * (G.net.phase === 'haul' ? 1.6 : 1) + s.rad * 0.5;
+  const bs = Math.abs(b.v) / 9, thr = sp.skit * (0.4 + 0.6 * clamp(bs, 0, 1)) * (G.net.phase === 'haul' ? 1.6 : G.net.phase === 'tow' ? 0.45 : 1) + s.rad * 0.5; // a slow, steady tow scares fish far less
   s.fleeing = false;
   if (G.mode === 'play' && d < thr) { const f = sp.spd * 1.0 * (1 - d / thr); vx += dx / d * f; vz += dz / d * f; s.dep = Math.min(s.dep + dt * 1.4, Math.min(s.dep0 + 8, seabed(s.x, s.z) - 3)); s.fleeing = true; }
   else s.dep += (Math.max(3, s.dep0 * (1 - sp.rise * nightF())) + Math.sin(s.age * 0.15 + s.rot) * 2.5 - s.dep) * dt * 0.3; // night: rise towards the lights
@@ -1490,14 +1504,15 @@ function sonarContacts() {
 }
 
 /* ---------------------------------------------------------------- net */
-function stowNet() { G.net.phase = 'stowed'; G.net.pts = []; G.net.len = 0; G.net.ht = 0; G.net.full = false; G.net.lidaki = [false, false, false, false]; G.net.lidKg = [0, 0, 0, 0]; }
+function stowNet() { G.net.gear = null; G.net.warn = ''; G.net.phase = 'stowed'; G.net.pts = []; G.net.len = 0; G.net.ht = 0; G.net.full = false; G.net.lidaki = [false, false, false, false]; G.net.lidKg = [0, 0, 0, 0]; }
 function netNear() { const b = G.boat; return Math.hypot(b.x - DOCK.x, b.z - DOCK.z); }
 function canDock() { const b = G.boat; return G.mode === 'play' && netNear() < 17 && Math.abs(b.v) < 4.5 && G.net.phase === 'stowed'; }
 function trySetNet() {
   const b = G.boat; if (G.net.phase !== 'stowed') return;
   if (inBasin(b.x, b.z)) { toast(t('toast_nonet'), 'bad'); return; }
   if (G.wx.wave > BC().rough) { toast(t('toast_rough'), 'bad'); return; }
-  const n = G.net; n.phase = 'set'; n.pts = []; n.len = 0; n.ht = 0; n.full = false; n.fullT = 0; n.maxLen = ST.netLen(); n.depth = ST.netDep(); n.lidaki = [false, false, false, false]; n.lidKg = [0, 0, 0, 0];
+  const gk = curGear(); if (GEARS[gk].kind !== 'ring') { setGear(gk); return; }
+  const n = G.net; n.gear = 'halka'; n.phase = 'set'; n.pts = []; n.len = 0; n.ht = 0; n.full = false; n.fullT = 0; n.maxLen = ST.netLen(); n.depth = ST.netDep(); n.lidaki = [false, false, false, false]; n.lidKg = [0, 0, 0, 0];
   n.pts.push({ x: b.x - Math.cos(b.h) * 3.2, z: b.z - Math.sin(b.h) * 3.2 }); Snd.netSet(); G.today.sets = (G.today.sets || 0) + 1;
 }
 function startHaul() {
@@ -1567,6 +1582,7 @@ function finishHaul() {
 }
 function stepNet(dt) {
   const n = G.net, b = G.boat;
+  if (n.gear && n.gear !== 'halka') { stepGear(dt); return; }
   if (n.phase === 'set') {
     const sx = b.x - Math.cos(b.h) * 3.2, sz = b.z - Math.sin(b.h) * 3.2, l = n.pts[n.pts.length - 1];
     const d = Math.hypot(sx - l.x, sz - l.z);
@@ -1576,6 +1592,140 @@ function stepNet(dt) {
   } else if (n.phase === 'haul') {
     n.ht += dt; if (n.ht >= n.haulT) finishHaul();
   }
+}
+
+/* ---------- fishing gear (player choice; the ?auto bot always uses the boat's own encircling net)
+   ring  : the boat's encircling net (voli on sandal/taka, gırgır on the purse seiner) — the original mechanic.
+   gill  : straight nets (uzatma / galsama). Paid out behind the boat along its track, straight or curved as you steer,
+           left in the water and lifted again from either buoy. A fish that swims through the wall inside the net's
+           depth band is gilled with the mesh's selectivity, so a 100 kg school may give 100 kg or 10 kg depending on
+           where and how the net was laid.
+   trawl : a towed bag. The mouth follows the track behind the boat; orta su trolü fishes at a chosen depth, dip trolü
+           just above the seabed. It only fishes at towing speed (about 2-5 kn); faster lifts it, slower collapses it. */
+const GEARS = {
+  halka:          { kind: 'ring' },
+  duz_hamsi:      { kind: 'gill', len: 1.0, band: [3, 22],  sel: [0.85, 0.75, 0.12, 0.08], cap: 2.6 },
+  duz_cinekop:    { kind: 'gill', len: 1.1, band: [6, 30],  sel: [0.03, 0.35, 0.45, 0.9],  cap: 2.0 },
+  uzatma_palamut: { kind: 'gill', len: 1.4, band: [14, 42], sel: [0, 0.06, 0.9, 0.45],      cap: 1.8 },
+  trol_orta:      { kind: 'trawl', mid: true,  w: 16, h: 9, sel: [0.8, 0.85, 0.7, 0.6], cap: 3.2 },
+  trol_dip:       { kind: 'trawl', mid: false, w: 18, h: 6, sel: [0.5, 0.9, 0.6, 0.7],  cap: 3.2 },
+};
+const BOAT_GEARS = {
+  sandal: ['halka', 'duz_hamsi', 'duz_cinekop', 'uzatma_palamut'],
+  taka:   ['halka', 'duz_hamsi', 'duz_cinekop', 'uzatma_palamut'],
+  trol:   ['trol_orta', 'trol_dip'],
+  girgir: ['halka'],
+};
+const TRAWL_BACK = 26, TOW_MIN = 2 / 1.944, TOW_MAX = 5 / 1.944; // m behind the stern; towing window in m/s (2-5 kn)
+function curGear() { const l = BOAT_GEARS[BC().id] || ['halka']; if (G.auto) return 'halka'; return l.includes(G.gear) ? G.gear : l[0]; }
+function gearName(k) { return k === 'halka' ? t('n_' + BC().netId) : t('g_' + k); }
+function cycleGear() {
+  if (G.net.phase !== 'stowed' || G.auto) return; const l = BOAT_GEARS[BC().id] || ['halka']; if (l.length < 2) return;
+  G.gear = l[(l.indexOf(curGear()) + 1) % l.length]; toast(t('gear_btn', { g: gearName(G.gear) }), 'info'); refreshUI(true);
+}
+function setGear(gk) {
+  const n = G.net, b = G.boat, gr = GEARS[gk];
+  if (gr.kind === 'trawl' && !gr.mid && seabed(b.x, b.z) - gr.h / 2 > ST.netDep() + 25) { toast(t('toast_deep'), 'bad'); return; }
+  n.gear = gk; n.pts = [{ x: b.x - Math.cos(b.h) * 3.2, z: b.z - Math.sin(b.h) * 3.2 }]; n.len = 0; n.ht = 0; n.full = false; n.fullT = 0;
+  n.kg = [0, 0, 0, 0]; n.members = 0; n.lidaki = [false, false, false, false]; n.lidKg = [0, 0, 0, 0]; n.setId = (n.setId || 0) + 1; n.pm = null;
+  n.cap = Math.round(ST.netLen() * gr.cap); n.warn = '';
+  if (gr.kind === 'gill') { n.phase = 'set'; n.maxLen = Math.round(ST.netLen() * gr.len); n.band = gr.band; n.depth = gr.band[1]; }
+  else { n.phase = 'tow'; n.maxLen = 1e9; n.tdep = 2; n.ttgt = gr.mid ? clamp(Math.round(ST.netDep() * 0.6), 6, 40) : 60; n.depth = n.tdep; }
+  Snd.netSet(); G.today.sets = (G.today.sets || 0) + 1;
+}
+const kgSum = n => n.kg[0] + n.kg[1] + n.kg[2] + n.kg[3];
+// segment a-b crosses segment c-d (2D, x/z)
+function segX(ax, az, bx, bz, cx, cz, dx, dz) {
+  const d1 = (dx - cx) * (az - cz) - (dz - cz) * (ax - cx), d2 = (dx - cx) * (bz - cz) - (dz - cz) * (bx - cx);
+  if ((d1 > 0) === (d2 > 0)) return false;
+  const d3 = (bx - ax) * (cz - az) - (bz - az) * (cx - ax), d4 = (bx - ax) * (dz - az) - (bz - az) * (dx - ax);
+  return (d3 > 0) !== (d4 > 0);
+}
+function takeFish(n, s, f, sel, mul) {
+  if (rand() >= sel[s.sp] * (mul || 1)) return false;
+  const kg = s.kgPer * (0.9 + rand() * 0.2); n.kg[s.sp] += kg; n.members++;
+  if (s.lidaki) { n.lidaki[s.sp] = true; n.lidKg[s.sp] += kg; }
+  f.dead = 1; return true;
+}
+function gillCatch(gr) {
+  const n = G.net, P = n.pts; if (P.length < 2) return;
+  let x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9; for (const p of P) { if (p.x < x0) x0 = p.x; if (p.x > x1) x1 = p.x; if (p.z < z0) z0 = p.z; if (p.z > z1) z1 = p.z; }
+  // the wall is easier to see by day: real gillnets are set at dusk and lifted at dawn
+  const full = kgSum(n) >= n.cap, vis = 0.4 + 0.55 * nightF(); let any = false;
+  for (const s of G.schools) {
+    const near = !full && s.x + s.rad * 2 > x0 && s.x - s.rad * 2 < x1 && s.z + s.rad * 2 > z0 && s.z - s.rad * 2 < z1;
+    for (const f of s.mem) {
+      const wx = s.x + f.x, wz = s.z + f.z;
+      if (near && f.gk === n.setId) {
+        const d = s.dep + f.y;
+        if (d >= gr.band[0] && d <= gr.band[1] && (f.gx !== wx || f.gz !== wz))
+          for (let i = 0; i < P.length - 1; i++) if (segX(f.gx, f.gz, wx, wz, P[i].x, P[i].z, P[i + 1].x, P[i + 1].z)) {
+            if (f.ws !== n.setId) { if (takeFish(n, s, f, gr.sel, vis)) any = true; else f.ws = n.setId; } // one chance per fish: a fish that bounced off keeps clear
+            break;
+          }
+      }
+      f.gx = wx; f.gz = wz; f.gk = n.setId;
+    }
+  }
+  if (any) { for (const s of G.schools) s.mem = s.mem.filter(f => !f.dead); G.schools = G.schools.filter(s => s.mem.length >= 4); }
+  if (!full && kgSum(n) >= n.cap) toast(t('toast_gillfull'), 'bad');
+}
+// mouth of the trawl: the point TRAWL_BACK metres back along the towed track
+function trawlMouth(n, b) {
+  const P = n.pts; let px = b.x - Math.cos(b.h) * 3.2, pz = b.z - Math.sin(b.h) * 3.2, left = TRAWL_BACK;
+  for (let i = P.length - 1; i >= 0; i--) {
+    const q = P[i], d = Math.hypot(px - q.x, pz - q.z);
+    if (d >= left) { const k = left / d; return { x: px + (q.x - px) * k, z: pz + (q.z - pz) * k, dx: (px - q.x) / d, dz: (pz - q.z) / d }; }
+    left -= d; px = q.x; pz = q.z;
+  }
+  return { x: px - Math.cos(b.h) * left, z: pz - Math.sin(b.h) * left, dx: Math.cos(b.h), dz: Math.sin(b.h) };
+}
+function trawlStep(gr, dt) {
+  const n = G.net, b = G.boat, v = Math.abs(b.v), m = trawlMouth(n, b), sb = seabed(m.x, m.z), maxD = ST.netDep() + 25;
+  const tgt = gr.mid ? Math.min(n.ttgt, sb - gr.h / 2 - 1) : sb - gr.h / 2 - 0.5;
+  const fast = v > TOW_MAX, slow = v < TOW_MIN, reach = Math.min(tgt, maxD);
+  // the warps pay out at a few metres a second; too fast lifts the bag towards the surface
+  n.tdep += clamp((fast ? Math.max(2, reach - (v - TOW_MAX) * 8) : reach) - n.tdep, -dt * 3, dt * 3); n.depth = n.tdep;
+  n.warn = fast ? 'fast' : slow ? 'slow' : !gr.mid && tgt > maxD ? 'deep' : '';
+  const fishing = !n.warn && Math.abs(n.tdep - reach) < 2.5 && kgSum(n) < n.cap;
+  if (fishing && n.pm) {
+    const ax = n.pm.x, az = n.pm.z, ex = m.x - ax, ez = m.z - az, L2 = ex * ex + ez * ez || 1e-6; let any = false;
+    for (const s of G.schools) {
+      if (Math.hypot(s.x - m.x, s.z - m.z) > s.rad * 2 + gr.w) continue;
+      for (const f of s.mem) {
+        const wx = s.x + f.x, wz = s.z + f.z, d = s.dep + f.y;
+        if (Math.abs(d - n.tdep) > gr.h / 2) continue;
+        const k = clamp(((wx - ax) * ex + (wz - az) * ez) / L2, 0, 1), qx = ax + ex * k - wx, qz = az + ez * k - wz;
+        if (qx * qx + qz * qz < (gr.w / 2) * (gr.w / 2) && takeFish(n, s, f, gr.sel)) any = true;
+      }
+    }
+    if (any) { for (const s of G.schools) s.mem = s.mem.filter(f => !f.dead); G.schools = G.schools.filter(s => s.mem.length >= 4); if (kgSum(n) >= n.cap) toast(t('toast_codfull'), 'bad'); }
+  }
+  n.pm = { x: m.x, z: m.z }; n.mouth = m;
+}
+function trawlDepth(d) { const n = G.net; if (n.phase !== 'tow' || !GEARS[n.gear].mid) return; n.ttgt = clamp(n.ttgt + d, 4, ST.netDep() + 25); refreshUI(true); }
+function leaveGill() { const n = G.net; if (n.pts.length < 4) { stowNet(); toast(t('toast_empty'), 'info'); return; } n.phase = 'soak'; Snd.splash(); }
+function liftGear() {
+  const n = G.net, b = G.boat;
+  if (n.phase === 'soak') {
+    const P = n.pts, a = P[0], z = P[P.length - 1];
+    if (Math.min(Math.hypot(b.x - a.x, b.z - a.z), Math.hypot(b.x - z.x, b.z - z.z)) > 14 || Math.abs(b.v) > 3.5) { toast(t('toast_gillfar'), 'info'); return; }
+  }
+  const kind = GEARS[n.gear].kind;
+  n.phase = 'haul'; n.ht = 0; n.haulT = ST.haul() * (kind === 'gill' ? 0.8 + n.len / 180 : 1.3);
+  G.today.hauls = (G.today.hauls || 0) + 1; G.today.mem = (G.today.mem || 0) + n.members; Snd.splash();
+}
+function stepGear(dt) {
+  const n = G.net, b = G.boat, gr = GEARS[n.gear];
+  if (n.phase === 'set' || n.phase === 'tow') {
+    const sx = b.x - Math.cos(b.h) * 3.2, sz = b.z - Math.sin(b.h) * 3.2, l = n.pts[n.pts.length - 1], d = Math.hypot(sx - l.x, sz - l.z);
+    if (d >= 1.6 && !n.full) { n.pts.push({ x: sx, z: sz }); n.len += d; if (n.phase === 'tow' && n.pts.length > 40) n.pts.shift(); }
+    if (n.phase === 'set' && n.len >= n.maxLen * 0.985 && !n.full) { n.full = true; toast(t('toast_gillout'), 'info'); leaveGill(); }
+    if (inBasin(b.x, b.z) && n.len > 5) { stowNet(); return; }
+  }
+  if (n.phase === 'set' || n.phase === 'soak') gillCatch(gr);
+  else if (n.phase === 'tow') trawlStep(gr, dt);
+  else if (n.phase === 'haul') { n.ht += dt; if (n.ht >= n.haulT) finishHaul(); }
 }
 
 /* ---------------------------------------------------------------- boat */
@@ -1595,7 +1745,7 @@ function stepBoat(dt) {
   b.thr += clamp(inp.thr - b.thr, -dt * 0.9, dt * 0.9);
   const hasFuel = G.fuel > 0; const thrEff = hasFuel ? b.thr : 0;
   let vmax = ST.vmax();
-  if (G.net.phase === 'set') vmax *= 0.72; else if (G.net.phase === 'haul') vmax *= 0.15;
+  if (G.net.phase === 'set') vmax *= 0.72; else if (G.net.phase === 'tow') vmax *= 0.5; else if (G.net.phase === 'haul') vmax *= 0.15;
   vmax *= 1 - 0.18 * clamp((wx.wave - 0.9) / 1.1, 0, 1);
   const target = thrEff * vmax;
   b.v += (target - b.v) * clamp(dt * 0.55, 0, 1);
@@ -1670,7 +1820,7 @@ function freshRun() {
   G.runId++; G.day = 1; G.money = START_MONEY; G.loan = START_LOAN; G.up = { net: 0, sonar: 0, engine: 0, hold: 0, ice: 0, crew: 0 }; G.boatClass = 0; G.log = []; G.buys = []; setBoatVisual();
   Object.assign(bot, { target: null, inHarbor: false, wp: 0, timer: 0 });
   G.fuel = ST.tank(); G.hull = 100; G.ice = ST.ice(); G.hold.forEach(h => { h.kg = 0; h.fresh = 100; h.lidaki = false; h.lidKg = 0; });
-  G.tot = { catch: 0, storms: 0, sales: 0 }; G.seed = FLAG.auto ? SEED : (Math.random() * 1e9) | 0; G.stormDays = pickStormDays(G.seed);
+  G.tot = { catch: 0, storms: 0, sales: 0 }; G.gear = null; G.seed = FLAG.auto ? SEED : (Math.random() * 1e9) | 0; G.stormDays = pickStormDays(G.seed);
   G.mk = { demand: [1, 1, 1, 1], pm: [1, 1, 1, 1], prev: [1, 1, 1, 1] }; G.result = null;
   G.daily = null; rand = Math.random;
 }
@@ -1749,7 +1899,7 @@ function netWorth() { return Math.round(G.money - G.loan + boatValue()); }
 /* ---------------------------------------------------------------- save / load */
 function saveRun() {
   if (G.mode === 'menu' || G.mode === 'end' || G.daily) return; // a daily challenge never overwrites the season save
-  const o = { v: 2, day: G.day, money: G.money, loan: G.loan, boat: BC().id, up: G.up, fuel: G.fuel, hull: G.hull, ice: G.ice, hold: G.hold, demand: G.mk.demand, seed: G.seed, tot: G.tot };
+  const o = { v: 2, day: G.day, money: G.money, loan: G.loan, boat: BC().id, up: G.up, fuel: G.fuel, hull: G.hull, ice: G.ice, hold: G.hold, demand: G.mk.demand, seed: G.seed, tot: G.tot, gear: G.gear || null };
   store.set(KEY_SAVE, JSON.stringify(o));
 }
 function hasSave() { try { const o = JSON.parse(store.get(KEY_SAVE) || 'null'); return !!(o && (o.v === 1 || o.v === 2) && o.day >= 1 && o.day <= DAYS); } catch (e) { return false; } }
@@ -1760,6 +1910,7 @@ function loadRun() {
     // v1 (before boat classes): the old boat had the taka's base stats; its upgrade levels are kept even above the taka cap
     const bi = BOATS.findIndex(b => b.id === o.boat); G.boatClass = o.v === 1 ? 1 : Math.max(0, bi); setBoatVisual(); G.fuel = o.fuel; G.hull = o.hull; G.ice = o.ice;
     o.hold.forEach((h, i) => { G.hold[i].kg = h.kg; G.hold[i].fresh = h.fresh; G.hold[i].lidaki = !!h.lidaki; G.hold[i].lidKg = typeof h.lidKg === 'number' ? h.lidKg : (h.lidaki ? h.kg : 0); }); G.mk.demand = o.demand.slice(); G.seed = o.seed; G.stormDays = pickStormDays(G.seed); G.tot = o.tot || G.tot;
+    G.gear = typeof o.gear === 'string' && GEARS[o.gear] ? o.gear : null;
     G.flags = { loaded: true }; return true;
   } catch (e) { return false; }
 }
@@ -2187,6 +2338,12 @@ function cabin(L, LL, x, roof, W) {
   L.push(gBox(0.38, 0.08, 2.9, x + 1.52, 3.08, 0, roof), gCyl(0.16, 0.18, 0.32, 8, x + 1.15, 3.65, 0, '#d8d4c8', { rz: Math.PI / 2 }), gCyl(0.24, 0.28, 0.32, 8, x + 0.25, 3.62, 0, '#d8d4c8'));
   LL.push(gBox(0.06, 0.8, 1.0, x + 1.445, 2.6, -0.65, W), gBox(0.06, 0.8, 1.0, x + 1.445, 2.6, 0.65, W), gBox(1.0, 0.7, 0.06, x + 0.4, 2.6, 1.395, W), gBox(1.0, 0.7, 0.06, x + 0.4, 2.6, -1.395, W), gBox(1.0, 0.7, 0.06, x - 0.6, 2.6, 1.395, W), gBox(1.0, 0.7, 0.06, x - 0.6, 2.6, -1.395, W));
 }
+// gırgır botu: the purse seiner's skiff (small steel boat with a tiny wheelhouse), also used free in the water
+function skiffParts() {
+  return [gBox(3.0, 0.7, 1.5, 0, 0, 0, '#c0392b'), gBox(2.6, 0.12, 1.3, 0, 0.36, 0, '#7d8a90'), gBox(0.7, 0.55, 1.6, 1.25, 0.05, 0, '#c0392b'),
+    gBox(0.9, 0.8, 0.9, -0.2, 0.8, 0, '#f6f8fa'), gBox(1.0, 0.1, 1.0, -0.2, 1.25, 0, '#1d3557'), gBox(0.04, 0.3, 0.7, 0.26, 0.9, 0, '#1c2c38'),
+    gSph(0.18, -1.3, 0.45, 0.62, '#222', 1, 1.3, 1, 6), gSph(0.18, -1.3, 0.45, -0.62, '#222', 1, 1.3, 1, 6), gCyl(0.03, 0.03, 1.4, 4, -0.2, 1.9, 0, '#d8d4c8')];
+}
 function makeRig(id) {
   const L = [], LL = [], W = '#ffc15a', rig = { g: new THREE.Group(), crew: [], radar: null, flag: [-4.55, 2.5, 0.75], slots: [], glow: [-3.0, 4.0, 0] };
   const fenders = () => { for (let i = 0; i < 4; i++) L.push(gSph(0.22, -2 + i * 1.3, 0.55, 1.72, '#222', 1, 1.4, 1, 6), gSph(0.22, -2 + i * 1.3, 0.55, -1.72, '#222', 1, 1.4, 1, 6)); };
@@ -2215,26 +2372,40 @@ function makeRig(id) {
       L.push(gCyl(0.07, 0.1, 4.6, 6, 3.6, 3.3, 0, '#d8d4c8'), gBox(0.1, 0.1, 1.8, 3.6, 5.1, 0, '#d8d4c8'), gSph(0.6, -3.4, 1.3, 0, '#7a6a3a', 1.4, 0.5, 1.2, 8));
       LL.push(gSph(0.2, 3.6, 5.7, 0, '#ffffff'), gSph(0.22, -4.2, 5.4, 0, '#ffd27a')); nav(2.6, 2.0); rig.glow = [-4.2, 5.2, 0]; rig.flag = [-4.6, 2.4, 0.4];
       rig.slots = [[-2.6, 1.05, 1.05], [-3.3, 1.05, -1.0], [0.0, 1.05, 0.9]];
-    } else { // gırgır: the original purse seiner with net drum, power block, light masts and a skiff on the stern
-      cabin(L, LL, -1.4, '#1565C0', W);
-      L.push(gCyl(0.07, 0.1, 5.4, 6, 1.9, 3.7, 0, '#d8d4c8'), gBox(0.1, 0.1, 2.0, 1.9, 5.7, 0, '#d8d4c8'), gBox(0.2, 0.2, 0.2, 1.9, 6.5, 0, '#ffe08a'), gCyl(0.04, 0.04, 2.0, 5, -1.0, 4.5, -0.6, '#222'));
-      L.push(gCyl(0.06, 0.07, 3.6, 6, 0.8, 3.2, 0, '#d8d4c8', { rz: 0.9 }));
-      L.push(gCyl(0.8, 0.8, 1.8, 14, -3.35, 1.95, 0, '#2e6b46', { rx: Math.PI / 2 }), gCyl(1.05, 1.05, 0.14, 14, -3.35, 1.95, 1.0, '#e0791f', { rx: Math.PI / 2 }), gCyl(1.05, 1.05, 0.14, 14, -3.35, 1.95, -1.0, '#e0791f', { rx: Math.PI / 2 }));
-      L.push(gBox(0.2, 1.0, 0.2, -3.35, 1.4, 1.1, '#555'), gBox(0.2, 1.0, 0.2, -3.35, 1.4, -1.1, '#555'));
-      L.push(gSph(1, 3.0, 1.2, 0, '#2b5a46', 1.2, 0.45, 1.0, 8), gSph(0.28, 3.9, 1.2, 0.8, '#ff7a1c'), gSph(0.28, 3.9, 1.2, -0.8, '#ffffff'), gSph(0.28, 3.4, 1.55, 0.2, '#ff7a1c'));
-      L.push(gCyl(0.36, 0.4, 0.2, 8, 4.3, 1.24, 0.52, '#c8a46e'), gCyl(0.32, 0.36, 0.18, 8, 4.3, 1.24, -0.52, '#c8a46e'), gBox(0.45, 0.14, 0.14, 5.05, 0.95, 0.42, '#2b2f33'), gBox(0.45, 0.14, 0.14, 5.05, 0.95, -0.42, '#2b2f33'));
-      L.push(gCyl(0.06, 0.06, 2.0, 5, -4.55, 2.0, 0, '#d8d4c8'), gCyl(0.06, 0.06, 1.6, 5, 5.3, 2.2, 0, '#d8d4c8'));
-      L.push(gCyl(0.07, 0.08, 3.0, 5, -4.2, 3.0, 1.05, '#c9c5b8'), gCyl(0.07, 0.08, 3.0, 5, -4.2, 3.0, -1.05, '#c9c5b8'), gBox(0.14, 0.14, 2.3, -4.2, 4.5, 0, '#c9c5b8'), gSph(0.2, -4.2, 4.2, 0, '#e0791f'));
-      L.push(gBox(0.8, 0.5, 0.7, 0.4, 1.3, 1.0, '#e0791f'), gBox(0.8, 0.5, 0.7, 0.4, 1.3, -1.0, '#e0791f'), gBox(0.8, 0.5, 0.7, 0.4, 1.78, 1.0, '#f2c230'), gBox(0.8, 0.5, 0.7, 0.4, 1.78, -1.0, '#3a7ec2'));
-      for (const x of [0.2, 3.2]) { L.push(gCyl(0.05, 0.05, 3.4, 5, x, 2.9, 1.55, '#c9c5b8'), gCyl(0.05, 0.05, 3.4, 5, x, 2.9, -1.55, '#c9c5b8')); LL.push(gSph(0.18, x, 4.6, 1.55, '#fff2c0'), gSph(0.18, x, 4.6, -1.55, '#fff2c0')); } // lamp poles (ışıkçı)
-      L.push(gBox(1.6, 0.5, 0.9, -5.6, 0.7, 0, '#e0791f')); // skiff riding on the stern
-      LL.push(gSph(0.2, 1.9, 6.7, 0, '#ffffff'), gSph(0.22, -3.0, 4.0, 0, '#ffd27a')); nav(1.2, 2.0);
-      rig.slots = [[-2.6, 1.05, 1.05], [-3.3, 1.05, -1.35], [1.8, 1.05, 0.9]];
-      rig.radar = lamMesh([gBox(0.22, 0.14, 1.25, 0, 0, 0, '#f6f8fa'), gBox(0.24, 0.08, 0.3, 0, -0.06, 0, '#1565C0')]); rig.radar.position.set(-1.15, 3.84, 0);
+    } else { // gırgır: Black Sea purse seiner (Sürmene type). Long hull, high flared bow, two-deck superstructure FORWARD,
+      // main mast right behind it with the boom and the power block over the long aft working deck, the net heaped aft,
+      // and the gırgır botu (skiff) riding on the stern ramp: it is let go with the net's end when the net is set.
+      L[0].scale(1.5, 1.08, 1.0); L.splice(1, 8); // longer, higher hull; own fender row below
+      for (let i = 0; i < 5; i++) L.push(gSph(0.26, -4.5 + i * 2.4, 0.7, 1.74, '#222', 1, 1.4, 1, 6), gSph(0.26, -4.5 + i * 2.4, 0.7, -1.74, '#222', 1, 1.4, 1, 6));
+      L.push(gBox(2.4, 0.6, 2.2, 6.6, 1.95, 0, '#1d3557'), gBox(2.5, 0.08, 2.3, 6.6, 2.28, 0, '#f6f8fa'), gCyl(0.05, 0.05, 2.6, 5, 7.9, 2.6, 0, '#d8d4c8')); // raised forecastle, jack staff
+      // superstructure: deckhouse + wheelhouse with a window band all round, dark roof, bridge wings
+      L.push(gBox(3.8, 1.5, 3.0, 3.7, 1.85, 0, '#f6f8fa'), gBox(2.7, 1.25, 2.7, 4.0, 3.2, 0, '#f6f8fa'), gBox(3.1, 0.16, 3.1, 4.0, 3.9, 0, '#1d3557'));
+      L.push(gBox(0.7, 0.1, 4.2, 4.9, 2.62, 0, '#1d3557'), gBox(0.04, 0.55, 2.3, 5.36, 3.3, 0, '#1c2c38'), gBox(2.2, 0.5, 0.04, 4.0, 3.35, 1.36, '#1c2c38'), gBox(2.2, 0.5, 0.04, 4.0, 3.35, -1.36, '#1c2c38'));
+      L.push(gBox(0.6, 0.6, 0.04, 3.2, 1.95, 1.51, '#1c2c38'), gBox(0.6, 0.6, 0.04, 2.2, 1.95, 1.51, '#1c2c38'), gBox(0.6, 0.6, 0.04, 3.2, 1.95, -1.51, '#1c2c38'), gBox(0.6, 0.6, 0.04, 2.2, 1.95, -1.51, '#1c2c38'));
+      LL.push(gBox(0.06, 0.5, 2.3, 5.38, 3.3, 0, W), gBox(2.2, 0.45, 0.06, 4.0, 3.35, 1.37, W), gBox(2.2, 0.45, 0.06, 4.0, 3.35, -1.37, W));
+      L.push(gCyl(0.07, 0.09, 2.2, 6, 4.9, 5.0, 0, '#d8d4c8'), gBox(0.08, 0.08, 1.6, 4.9, 5.6, 0, '#d8d4c8'), gCyl(0.07, 0.09, 1.2, 6, 3.4, 4.5, 0, '#d8d4c8')); // signal mast + radar post on the roof
+      L.push(gCyl(0.22, 0.26, 0.9, 8, 2.6, 4.3, 0.8, '#2b2f33'), gCyl(0.24, 0.24, 0.25, 8, 2.6, 4.85, 0.8, '#c0392b')); // funnel
+      // main mast behind the wheelhouse, crosstree with lamps, boom raking aft to the power block over the net
+      L.push(gCyl(0.13, 0.17, 7.4, 8, 1.5, 4.8, 0, '#d8d4c8'), gBox(0.12, 0.12, 3.4, 1.5, 7.4, 0, '#d8d4c8'), gBox(0.1, 0.1, 2.4, 1.5, 6.2, 0, '#d8d4c8'));
+      L.push(gCyl(0.1, 0.12, 6.9, 6, -1.0, 4.8, 0, '#c9c5b8', { rz: 0.84 }), gCyl(0.03, 0.03, 4.0, 4, -3.4, 5.2, 0, '#333'));
+      L.push(gCyl(0.6, 0.6, 0.4, 14, -3.6, 6.7, 0, '#e0791f', { rx: Math.PI / 2 }), gCyl(0.25, 0.25, 0.5, 8, -3.6, 6.7, 0, '#2b2f33', { rx: Math.PI / 2 }), gBox(0.14, 0.8, 0.14, -3.6, 7.3, 0, '#555'));
+      L.push(gCyl(0.55, 0.55, 1.6, 12, 0.3, 1.65, 0, '#2e6b46', { rx: Math.PI / 2 }), gCyl(0.75, 0.75, 0.12, 12, 0.3, 1.65, 0.85, '#e0791f', { rx: Math.PI / 2 }), gCyl(0.75, 0.75, 0.12, 12, 0.3, 1.65, -0.85, '#e0791f', { rx: Math.PI / 2 })); // purse winch
+      L.push(gBox(0.8, 0.5, 0.7, -1.4, 1.3, 1.25, '#e0791f'), gBox(0.8, 0.5, 0.7, -1.4, 1.78, 1.25, '#f2c230'), gBox(0.8, 0.5, 0.7, -1.4, 1.3, -1.25, '#3a7ec2')); // fish boxes
+      L.push(gBox(1.4, 0.12, 2.0, -6.5, 1.15, 0, '#555', 0), gCyl(0.06, 0.06, 2.6, 5, -6.9, 2.3, 1.0, '#d8d4c8'), gCyl(0.06, 0.06, 2.6, 5, -6.9, 2.3, -1.0, '#d8d4c8'), gBox(0.12, 0.12, 2.2, -6.9, 3.6, 0, '#d8d4c8')); // stern ramp + gantry
+      for (const x of [-0.2, -2.6, -5.0]) { L.push(gCyl(0.05, 0.05, 2.6, 5, x, 2.4, 1.6, '#c9c5b8'), gCyl(0.05, 0.05, 2.6, 5, x, 2.4, -1.6, '#c9c5b8')); LL.push(gSph(0.18, x, 3.75, 1.6, '#fff2c0'), gSph(0.18, x, 3.75, -1.6, '#fff2c0')); }
+      LL.push(gSph(0.22, 1.5, 8.0, 0, '#ffffff'), gSph(0.2, 1.5, 7.45, 1.6, '#ffd27a'), gSph(0.2, 1.5, 7.45, -1.6, '#ffd27a'), gSph(0.2, 4.9, 6.15, 0, '#ffffff')); nav(4.9, 2.7);
+      rig.glow = [1.5, 7.0, 0]; rig.flag = [-6.9, 3.9, 0.6];
+      rig.slots = [[-2.2, 1.12, 1.2], [-3.0, 1.12, -1.3], [0.4, 1.12, 1.15]];
+      rig.radar = lamMesh([gBox(0.22, 0.14, 1.4, 0, 0, 0, '#f6f8fa'), gBox(0.24, 0.08, 0.3, 0, -0.06, 0, '#1565C0')]); rig.radar.position.set(3.4, 5.15, 0);
+      rig.pile = lamMesh([gBox(4.4, 0.9, 2.5, 0, 0.45, 0, '#244f3f'), gSph(1, -0.8, 0.85, 0.2, '#2b5a46', 1.6, 0.45, 1.1, 8), gSph(1, 1.0, 0.8, -0.2, '#2b5a46', 1.4, 0.4, 1.0, 8),
+        ...Array.from({ length: 9 }, (_, i) => gSph(0.2, -2.0 + i * 0.5, 1.15, (i % 2 ? 0.5 : -0.5), '#ff7a1c'))]);
+      rig.pile.position.set(-4.0, 1.05, 0); rig.pile.castShadow = true;
+      rig.skiff = lamMesh(skiffParts()); rig.skiff.position.set(-7.7, 1.25, 0); rig.skiff.rotation.z = 0.2;
     }
     if (id === 'taka' || id === 'trol') { rig.radar = lamMesh([gBox(0.2, 0.12, 1.0, 0, 0, 0, '#f6f8fa')]); rig.radar.position.set(id === 'taka' ? -1.15 : 1.85, 3.84, 0); }
   }
   const body = mergedMesh(L, new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide })); body.castShadow = true; rig.g.add(body);
+  if (rig.pile) rig.g.add(rig.pile); if (rig.skiff) rig.g.add(rig.skiff);
   rig.g.add(mergedMesh(LL, boatLightMat));
   if (rig.radar) rig.g.add(rig.radar);
   const glow = new THREE.Sprite(boatGlowMat); glow.position.set(...rig.glow); glow.scale.set(5.5, 5.5, 1); rig.g.add(glow);
@@ -2302,9 +2473,42 @@ const netMesh = new THREE.Mesh(netGeo, new THREE.MeshBasicMaterial({ color: 0x1d
 const floats = new THREE.InstancedMesh(new THREE.SphereGeometry(0.24, 6, 5), new THREE.MeshLambertMaterial({}), MAXP); floats.frustumCulled = false; floats.count = 0; scene.add(floats);
 for (let i = 0; i < MAXP; i++) floats.setColorAt(i, _c.set(i % 3 === 0 ? '#ff7a1c' : '#f6f8fa')); floats.instanceColor.needsUpdate = true;
 const buoy = lamMesh([gSph(0.6, 0, 0.2, 0, '#e24a2a'), gCyl(0.05, 0.05, 2.4, 5, 0, 1.6, 0, '#eeeeee'), gBox(0.7, 0.45, 0.04, 0.35, 2.5, 0, '#ffd25a')]); buoy.visible = false; scene.add(buoy);
+const buoy2 = buoy.clone(); buoy2.visible = false; scene.add(buoy2);
+const warpGeo = new THREE.BufferGeometry(); warpGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(12), 3));
+const warps = new THREE.LineSegments(warpGeo, new THREE.LineBasicMaterial({ color: 0x2b2f33 })); warps.frustumCulled = false; warps.visible = false; scene.add(warps);
+const sack = new THREE.Mesh(new THREE.ConeGeometry(1, 1, 12, 1, true), new THREE.MeshBasicMaterial({ color: 0x1d6f6a, wireframe: true, transparent: true, opacity: 0.7 })); sack.visible = false; scene.add(sack);
+const skiffW = lamMesh(skiffParts()); skiffW.visible = false; scene.add(skiffW);
+const _up = new THREE.Vector3(0, 1, 0), _dir = new THREE.Vector3();
+// trawl warps and bag, the gillnet's far buoy, the gırgır skiff in the water and the shrinking net heap on deck
+function updateGearVis() {
+  const n = G.net, b = G.boat, gk = n.gear && GEARS[n.gear].kind, tr = gk === 'trawl' && (n.phase === 'tow' || n.phase === 'haul');
+  warps.visible = sack.visible = tr;
+  if (tr) {
+    let m = n.mouth || trawlMouth(n, b); const sx = b.x - Math.cos(b.h) * 3.6, sz = b.z - Math.sin(b.h) * 3.6;
+    if (n.phase === 'haul') { const e = clamp(n.ht / n.haulT, 0, 1); m = { x: lerp(m.x, sx, e), z: lerp(m.z, sz, e), dx: m.dx, dz: m.dz }; }
+    const px = -m.dz, pz = m.dx, my = waveH(m.x, m.z) - Math.min(n.tdep * 0.25, 3), sy = waveH(sx, sz) + 1.3, P = warpGeo.attributes.position.array, gw = GEARS[n.gear].w * 0.3;
+    P.set([sx + px * 0.9, sy, sz + pz * 0.9, m.x + px * gw, my, m.z + pz * gw, sx - px * 0.9, sy, sz - pz * 0.9, m.x - px * gw, my, m.z - pz * gw]); warpGeo.attributes.position.needsUpdate = true;
+    const r = GEARS[n.gear].h * 0.35, len = 7 + Math.min(6, kgSum(n) / 60);
+    sack.position.set(m.x - m.dx * len / 2, my, m.z - m.dz * len / 2); sack.scale.set(r, len, r); sack.quaternion.setFromUnitVectors(_up, _dir.set(-m.dx, 0, -m.dz));
+  }
+  const gill = gk === 'gill' && n.pts.length > 1 && n.phase !== 'stowed'; buoy2.visible = gill && n.phase !== 'set';
+  if (buoy2.visible) { const q = n.pts[n.pts.length - 1]; buoy2.position.set(q.x, waveH(q.x, q.z), q.z); buoy2.rotation.z = Math.sin(VT * 2 + 1) * 0.1; }
+  netMesh.material.color.setHex(gk === 'gill' ? 0xd9d2bf : 0x1d6f6a);
+  const rig = RIG, out = BC().id === 'girgir' && gk === 'ring' && n.pts.length > 0 && (n.phase === 'set' || n.phase === 'haul');
+  skiffW.visible = out; if (rig && rig.skiff) rig.skiff.visible = !out;
+  if (out) {
+    const p0 = n.pts[0], e = n.phase === 'haul' ? Math.pow(clamp(n.ht / n.haulT, 0, 1), 1.4) * 0.85 : 0, x = lerp(p0.x, b.x, e), z = lerp(p0.z, b.z, e);
+    skiffW.position.set(x, waveH(x, z) + 0.35, z); skiffW.rotation.set(Math.sin(VT * 1.7) * 0.06, Math.atan2(p0.x - b.x, p0.z - b.z), Math.cos(VT * 1.3) * 0.05); skiffW.scale.setScalar(BOATS[G.boatClass].scale);
+  }
+  if (rig && rig.pile) {
+    const ring = gk === 'ring', paid = ring && n.maxLen ? clamp(n.len / n.maxLen, 0, 1) : 0, back = ring && n.phase === 'haul' ? clamp(n.ht / n.haulT, 0, 1) : 0;
+    const f = Math.max(0.12, 1 - paid * (1 - back)); rig.pile.scale.set(0.55 + 0.45 * f, f, 0.8 + 0.2 * f); rig.pile.position.x = -4.0 - (1 - f) * 0.9;
+  }
+}
 const netTmp = [];
 function updateNet() {
-  const n = G.net, b = G.boat; if (n.phase === 'stowed' || !n.pts.length) { netMesh.visible = false; floats.count = 0; buoy.visible = false; return; }
+  updateGearVis();
+  const n = G.net, b = G.boat; if (n.phase === 'stowed' || !n.pts.length || (n.gear && GEARS[n.gear].kind === 'trawl')) { netMesh.visible = false; floats.count = 0; buoy.visible = false; return; }
   netMesh.visible = true; buoy.visible = true;
   const P = netGeo.attributes.position.array, depthVis = n.phase === 'haul' ? lerp(6, 2.4, clamp(n.ht / n.haulT, 0, 1)) : 6;
   const rawN = Math.min(n.pts.length, MAXP - 2);
@@ -2508,14 +2712,20 @@ function refreshUI(force) {
   const n = G.net, dockable = canDock(), inB = inBasin(b.x, b.z), playing = G.mode === 'play';
   $('bDock').classList.toggle('hidden', !(playing && dockable));
   const nb = $('bNet'); nb.classList.toggle('hidden', !playing || dockable); nb.disabled = n.phase === 'haul';
-  setText('bNetT', n.phase === 'stowed' ? t('net_set') : n.phase === 'set' ? t('net_haul') : t('net_hauling'));
+  const gk = n.gear ? GEARS[n.gear].kind : 'ring', gl = BOAT_GEARS[BC().id] || ['halka'];
+  setText('bNetT', n.phase === 'stowed' ? t('net_set') : n.phase === 'set' ? t(gk === 'gill' ? 'net_leave' : 'net_haul') : n.phase === 'soak' ? t('net_lift') : n.phase === 'tow' ? t('net_heave') : t('net_hauling'));
+  $('bGear').classList.toggle('hidden', !(playing && !dockable && n.phase === 'stowed' && gl.length > 1 && !G.auto)); setText('bGearT', gearName(curGear()));
+  const midTow = playing && n.phase === 'tow' && GEARS[n.gear].mid; $('bUp').classList.toggle('hidden', !midTow); $('bDn').classList.toggle('hidden', !midTow);
   let hint = '';
   if (playing) {
     if (dockable) hint = t('hint_dockok'); else if (netNear() < 32 && n.phase === 'stowed') hint = t('hint_dock');
-    else if (n.phase === 'stowed') hint = inB ? t('hint_harbor') : t('hint_set'); else if (n.phase === 'set') hint = t('hint_haul', { m: Math.max(0, Math.round(n.maxLen - n.len)) });
+    else if (n.phase === 'stowed') hint = inB ? t('hint_harbor') : gk === 'ring' && curGear() !== 'halka' ? t('hint_gear', { g: gearName(curGear()) }) : t('hint_set');
+    else if (n.phase === 'set') hint = gk === 'gill' ? t('hint_gill', { m: Math.max(0, Math.round(n.maxLen - n.len)) }) : t('hint_haul', { m: Math.max(0, Math.round(n.maxLen - n.len)) });
+    else if (n.phase === 'soak') hint = t('hint_soak', { kg: Math.round(kgSum(n)) });
+    else if (n.phase === 'tow') hint = t('hint_tow', { d: Math.round(n.tdep), kg: Math.round(kgSum(n)) }) + (n.warn ? ' · ' + t('tow_' + n.warn) : '') + (GEARS[n.gear].mid ? ' · ' + t('hint_qe') : '');
   }
   setText('actHint', hint); $('actHint').classList.toggle('hidden', !hint);
-  const nbar = $('netbar'); nbar.classList.toggle('hidden', !(playing && n.phase !== 'stowed')); if (n.phase !== 'stowed') nbar.firstElementChild.style.width = ((n.phase === 'set' ? n.len / n.maxLen : n.ht / n.haulT) * 100).toFixed(0) + '%';
+  const nbar = $('netbar'); nbar.classList.toggle('hidden', !(playing && n.phase !== 'stowed')); if (n.phase !== 'stowed') nbar.firstElementChild.style.width = ((n.phase === 'set' ? n.len / n.maxLen : n.phase === 'soak' || n.phase === 'tow' ? kgSum(n) / n.cap : n.ht / n.haulT) * 100).toFixed(0) + '%';
   $('bSpeed').classList.toggle('primary', G.scale > 1);
   $('bSound').firstElementChild.firstElementChild.setAttribute('href', S.musicOn || S.sfxOn ? '#i-sound' : '#i-mute');
 }
@@ -2550,7 +2760,7 @@ function drawSonar(dt) {
   const sg = sctx.createLinearGradient(0, 0, 70, 0); sg.addColorStop(0, 'rgba(120,255,200,0)'); sg.addColorStop(1, 'rgba(120,255,200,.0)');
   sctx.beginPath(); sctx.moveTo(0, 0); sctx.arc(0, 0, rad, -0.5, 0); sctx.closePath(); const rg = sctx.createRadialGradient(0, 0, 0, 0, 0, rad); rg.addColorStop(0, 'rgba(0,230,118,.0)'); rg.addColorStop(1, 'rgba(0,230,118,.34)'); sctx.fillStyle = rg; sctx.fill(); sctx.restore();
   // fish
-  const nd = G.net.phase === 'stowed' ? ST.netDep() : G.net.depth;
+  const cg = GEARS[curGear()], nd = G.net.phase === 'stowed' ? (cg.kind === 'gill' ? cg.band[1] : cg.kind === 'trawl' && cg.mid ? clamp(Math.round(ST.netDep() * 0.6), 6, 40) : ST.netDep()) : G.net.depth;
   for (const s of G.schools) {
     const col = SPECIES[s.sp].col;
     for (const f of s.mem) {
@@ -2762,7 +2972,8 @@ function toggleSfx() { S.sfxOn = !S.sfxOn; Snd.vol(); toast(t('sfxt') + ': ' + (
 function cycleSpeed() { G.scale = G.scale === 1 ? 2 : G.scale === 2 ? 4 : 1; toast(t('fast') + ': x' + G.scale, 'info'); refreshUI(true); }
 function netAction() {
   if (G.mode !== 'play' || G.paused || G.overlay) return; if (canDock()) { dockNow(); return; }
-  const n = G.net; if (n.phase === 'stowed') trySetNet(); else if (n.phase === 'set') startHaul(); refreshUI(true);
+  const n = G.net, gk = n.gear && GEARS[n.gear].kind;
+  if (n.phase === 'stowed') trySetNet(); else if (n.phase === 'set') { if (gk === 'gill') leaveGill(); else startHaul(); } else if (n.phase === 'soak' || n.phase === 'tow') liftGear(); refreshUI(true);
 }
 
 /* ---------- wiring */
@@ -2783,7 +2994,8 @@ if (ARENA) {
 } else for (const id of ['setA11y', 'endShare', 'endOther']) $(id).classList.add('hidden');
 $('bLang').addEventListener('click', toggleLang); $('bSound').addEventListener('click', () => { const on = !(S.musicOn || S.sfxOn); S.musicOn = S.sfxOn = on; Snd.vol(); refreshUI(true); });
 $('bSpeed').addEventListener('click', cycleSpeed); $('bMap').addEventListener('click', toggleMap); $('bPause').addEventListener('click', () => setPause(true));
-$('bNet').addEventListener('click', () => { Snd.click(); netAction(); }); $('bDock').addEventListener('click', () => { dockNow(); });
+$('bNet').addEventListener('click', () => { Snd.click(); netAction(); });
+$('bGear').addEventListener('click', () => { Snd.click(); cycleGear(); }); $('bUp').addEventListener('click', () => trawlDepth(-3)); $('bDn').addEventListener('click', () => trawlDepth(3)); $('bDock').addEventListener('click', () => { dockNow(); });
 $('pResume').addEventListener('click', () => setPause(false)); $('pRestart').addEventListener('click', () => { setPause(false); hideAll(); if (G.daily) { startDaily(); return; } store.del(KEY_SAVE); startNewGame(); }); // a daily restarts the daily, the season save stays
 $('pSet').addEventListener('click', () => openSettings('pause')); $('pMenu').addEventListener('click', () => { toTitle(); });
 $('setBack').addEventListener('click', closeSettings); $('mapClose').addEventListener('click', toggleMap);
@@ -2804,6 +3016,8 @@ addEventListener('keydown', e => {
   else if (k === 'KeyD' || k === 'ArrowRight') { inp.kR = true; if (playing) e.preventDefault(); }
   else if (k === 'Space') { if (playing) { e.preventDefault(); if (document.activeElement && document.activeElement.tagName === 'BUTTON') document.activeElement.blur(); netAction(); } }
   else if (k === 'KeyM') toggleMap();
+  else if (k === 'KeyG') { if (playing) cycleGear(); }
+  else if (k === 'KeyQ' || k === 'KeyE') { if (playing) trawlDepth(k === 'KeyQ' ? -3 : 3); }
   else if (k === 'KeyP' || k === 'Escape') {
     if ($('mapscr').classList.contains('show')) toggleMap(); else if ($('settings').classList.contains('show')) closeSettings(); else if (G.paused && G.overlay === 'pause') setPause(false); else setPause(true);
   }
