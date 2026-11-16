@@ -1487,7 +1487,7 @@ function stepSchool(s, dt) {
   s.hd += (rand() - 0.5) * dt * 1.1;
   let vx = Math.cos(s.hd) * sp.spd * 0.3, vz = Math.sin(s.hd) * sp.spd * 0.3;
   const dx = s.x - b.x, dz = s.z - b.z, d = Math.hypot(dx, dz) || 1;
-  const bs = Math.abs(b.v) / 9, thr = sp.skit * (0.4 + 0.6 * clamp(bs, 0, 1)) * (G.net.phase === 'haul' ? 1.6 : G.net.phase === 'tow' ? 0.45 : 1) + s.rad * 0.5; // a slow, steady tow scares fish far less
+  const bs = Math.abs(b.v) / 9, thr = sp.skit * (0.4 + 0.6 * clamp(bs, 0, 1)) * (G.net.phase === 'haul' ? 1.6 : G.net.phase === 'tow' ? 0.25 : 1) + s.rad * 0.5; // a slow, steady tow scares fish far less
   s.fleeing = false;
   if (G.mode === 'play' && d < thr) { const f = sp.spd * 1.0 * (1 - d / thr); vx += dx / d * f; vz += dz / d * f; s.dep = Math.min(s.dep + dt * 1.4, Math.min(s.dep0 + 8, seabed(s.x, s.z) - 3)); s.fleeing = true; }
   else s.dep += (Math.max(3, s.dep0 * (1 - sp.rise * nightF())) + Math.sin(s.age * 0.15 + s.rot) * 2.5 - s.dep) * dt * 0.3; // night: rise towards the lights
@@ -1592,7 +1592,7 @@ function finishHaul() {
     const isLid = lidFrac >= 0.35;
     const r = addToHold(i, kg, 97, lidFrac); G.today.catch[i] += r.add; G.tot.catch += r.add; any += kg;
     const spName = t('sp_' + SPECIES[i].id) + (isLid ? ' [' + t('lidaki') + ']' : '');
-    toast(t('toast_caught', { kg: Math.round(r.add), sp: spName }), 'good');
+    if (r.add >= 1) toast(t('toast_caught', { kg: Math.round(r.add), sp: spName }), 'good');
     if (r.lost > 1) toast(t('toast_hold', { kg: Math.round(r.lost) }), 'bad');
   }
   if (!any) {
@@ -1630,25 +1630,24 @@ const GEARS = {
   duz_hamsi:      { kind: 'gill', len: 1.0, band: [3, 22],  sel: [0.85, 0.75, 0.12, 0.08], cap: 2.6 },
   duz_cinekop:    { kind: 'gill', len: 1.1, band: [6, 30],  sel: [0.03, 0.35, 0.45, 0.9],  cap: 2.0 },
   uzatma_palamut: { kind: 'gill', len: 1.4, band: [14, 42], sel: [0, 0.06, 0.9, 0.45],      cap: 1.8 },
-  trol_orta:      { kind: 'trawl', mid: true,  w: 16, h: 9, sel: [0.8, 0.85, 0.7, 0.6], cap: 3.2 },
-  trol_dip:       { kind: 'trawl', mid: false, w: 18, h: 6, sel: [0.5, 0.9, 0.6, 0.7],  cap: 3.2 },
+  trol_orta:      { kind: 'trawl', mid: true,  w: 26, h: 12, sel: [0.8, 0.85, 0.7, 0.6], cap: 3.2 },
+  trol_dip:       { kind: 'trawl', mid: false, w: 26, h: 10,sel: [0.5, 0.9, 0.6, 0.7],  cap: 3.2 },
 };
 const BOAT_GEARS = {
   sandal: ['halka', 'duz_hamsi', 'duz_cinekop', 'uzatma_palamut'],
   taka:   ['halka', 'duz_hamsi', 'duz_cinekop', 'uzatma_palamut'],
-  trol:   ['trol_orta', 'trol_dip'],
+  trol:   ['trol_orta', 'trol_dip', 'halka'],
   girgir: ['halka'],
 };
-const TRAWL_BACK = 26, TOW_MIN = 2 / 1.944, TOW_MAX = 5 / 1.944; // m behind the stern; towing window in m/s (2-5 kn)
+const TRAWL_BACK = 12, TOW_MIN = 2 / 1.944, TOW_MAX = 5 / 1.944; // m behind the stern; towing window in m/s (2-5 kn)
 function curGear() { const l = BOAT_GEARS[BC().id] || ['halka']; if (G.auto) return 'halka'; return l.includes(G.gear) ? G.gear : l[0]; }
 function gearName(k) { return k === 'halka' ? t('n_' + BC().netId) : t('g_' + k); }
 function cycleGear() {
   if (G.net.phase !== 'stowed' || G.auto) return; const l = BOAT_GEARS[BC().id] || ['halka']; if (l.length < 2) return;
-  G.gear = l[(l.indexOf(curGear()) + 1) % l.length]; toast(t('gear_btn', { g: gearName(G.gear) }), 'info'); refreshUI(true);
+  G.gear = l[(l.indexOf(curGear()) + 1) % l.length]; toast(t('gear_btn', { g: gearName(G.gear) }), 'info'); saveRun(); refreshUI(true);
 }
 function setGear(gk) {
   const n = G.net, b = G.boat, gr = GEARS[gk];
-  if (gr.kind === 'trawl' && !gr.mid && seabed(b.x, b.z) - gr.h / 2 > ST.netDep() + 25) { toast(t('toast_deep'), 'bad'); return; }
   n.gear = gk; n.pts = [{ x: b.x - Math.cos(b.h) * 3.2, z: b.z - Math.sin(b.h) * 3.2 }]; n.len = 0; n.ht = 0; n.full = false; n.fullT = 0;
   n.kg = [0, 0, 0, 0]; n.members = 0; n.lidaki = [false, false, false, false]; n.lidKg = [0, 0, 0, 0]; n.setId = (n.setId || 0) + 1; n.pm = null;
   n.cap = Math.round(ST.netLen() * gr.cap); n.warn = '';
@@ -1705,11 +1704,12 @@ function trawlMouth(n, b) {
 }
 function trawlStep(gr, dt) {
   const n = G.net, b = G.boat, v = Math.abs(b.v), m = trawlMouth(n, b), sb = seabed(m.x, m.z), maxD = ST.netDep() + 25;
-  const tgt = gr.mid ? Math.min(n.ttgt, sb - gr.h / 2 - 1) : sb - gr.h / 2 - 0.5;
+  const floor = Math.min(sb - 6, 32); // bottom trawl: just above the seabed in shallow water, the deepest fish layer offshore (no demersal species in the game)
+  const tgt = gr.mid ? Math.min(n.ttgt, sb - gr.h / 2 - 1) : floor - gr.h / 2 + 1;
   const fast = v > TOW_MAX, slow = v < TOW_MIN, reach = Math.min(tgt, maxD);
   // the warps pay out at a few metres a second; too fast lifts the bag towards the surface
   n.tdep += clamp((fast ? Math.max(2, reach - (v - TOW_MAX) * 8) : reach) - n.tdep, -dt * 3, dt * 3); n.depth = n.tdep;
-  n.warn = fast ? 'fast' : slow ? 'slow' : !gr.mid && tgt > maxD ? 'deep' : '';
+  n.warn = fast ? 'fast' : slow ? 'slow' : '';
   const fishing = !n.warn && Math.abs(n.tdep - reach) < 2.5 && kgSum(n) < n.cap;
   if (fishing && n.pm) {
     const ax = n.pm.x, az = n.pm.z, ex = m.x - ax, ez = m.z - az, L2 = ex * ex + ez * ez || 1e-6; let any = false;
@@ -1768,7 +1768,7 @@ function stepBoat(dt) {
   b.thr += clamp(inp.thr - b.thr, -dt * 0.9, dt * 0.9);
   const hasFuel = G.fuel > 0; const thrEff = hasFuel ? b.thr : 0;
   let vmax = ST.vmax();
-  if (G.net.phase === 'set') vmax *= 0.72; else if (G.net.phase === 'tow') vmax *= 0.5; else if (G.net.phase === 'haul') vmax *= 0.15;
+  if (G.net.phase === 'set') vmax *= 0.72; else if (G.net.phase === 'tow') vmax = Math.min(vmax * 0.5, TOW_MAX * 0.92); else if (G.net.phase === 'haul') vmax *= 0.15;
   vmax *= 1 - 0.18 * clamp((wx.wave - 0.9) / 1.1, 0, 1);
   const target = thrEff * vmax;
   b.v += (target - b.v) * clamp(dt * 0.55, 0, 1);
@@ -2805,6 +2805,8 @@ function drawSonar(dt) {
   sctx.globalAlpha = 1;
   // net path
   if (G.net.phase !== 'stowed' && G.net.pts.length > 1) { sctx.strokeStyle = '#ffd25a'; sctx.lineWidth = 3; sctx.beginPath(); G.net.pts.forEach((q, i) => { const x0 = px(q.x, q.z), y0 = py(q.x, q.z); i ? sctx.lineTo(x0, y0) : sctx.moveTo(x0, y0); }); sctx.stroke(); }
+  if (G.net.phase === 'tow' && G.net.mouth) { const m = G.net.mouth, mx = px(m.x, m.z), my = py(m.x, m.z), mr = Math.max(6, GEARS[G.net.gear].w / 2 * sc);
+    sctx.strokeStyle = '#ff9f43'; sctx.lineWidth = 3; sctx.setLineDash([5, 4]); sctx.beginPath(); sctx.arc(mx, my, mr, 0, TAU); sctx.stroke(); sctx.setLineDash([]); sctx.fillStyle = '#ff9f43'; sctx.beginPath(); sctx.arc(mx, my, 5, 0, TAU); sctx.fill(); }
   // contact rings (inside the radar clip), labels are drawn after the clip is released
   const cs = sonarContacts().sort((a, c) => a.dist - c.dist).slice(0, 4); const labels = [];
   for (const c of cs) {
