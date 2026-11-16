@@ -283,6 +283,28 @@ ul.feat li::before{background:var(--sonar);border-radius:1px}
 input[type=range]{accent-color:var(--sonar)}
 .rec{color:var(--sodium)}
 button.btn:focus-visible{outline:3px solid var(--sonar);outline-offset:2px} /* A11y: high-contrast focus ring */
+/* Mobile (touch): gauges collapse to a chip under the weather card (tap to open, closes by itself); the action column
+   stacks above the wheel: net button on top, depth buttons, the small gear button right above the wheel. Desktop unchanged. */
+#gChip{display:none}
+body.touch #gChip{display:flex;position:absolute;left:max(8px,env(safe-area-inset-left));top:calc(var(--barh,56px) + max(8px,env(safe-area-inset-top)) + 66px);
+  align-items:center;gap:5px;min-height:40px;padding:4px 11px;border-radius:12px;color:var(--ink);font:800 14px/1 var(--mono);pointer-events:auto;cursor:pointer}
+body.touch #gChip svg.ic{width:16px;height:16px;color:var(--sonar)}
+body.touch #gChip small{font-size:10px;color:var(--dim)}
+body.touch #gChip i{width:9px;height:9px;border-radius:50%;background:var(--bad);display:none;box-shadow:0 0 6px var(--bad)}
+body.touch #gChip.uyari i{display:block}
+body.touch #gauges{display:none}
+body.touch.gOpen #gauges{display:grid;left:max(8px,env(safe-area-inset-left))!important;right:auto!important;bottom:auto!important;
+  top:calc(var(--barh,56px) + max(8px,env(safe-area-inset-top)) + 112px)!important;z-index:6;animation:tin .18s ease-out}
+body.touch #actions .row{flex-direction:column;align-items:flex-end;gap:8px}
+body.touch #bNet,body.touch #bDock{order:1}
+body.touch #bUp{order:2}
+body.touch #bDn{order:3}
+body.touch #actions #bGear{order:4;min-height:40px;padding:4px 11px;font-size:12px}
+body.touch #actions #bGear svg.ic{width:16px;height:16px}
+@media (orientation:portrait) and (min-height:701px){
+  body.touch{--sonw:min(356px,calc(100vw - 36px),calc((100vh - 649px) * 600 / 344))}
+  body.touch #sonar{top:calc(var(--barh,56px) + max(8px,env(safe-area-inset-top)) + 118px)}
+}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important}#lens,#wcard.warn,canvas#gl.catch-flash,canvas#gl.screen-flash{animation:none!important;filter:none!important}} /* A11y: disable infinite animations */
 html[data-arena-reduced-motion] :is(#lens,#wcard.warn,canvas#gl.catch-flash,canvas#gl.screen-flash){animation:none!important;filter:none!important} /* the same when "Reduce motion" is on in the Arena panel */
 a.btn{text-decoration:none;color:inherit;display:inline-flex;align-items:center;justify-content:center}
@@ -795,6 +817,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-flex;align-items:center;
   <div id="wcard" class="glass"><svg class="ic"><use href="#i-sun"/></svg><div><div class="t1" id="wT1"></div><div class="t2" id="wT2"></div></div></div>
   <div id="goal" class="glass"><small data-i18n="goal">Günün hedefi</small><span id="goalT"></span><div class="gb"><i id="goalB"></i></div></div>
   <div id="sonar" class="glass"><canvas id="sonarc" width="600" height="344"></canvas><span class="cap" data-i18n="sonar">Sonar</span></div>
+  <button id="gChip" class="glass" aria-label="Gauges" aria-expanded="false"><svg class="ic"><use href="#i-fuel"/></svg><b id="gChipV">0.0</b><small>kn</small><i></i></button>
   <div id="gauges" class="glass">
     <div class="spd"><b id="gSpd">0</b><small id="gSpdU">kn</small><small id="gWindT"></small></div>
     <svg class="ic"><use href="#i-fuel"/></svg><div class="bar" id="gFuelB"><i></i></div><output id="gFuel"></output>
@@ -2635,7 +2658,7 @@ function updateEnv(dt) {
   SKY.hor.lerp(SKY.tmp.setRGB(0.05, 0.075, 0.12), dark * 0.92);
   scene.fog.color.copy(SKY.hor); scene.fog.density = Math.min(w.fog + dark * 0.0012, 0.0072) * (1 + 0.3 * warm);
   SEA_U.uSky.value.copy(SKY.hor).lerp(SKY.zen, 0.4).multiplyScalar(0.88);
-  waterBase.setRGB(0.04, 0.14, 0.19).multiplyScalar(lerp(1.05, 0.6, over) * (0.72 + 0.28 * Math.max(0, sinEl)) * lerp(1, 0.4, dark)); farSea.material.color.copy(waterBase).multiplyScalar(1.0);
+  (IS_TOUCH ? waterBase.setRGB(0.032, 0.2, 0.32) : waterBase.setRGB(0.04, 0.14, 0.19)).multiplyScalar(lerp(1.05, 0.6, over) * (0.72 + 0.28 * Math.max(0, sinEl)) * lerp(1, 0.4, dark)); farSea.material.color.copy(waterBase).multiplyScalar(1.0);
   cloudMesh.material.color.setRGB(lerp(1, 0.42, w.s), lerp(1, 0.44, w.s), lerp(1, 0.48, w.s)).multiplyScalar(lerp(1, 0.16, dark)); cloudMesh.position.set(camera.position.x, 0, camera.position.z);
   foamCol.setRGB(0.9, 0.94, 0.95).multiplyScalar(lerp(1, 0.32, dark)); if (foam) { foam.m.material.color.setScalar(lerp(1, 0.35, dark)); spray.m.material.color.setScalar(lerp(1, 0.4, dark)); }
   starPts.position.copy(camera.position); starPts.material.opacity = dark * (1 - over) * 0.9; starPts.visible = starPts.material.opacity > 0.02;
@@ -2717,6 +2740,7 @@ function refreshUI(force) {
   setText('gFresh', hk > 0 ? Math.round(holdFresh()) + '%' : '-'); setBar('gFreshB', hk > 0 ? holdFresh() / 100 : 1, false);
   setText('gIce', Math.round(G.ice) + ''); setBar('gIceB', G.ice / ST.ice(), G.ice < 15);
   setText('gHull', Math.round(G.hull) + '%'); setBar('gHullB', G.hull / 100, G.hull < 30);
+  setText('gChipV', (Math.abs(b.v) * 1.944).toFixed(1)); $('gChip').classList.toggle('uyari', G.fuel / tank < 0.2 || G.ice < 15 || G.hull < 30);
   // action buttons
   const n = G.net, dockable = canDock(), inB = inBasin(b.x, b.z), playing = G.mode === 'play';
   $('bDock').classList.toggle('hidden', !(playing && dockable));
@@ -3004,6 +3028,12 @@ if (ARENA) {
 $('bLang').addEventListener('click', toggleLang); $('bSound').addEventListener('click', () => { const on = !(S.musicOn || S.sfxOn); S.musicOn = S.sfxOn = on; Snd.vol(); refreshUI(true); });
 $('bSpeed').addEventListener('click', cycleSpeed); $('bMap').addEventListener('click', toggleMap); $('bPause').addEventListener('click', () => setPause(true));
 $('bNet').addEventListener('click', () => { Snd.click(); netAction(); });
+{ // mobile gauge chip: tap opens the gauges, 4 s without a touch on them closes them again
+  let gT = 0; const chip = $('gChip'), kapat = () => { document.body.classList.remove('gOpen'); chip.setAttribute('aria-expanded', 'false'); };
+  const zaman = () => { clearTimeout(gT); gT = setTimeout(kapat, 4000); };
+  chip.addEventListener('click', () => { Snd.click(); const ac = !document.body.classList.contains('gOpen'); document.body.classList.toggle('gOpen', ac); chip.setAttribute('aria-expanded', ac + ''); if (ac) zaman(); else clearTimeout(gT); });
+  $('gauges').addEventListener('pointerdown', () => { if (document.body.classList.contains('gOpen')) zaman(); });
+}
 $('bGear').addEventListener('click', () => { Snd.click(); cycleGear(); }); $('bUp').addEventListener('click', () => trawlDepth(-3)); $('bDn').addEventListener('click', () => trawlDepth(3)); $('bDock').addEventListener('click', () => { dockNow(); });
 $('pResume').addEventListener('click', () => setPause(false)); $('pRestart').addEventListener('click', () => { setPause(false); hideAll(); if (G.daily) { startDaily(); return; } store.del(KEY_SAVE); startNewGame(); }); // a daily restarts the daily, the season save stays
 $('pSet').addEventListener('click', () => openSettings('pause')); $('pMenu').addEventListener('click', () => { toTitle(); });
