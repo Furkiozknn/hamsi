@@ -1386,8 +1386,9 @@ function detectTouch() {
   document.body.classList.toggle('touch', IS_TOUCH);
 }
 const S = (() => {
-  const d = { master: 0.8, music: 0.6, sfx: 0.8, lang: (navigator.language || 'tr').toLowerCase().startsWith('tr') ? 'tr' : 'en', quality: matchMedia('(pointer:coarse)').matches ? 'low' : 'high' };
+  const d = { master: 0.8, music: 0.6, sfx: 0.8, lang: (/^tr/i.test(navigator.language || '') ? 'tr' : 'en'), quality: matchMedia('(pointer:coarse)').matches ? 'low' : 'high' };
   try { Object.assign(d, JSON.parse(store.get(KEY_SET) || '{}')); } catch (e) { }
+  if (d.lang !== 'tr' && d.lang !== 'en') d.lang = (/^tr/i.test(navigator.language || '') ? 'tr' : 'en'); // a stored unknown language falls back to the browser's
   if (FLAG.lang === 'en' || FLAG.lang === 'tr') d.lang = FLAG.lang;
   if (FLAG.low) d.quality = 'low';
   d.musicOn = true; d.sfxOn = true;
