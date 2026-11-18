@@ -3420,7 +3420,18 @@ function refreshBest() {
   $('tDaily').classList.toggle('hidden', !ARENA);
   if (ARENA) { const d = ARENA.daily('hamsi'); $('tDailyInfo').textContent = '(' + (d.done ? t('daily_done') + ' · ' : '') + t('daily_info', { s: d.streak, b: d.best }) + ')'; $('tDaily').title = t('daily_note'); }
 }
-$('sumNext').addEventListener('click', () => { Snd.click(); nextDay(); });
+// Portals (arena-kit v1.3 Arena.portal): an interstitial may play only at the natural break, when the player leaves the
+// day summary ("next day" / "finish season") or the season-end card ("play again" / "main menu"), while the game already
+// waits. On the game's own site (no portal SDK) afterBreak() runs the action synchronously, exactly as before. The ?auto
+// bot calls nextDay() directly and is not affected. One tap = one action. No rewarded hook: every reward on offer would
+// move money in a 30-day season scored by net worth (see the G-050 report).
+let breakBusy = false;
+function afterBreak(f) {
+  if (!(window.Arena && Arena.portal && Arena.portal.name !== 'none')) return f(); // own site: synchronous, as before
+  if (breakBusy) return; breakBusy = true;
+  Arena.portal.midgame().catch(() => false).then(() => { breakBusy = false; f(); });
+}
+$('sumNext').addEventListener('click', () => { Snd.click(); afterBreak(nextDay); });
 
 /* ---------- screen flow */
 function hideAll() { for (const id of ['title', 'harbor', 'summary', 'ending', 'pause', 'settings', 'mapscr']) $(id).classList.remove('show'); }
@@ -3488,7 +3499,7 @@ $('bGear').addEventListener('click', () => { Snd.click(); cycleGear(); }); $('bU
 $('pResume').addEventListener('click', () => setPause(false)); $('pRestart').addEventListener('click', () => { setPause(false); hideAll(); if (G.daily) { startDaily(); return; } store.del(KEY_SAVE); startNewGame(); }); // a daily restarts the daily, the season save stays
 $('pSet').addEventListener('click', () => openSettings('pause')); $('pMenu').addEventListener('click', () => { toTitle(); });
 $('setBack').addEventListener('click', closeSettings); $('mapClose').addEventListener('click', toggleMap);
-$('endAgain').addEventListener('click', () => { hideAll(); startNewGame(); }); $('endMenu').addEventListener('click', toTitle);
+$('endAgain').addEventListener('click', () => afterBreak(() => { hideAll(); startNewGame(); })); $('endMenu').addEventListener('click', () => afterBreak(toTitle));
 const bindRange = (id, key) => $(id).addEventListener('input', e => { S[key] = e.target.value / 100; Snd.vol(); syncSettings(); saveSettings(); });
 bindRange('vMaster', 'master'); bindRange('vMusic', 'music'); bindRange('vSfx', 'sfx');
 $('sTR').addEventListener('click', () => { S.lang = 'tr'; saveSettings(); applyLang(); }); $('sEN').addEventListener('click', () => { S.lang = 'en'; saveSettings(); applyLang(); });
