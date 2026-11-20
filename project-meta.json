@@ -16,7 +16,7 @@
     "Canvas 2D",
     "Web Audio API"
   ],
-  "version": "2.0.0",
+  "version": "2.1.0",
   "license": "MIT",
   "topics": [
     "browser-game",
@@ -54,14 +54,14 @@
       "docs/gameplay.mp4"
     ]
   },
-  "tests": null,
+  "tests": ["tools/smoke.mjs", "tools/gate.mjs", "test/duman.mjs"],
   "ci": {
     "workflows": [],
     "badge": null
   },
   "docs": {
     "readme": "README.md",
-    "changelog": null,
+    "changelog": "CHANGELOG.md",
     "version_history": null,
     "roadmap": null,
     "security": null,
@@ -80,6 +80,6 @@
     "generated_at": "2026-10-28",
     "generator": "hand-written",
     "rule": "mechanical fields read from the repository; editorial fields hand-written from the README and index.html; no field is generated from a guess",
-    "note": "visual redesign 2026-11-02"
+    "note": "visual redesign 2026-11-02; v2.1 update 2026-11-20"
   }
 }

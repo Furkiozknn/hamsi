@@ -27,6 +27,8 @@
 
 <!-- gameplay gif -->
 
+> **v2.1 (Kasım 2026):** What's new window and a record of your last 8 seasons on the title screen, two new badges, a fixed title-screen link, Turkish page metadata and a 404 page. See [CHANGELOG.md](CHANGELOG.md).
+
 ## Features
 
 - **Purse-seine fishing & sonar:** Track underwater boid schools on the sonar with depth and species readouts; circle a school to deploy the net and haul before fish escape, pursuing calm hamsi and istavrit or fast, nervous and valuable palamut and lüfer.

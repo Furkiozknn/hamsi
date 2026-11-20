@@ -4,17 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#0d2230">
-<title>Hamsi</title>
+<title>Hamsi · Karadeniz Balıkçılık Oyunu</title>
 <meta name="arena-game" content="hamsi">
-<meta name="description" content="A 3D fishing and boat-management game on the Black Sea, redesigned with a dark-steel instrument UI: find the schools on the sonar, set the net and pay off the boat in 30 days. Plays in the browser.">
+<meta name="description" content="Karadeniz'de 3D hamsi avı ve tekne yönetimi: sonarla sürüyü bul, ağı çevresinde daire çizerek at, fırtınadan önce limana dön ve 30 günde krediyi ödeyip limanın reisi ol. Tarayıcıda ücretsiz oynanır.">
+<link rel="canonical" href="https://furkiozknn.github.io/hamsi/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Hamsi · Black Sea Fisher">
-<meta property="og:description" content="A 3D fishing and boat-management game on the Black Sea, redesigned with a dark-steel instrument UI: find the schools on the sonar, set the net and pay off the boat in 30 days. Plays in the browser.">
+<meta property="og:title" content="Hamsi · Karadeniz Balıkçılık Oyunu">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:site_name" content="Claude Game Arena">
+<meta property="og:description" content="Karadeniz'de 3D hamsi avı ve tekne yönetimi: sonarla sürüyü bul, ağı çevresinde daire çizerek at, fırtınadan önce limana dön ve 30 günde krediyi ödeyip limanın reisi ol. Tarayıcıda ücretsiz oynanır.">
 <meta property="og:url" content="https://furkiozknn.github.io/hamsi/">
 <meta property="og:image" content="https://furkiozknn.github.io/hamsi/docs/card.jpg">
 <meta property="og:image:width" content="960">
 <meta property="og:image:height" content="540">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hamsi · Karadeniz Balıkçılık Oyunu">
+<meta name="twitter:description" content="Karadeniz'de 3D hamsi avı ve tekne yönetimi: sonarla sürüyü bul, ağı çevresinde daire çizerek at, fırtınadan önce limana dön ve 30 günde krediyi ödeyip limanın reisi ol. Tarayıcıda ücretsiz oynanır.">
+<meta name="twitter:image" content="https://furkiozknn.github.io/hamsi/docs/card.jpg">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%231E88E5%27/%3E%3Cpath d=%27M4 21h24l-3 6H7z%27 fill=%27%23fff%27/%3E%3Crect x=%2711%27 y=%2713%27 width=%278%27 height=%278%27 rx=%271%27 fill=%27%23fff%27/%3E%3Cpath d=%27M4 12c4-5 9-5 12 0-3 5-8 5-12 0zM16 12l4-3v6z%27 fill=%27%23BBE3FF%27/%3E%3C/svg%3E">
 <style>
 :root{
@@ -46,6 +52,13 @@ button:focus-visible,input:focus-visible,a:focus-visible,[tabindex]:focus-visibl
 .btn[disabled]{opacity:.42;pointer-events:none}
 .btn.icon{padding:0;width:44px}
 .btn.sm{min-height:44px;padding:6px 12px;font-size:14px}
+.ver{margin-top:10px;background:none;border:0;border-bottom:1px dotted var(--dim);color:var(--dim);font-size:12px;min-height:44px;padding:0 10px;display:inline-flex;align-items:center}
+.ver:hover{color:var(--ink)}
+.newsl{text-align:left;margin:8px 0 0;padding:0 0 0 18px;font-size:14px;line-height:1.45;font-weight:600;color:#d3e2e6}
+.newsl li{margin:5px 0}
+.hist{display:grid;grid-template-columns:auto 1fr auto auto;gap:6px 12px;text-align:left;font-size:14px;margin-top:6px;font-variant-numeric:tabular-nums}
+.hist .pos{color:var(--warn)}.hist .neg{color:var(--bad)}
+.card h3{margin:14px 0 2px;font-size:15px;color:var(--sonar);letter-spacing:.1em;text-transform:uppercase;text-align:left}
 /* HUD */
 #hud{position:fixed;inset:0;pointer-events:none;z-index:5}
 #hud>*{pointer-events:none}
@@ -1291,8 +1304,9 @@ window.ArenaCore = { version: VERSION, kalite, render, kabuk, his, kamera, test 
       <div class="row"><button class="btn" id="tSet"><svg class="ic"><use href="#i-gear"/></svg><span data-i18n="settings">Ayarlar</span></button><button class="btn" id="tLang"><svg class="ic"><use href="#i-globe"/></svg><span id="tLangT">TR / EN</span></button></div>
     </div>
     <div class="best" id="tBest"></div>
+    <button class="ver" id="tNews" type="button"><span id="tVer"></span></button>
     <div id="loadmsg"></div>
-    <div class="foot"><span data-i18n="keys">W/S gaz · A/D dümen · Boşluk ağ · M harita · P duraklat</span><br><span>Claude Game Arena · built by Claude Sonnet 5.5</span> · <a href="https://github.com/Furkiozknn" target="_blank" rel="noopener">furkiozknn.github.io</a></div>
+    <div class="foot"><span data-i18n="keys">W/S gaz · A/D dümen · Boşluk ağ · M harita · P duraklat</span><br><span>Claude Game Arena · built by Claude Sonnet 5.5</span> · <a id="tHub" href="https://furkiozknn.github.io/" target="_blank" rel="noopener" data-i18n="another">Başka oyun</a></div>
   </div>
 </div>
 
@@ -1321,6 +1335,11 @@ window.ArenaCore = { version: VERSION, kalite, render, kabuk, his, kamera, test 
     <label data-i18n="screen">Ekran</label><div class="seg"><button class="btn" id="sFull"><svg class="ic"><use href="#i-full"/></svg><span data-i18n="fullscreen">Tam ekran</span></button></div>
   </div>
   <div class="col"><button class="btn" id="setA11y" data-i18n="a11y">Erişilebilirlik</button><button class="btn primary" id="setBack" data-i18n="back">Geri</button></div></div></div>
+
+<div class="screen dim" id="news" role="dialog" aria-modal="true" aria-labelledby="newsT"><div class="card glass"><h2 id="newsT" data-i18n="news_title">Yenilikler</h2><p class="smallnote" id="newsVer"></p>
+  <ul class="newsl" id="newsList"></ul>
+  <h3 data-i18n="hist_title">Son sezonlar</h3><div class="hist" id="histBody"></div>
+  <div class="col" style="margin-top:14px"><button class="btn primary" id="newsClose" data-i18n="close">Kapat</button></div></div></div>
 
 <div class="screen dim" id="mapscr"><div class="card glass wide"><h2 data-i18n="map">Harita</h2><canvas id="mapc" width="640" height="520"></canvas><p class="smallnote" id="mapNote"></p><div class="col"><button class="btn primary" id="mapClose" data-i18n="close">Kapat</button></div></div></div>
 
@@ -1379,6 +1398,7 @@ window.addEventListener('error', e => { errors.push(String(e.message || e)); if 
 window.addEventListener('unhandledrejection', e => { errors.push('promise: ' + String(e.reason)); });
 
 /* ---------------------------------------------------------------- settings / save */
+const VERSION = '2.1', KEY_HIST = 'arena.hamsi.history';
 const KEY_SET = 'arena.hamsi.settings', KEY_SAVE = 'arena.hamsi.save', KEY_BEST = 'arena.hamsi.best';
 let IS_TOUCH = false;
 function detectTouch() {
@@ -1462,7 +1482,9 @@ const L = {
     daily_note: 'Tek gün, sandalla: hava, pazar ve hedef bugünün tohumundan. Sezon kaydına dokunmaz.', daily_score: 'Günün satışı', daily_streak: 'Seri',
     daily_streak_v: '{s} gün (en iyi {b})', share: 'Paylaş', another: 'Başka oyun', a11y: 'Erişilebilirlik',
     share_day: 'Gün {d}: {kg} kg · satış {m}', share_daily: 'Günün Meydan Okuması {d} · seri {s}', share_end: '{r} · net değer {w} · {st}/3 yıldız',
-    badge_reis: 'Limanın reisi', badge_3star: 'Üç yıldızlı sezon', badge_girgir: 'Gırgır sahibi',
+    badge_reis: 'Limanın reisi', badge_3star: 'Üç yıldızlı sezon', badge_girgir: 'Gırgır sahibi', badge_first: 'İlk sürü', badge_storm: 'Fırtınadan sağ çıktın',
+    news_title: 'Yenilikler', hist_title: 'Son sezonlar', hist_none: 'Henüz bitmiş sezon yok.', ver_label: 'v{v} · {d}', ver_date: 'Kasım 2026', hist_reis: 'Reis', hist_bank: 'Banka', hist_day: 'Gün {d}',
+    news_1: 'Yeni: Yenilikler penceresi (bu pencere) ve son 8 sezonun kaydı.', news_2: 'Yeni rozetler: «İlk sürü» ve «Fırtınadan sağ çıktın».', news_3: 'Düzeltme: ana menüdeki bağlantı artık oyunlar sayfasına gidiyor.', news_4: 'Sayfa: Türkçe açıklama, paylaşım kartı ve 404 sayfası.',
   },
   en: {
     day: 'Day', time: 'Time', money: 'Cash', loan: 'Loan', goal: "Today's goal", sonar: 'Sonar', dock: 'Dock',
@@ -1528,7 +1550,9 @@ const L = {
     daily_note: 'One day in the rowboat: weather, market and goal come from today\'s seed. Your season save is untouched.', daily_score: 'Today\'s sales', daily_streak: 'Streak',
     daily_streak_v: '{s} days (best {b})', share: 'Share', another: 'Another game', a11y: 'Accessibility',
     share_day: 'Day {d}: {kg} kg · sales {m}', share_daily: 'Daily challenge {d} · streak {s}', share_end: '{r} · net worth {w} · {st}/3 stars',
-    badge_reis: 'Harbour chief', badge_3star: 'Three-star season', badge_girgir: 'Purse seiner owner',
+    badge_reis: 'Harbour chief', badge_3star: 'Three-star season', badge_girgir: 'Purse seiner owner', badge_first: 'First school', badge_storm: 'Storm survivor',
+    news_title: "What's new", hist_title: 'Recent seasons', hist_none: 'No finished season yet.', ver_label: 'v{v} · {d}', ver_date: 'Nov 2026', hist_reis: 'Reis', hist_bank: 'Bank', hist_day: 'Day {d}',
+    news_1: "New: this What's new window and a record of your last 8 seasons.", news_2: 'New badges: "First school" and "Storm survivor".', news_3: 'Fix: the title-screen link now goes to the games page.', news_4: 'Page: Turkish description, share card and a 404 page.',
   },
 };
 function t(k, v) {
@@ -1539,6 +1563,7 @@ function t(k, v) {
 function applyLang() {
   document.documentElement.lang = S.lang; if (ARENA) ARENA.lang(S.lang);
   document.querySelectorAll('[data-i18n]').forEach(e => { e.textContent = t(e.dataset.i18n); });
+  $('tVer').textContent = t('ver_label', { v: VERSION, d: t('ver_date') }) + ' · ' + t('news_title');
   $('tLangT').textContent = S.lang === 'tr' ? 'Türkçe · EN' : 'English · TR';
   $('sTR').classList.toggle('sel', S.lang === 'tr'); $('sEN').classList.toggle('sel', S.lang === 'en');
   document.body.classList.toggle('lowq', S.quality === 'low');
@@ -2043,7 +2068,7 @@ function finishHaul() {
   if (!any) {
     toast(t('toast_empty'), 'info');
   } else {
-    Snd.haulDone();
+    Snd.haulDone(); arenaAward('hamsi-first', 'badge_first');
     catchJuice();
   }
   stowNet(); checkGoal();
@@ -2342,7 +2367,7 @@ function endDay(reason) {
   ageHours(clamp((1440 + T_WAKE - G.tmin) / 60, 0, 10));
   const interest = Math.round(G.loan * LOAN_RATE); G.loan += interest; td.interest = interest;
   const upkeep = BC().upkeep + CREW_WAGE * G.up.crew, paid = Math.min(Math.max(0, G.money), upkeep); G.money -= paid; G.loan += upkeep - paid; td.upkeep = upkeep;
-  if (G.plan && G.plan.storm) G.tot.storms++;
+  if (G.plan && G.plan.storm) { G.tot.storms++; arenaAward('hamsi-storm', 'badge_storm'); }
   const goalOk = !!(G.goal && G.goal.done);
   G.sum = { day: G.day, catch: td.catch.slice(), sales: td.sales, fuel: Math.round(td.fuelCost), interest, upkeep, tow: td.tow, bonus: td.bonus, goalOk, goalText: goalText(), reason, money: G.money, loan: G.loan, forecast: null };
   (G.log = G.log || []).push({ d: G.day, kg: Math.round(td.catch.reduce((a, b) => a + b, 0)), sales: td.sales, money: G.money, loan: G.loan, why: reason, goal: goalOk, hull: Math.round(G.hull), up: Object.values(G.up).join(''), boat: BC().id, trips: td.trips || 0, end: clockStr(G.tmin), st: G.plan.storm ? 1 : 0, sets: td.sets || 0, hauls: td.hauls || 0, mem: td.mem || 0, gap: Math.round((td.gaps || 0) / Math.max(1, td.hauls || 1)) });
@@ -3401,12 +3426,21 @@ function showSummary() {
   G.share = { title: 'Hamsi', lines, url: ARENA_URL }; $('sumShare').classList.toggle('hidden', !ARENA);
   $('sumNext').textContent = s.daily ? t('menu') : s.last ? t('finish') : t('nextday'); $('summary').classList.add('show'); bot.timer = 0.3; Snd.bell();
 }
+function getHist() { try { const h = JSON.parse(store.get(KEY_HIST) || '[]'); return Array.isArray(h) ? h : []; } catch (e) { return []; } }
+function pushHistory(r) { if (FLAG.auto || G.auto) return; const h = getHist(); h.unshift(r); store.set(KEY_HIST, JSON.stringify(h.slice(0, 8))); }
+function openNews() {
+  $('newsVer').textContent = t('ver_label', { v: VERSION, d: t('ver_date') });
+  $('newsList').innerHTML = [1, 2, 3, 4].map(i => '<li>' + t('news_' + i) + '</li>').join('');
+  const h = getHist(); $('histBody').innerHTML = h.length ? h.map(r => `<span>${r.reis ? t('hist_reis') : t('hist_bank')}</span><span>${'★'.repeat(r.stars | 0)}</span><span class="${r.worth >= 0 ? 'pos' : 'neg'}">${money(r.worth)}</span><span>${t('hist_day', { d: r.day })}</span>`).join('') : `<span style="grid-column:1/-1">${t('hist_none')}</span>`;
+  $('news').classList.add('show'); G.overlay = 'news'; $('newsClose').focus();
+}
+function closeNews() { $('news').classList.remove('show'); if (G.overlay === 'news') G.overlay = null; $('tNews').focus(); }
 function showEnding() {
   $('summary').classList.remove('show'); const reis = G.loan <= 0, worth = netWorth(); G.mode = 'end';
   const stars = reis ? (worth >= 300000 ? 3 : worth >= 150000 ? 2 : 1) : 0; // worth includes the boat (trade-in value)
   G.result = { reis, worth, stars };
   const prev = getBest(); const rec = !prev || (reis && !prev.reis) || (reis === prev.reis && worth > prev.worth); if (rec) store.set(KEY_BEST, JSON.stringify({ reis, worth, stars, day: G.day }));
-  store.del(KEY_SAVE);
+  store.del(KEY_SAVE); pushHistory({ reis, worth: Math.round(worth), stars, day: G.day });
   $('endT').textContent = reis ? t('end_reis') : t('end_bank'); $('endSub').textContent = reis ? t('end_sub_reis') : t('end_sub_bank');
   $('endStars').innerHTML = [0, 1, 2].map(i => `<svg viewBox="0 0 24 24" class="${i < stars ? 'on' : ''}"><use href="#i-star"/></svg>`).join('');
   $('endBody').innerHTML = `<div class="kv"><span>${t('end_worth')}</span><span class="${worth >= 0 ? 'pos' : 'neg'}">${money(worth)}</span><span>${t('end_money')}</span><span>${money(G.money)}</span><span>${t('end_loan')}</span><span class="${G.loan > 0 ? 'neg' : 'pos'}">${money(G.loan)}</span><span>${t('end_boat')}</span><span>${money(boatValue())}</span><span>${t('end_kg')}</span><span>${Math.round(G.tot.catch)} kg</span><span>${t('end_days')}</span><span>${G.tot.storms}</span></div>${rec ? `<p class="rec">${t('end_best')}</p>` : ''}`;
@@ -3434,7 +3468,7 @@ function afterBreak(f) {
 $('sumNext').addEventListener('click', () => { Snd.click(); afterBreak(nextDay); });
 
 /* ---------- screen flow */
-function hideAll() { for (const id of ['title', 'harbor', 'summary', 'ending', 'pause', 'settings', 'mapscr']) $(id).classList.remove('show'); }
+function hideAll() { for (const id of ['title', 'harbor', 'summary', 'ending', 'pause', 'settings', 'news', 'mapscr']) $(id).classList.remove('show'); }
 function toTitle() { hideAll(); G.daily = null; rand = Math.random; G.mode = 'menu'; G.paused = false; G.overlay = null; $('hud').classList.add('hidden'); $('title').classList.add('show'); stowNet(); G.schools = []; refreshBest(); }
 function enterGame() { $('title').classList.remove('show'); $('hud').classList.remove('hidden'); resize(); Snd.init(); }
 function startNewGame() { freshRun(); enterGame(); startDay(); }
@@ -3498,7 +3532,7 @@ $('bNet').addEventListener('click', () => { Snd.click(); netAction(); });
 $('bGear').addEventListener('click', () => { Snd.click(); cycleGear(); }); $('bUp').addEventListener('click', () => trawlDepth(-3)); $('bDn').addEventListener('click', () => trawlDepth(3)); $('bDock').addEventListener('click', () => { dockNow(); });
 $('pResume').addEventListener('click', () => setPause(false)); $('pRestart').addEventListener('click', () => { setPause(false); hideAll(); if (G.daily) { startDaily(); return; } store.del(KEY_SAVE); startNewGame(); }); // a daily restarts the daily, the season save stays
 $('pSet').addEventListener('click', () => openSettings('pause')); $('pMenu').addEventListener('click', () => { toTitle(); });
-$('setBack').addEventListener('click', closeSettings); $('mapClose').addEventListener('click', toggleMap);
+$('setBack').addEventListener('click', closeSettings); $('tNews').addEventListener('click', () => { Snd.click(); openNews(); }); $('newsClose').addEventListener('click', closeNews); $('mapClose').addEventListener('click', toggleMap);
 $('endAgain').addEventListener('click', () => afterBreak(() => { hideAll(); startNewGame(); })); $('endMenu').addEventListener('click', () => afterBreak(toTitle));
 const bindRange = (id, key) => $(id).addEventListener('input', e => { S[key] = e.target.value / 100; Snd.vol(); syncSettings(); saveSettings(); });
 bindRange('vMaster', 'master'); bindRange('vMusic', 'music'); bindRange('vSfx', 'sfx');
@@ -3519,7 +3553,7 @@ addEventListener('keydown', e => {
   else if (k === 'KeyG') { if (playing) cycleGear(); }
   else if (k === 'KeyQ' || k === 'KeyE') { if (playing) trawlDepth(k === 'KeyQ' ? -3 : 3); }
   else if (k === 'KeyP' || k === 'Escape') {
-    if ($('mapscr').classList.contains('show')) toggleMap(); else if ($('settings').classList.contains('show')) closeSettings(); else if (G.paused && G.overlay === 'pause') setPause(false); else setPause(true);
+    if ($('news').classList.contains('show')) closeNews(); else if ($('mapscr').classList.contains('show')) toggleMap(); else if ($('settings').classList.contains('show')) closeSettings(); else if (G.paused && G.overlay === 'pause') setPause(false); else setPause(true);
   }
   else if (k === 'KeyN') toggleMusic(); else if (k === 'KeyX') toggleSfx(); else if (k === 'KeyL') toggleLang(); else if (k === 'KeyT') cycleSpeed();
 });
