@@ -101,7 +101,7 @@ Yerleşim (1080x1920 kare üzerinden):
 
 ## 6. Kapanış kartı
 
-Yukarıdan aşağıya, hepsi ortalı (bkz. `docs/sarki-03-kapanis.jpg`):
+Yukarıdan aşağıya, hepsi ortalı (şarkı videosunun kapanış kartı):
 
 1. **Rozet:** altın sarısı hap biçimli etiket, koyu büyük harf: "OYUN ŞARKISI 1/21".
 2. **Oyun adı:** çok büyük krem serif: "HAMSİ", altında koyu gölge.

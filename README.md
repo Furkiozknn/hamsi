@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://furkiozknn.github.io/hamsi/">
-    <img src="docs/banner.svg" width="100%" alt="Hamsi: Karadeniz'de hamsi avı. Lacivert zeminde krem rengi HAMSİ başlığı, sarı OYNA düğmesi ve altın çerçeveli kartta sarı yağmurluklu balıkçı kız, mavi beyaz tekne, mantar halkası ve gümüş bir hamsi. Tarayıcıda oynamak için tıklayın. / Hamsi, a Black Sea fishing game: click to play in your browser.">
+    <img src="docs/card.jpg" width="100%" alt="Hamsi: a 3D fishing and boat-management game on the Black Sea coast. A blue-and-white fishing boat closes a ring of net corks around a school of fish below green tea-terraced mountains. Click to play in your browser.">
   </a>
 </p>
 
@@ -41,16 +41,6 @@ Hamsi'nin yaklaşık 35 saniyelik bir oyun şarkısı var: **"Turkish is easy…
 Hamsi has a 35-second game song. The fish asks in English, the fisher girl answers in Turkish, with gameplay in between.
 
 **▶ [Şarkı videosunu izle · Watch the song video](https://github.com/Furkiozknn/social-videos/blob/master/2026-11/2026-11-19-sarki-hamsi.mp4)** &nbsp;·&nbsp; [doğrudan dosya · direct file (MP4, 9.6 MB)](https://raw.githubusercontent.com/Furkiozknn/social-videos/master/2026-11/2026-11-19-sarki-hamsi.mp4)
-
-### Şarkı videosundan
-
-<table>
-  <tr>
-    <td width="33%"><a href="https://github.com/Furkiozknn/social-videos/blob/master/2026-11/2026-11-19-sarki-hamsi.mp4"><img src="docs/sarki-01-acilis.jpg" width="100%" alt="Şarkı videosunun açılışı: Turkish is easy… at sea? başlığı, sarı yağmurluklu balıkçı kız mavi beyaz teknede, önünde sudan bakan gümüş bir hamsi"></a><br><sub>Açılış · Opening</sub></td>
-    <td width="33%"><a href="https://github.com/Furkiozknn/social-videos/blob/master/2026-11/2026-11-19-sarki-hamsi.mp4"><img src="docs/sarki-02-soz.jpg" width="100%" alt="Şarkı sözü karesi: beyaz italik Boat? sorusu ve altın sarısı KAYIK! cevabı, balıkçı kız yakın planda"></a><br><sub>Boat? KAYIK!</sub></td>
-    <td width="33%"><a href="https://github.com/Furkiozknn/social-videos/blob/master/2026-11/2026-11-19-sarki-hamsi.mp4"><img src="docs/sarki-03-kapanis.jpg" width="100%" alt="Kapanış kartı: lacivert zemin, OYUN ŞARKISI 1/21 rozeti, HAMSİ başlığı, karakter ve oyun görüntüsü kartları, sarı OYNA düğmesi ve oyunun adresi"></a><br><sub>Kapanış kartı · End card</sub></td>
-  </tr>
-</table>
 
 ## Özellikler · Features
 
