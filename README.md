@@ -1,11 +1,11 @@
 <p align="center">
   <a href="https://furkiozknn.github.io/hamsi/">
-    <img src="docs/card.jpg" width="100%" alt="Hamsi: a 3D fishing and boat-management game on the Black Sea coast. A blue-and-white fishing boat closes a ring of net corks around a school of fish below green tea-terraced mountains. Click to play in your browser.">
+    <img src="docs/banner.svg" width="100%" alt="Hamsi: Karadeniz'de hamsi avı. Lacivert zeminde krem rengi HAMSİ başlığı, sarı OYNA düğmesi ve altın çerçeveli kartta sarı yağmurluklu balıkçı kız, mavi beyaz tekne, mantar halkası ve gümüş bir hamsi. Tarayıcıda oynamak için tıklayın. / Hamsi, a Black Sea fishing game: click to play in your browser.">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://furkiozknn.github.io/hamsi/"><img src="https://img.shields.io/badge/%E2%96%B6_Play_free-in_your_browser-1E88E5?style=for-the-badge&logo=googlechrome&logoColor=white&labelColor=0A1E2C" height="40" alt="Play free in your browser"></a>
+  <a href="https://furkiozknn.github.io/hamsi/"><img src="https://img.shields.io/badge/%E2%96%B6_Play_free-in_your_browser-1E88E5?style=for-the-badge&logo=googlechrome&logoColor=white&labelColor=0A1E2C" alt="Play free in your browser"></a>
 </p>
 
 <p align="center">
@@ -22,14 +22,37 @@
 <!-- portals:end -->
 
 <p align="center">
-  <strong>A 3D fishing and boat-management game on the Black Sea coast: find the schools on the sonar, circle a purse-seine net around them, race home before the storm, sell the catch fresh and pay off the boat loan in a 30-day season to become reis of the harbour.</strong>
+  <strong>Turkish is easy… at sea?</strong><br>
+  <em>Boat?</em> <strong>KAYIK!</strong> &nbsp;·&nbsp; <em>Light?</em> <strong>IŞIK!</strong> &nbsp;·&nbsp; <em>Mixed?</em> <strong>KARIŞIK!</strong>
 </p>
+
+**Türkçe ·** Sonara bak, sürü yakın! Hamsi, Karadeniz kıyısında geçen 3B bir balıkçılık ve tekne yönetimi oyunu. Sürüyü sonarda bul, ağla etrafına daire çiz, fırtına bastırmadan limana dön, balığı taze sat. Otuz günlük sezonda tekne kredisini kapatırsan limanın reisi sensin. Kurulum yok: tarayıcıda açılır, bilgisayarda da telefonda da oynanır.
+
+**English ·** Watch the sonar, the school is close! Hamsi is a 3D fishing and boat-management game on the Black Sea coast. Find the schools on the sonar, circle a purse-seine net around them, race home before the storm and sell the catch fresh. Pay off the boat loan in a 30-day season and you are reis of the harbour. No install: it runs in the browser, on desktop and phone.
 
 <!-- gameplay gif -->
 
 > **v2.1 (Kasım 2026):** What's new window and a record of your last 8 seasons on the title screen, two new badges, a fixed title-screen link, Turkish page metadata and a 404 page. See [CHANGELOG.md](CHANGELOG.md).
 
-## Features
+## Şarkı videosu · The song
+
+Hamsi'nin yaklaşık 35 saniyelik bir oyun şarkısı var: **"Turkish is easy… at sea?"**. Balık İngilizce sorar, balıkçı kız Türkçe cevap verir; arada oyundan görüntüler akar. Bu sayfanın renkleri ve yazı dili o videodan alındı ([stil kılavuzu](docs/STIL.md)).
+
+Hamsi has a 35-second game song. The fish asks in English, the fisher girl answers in Turkish, with gameplay in between.
+
+**▶ [Şarkı videosunu izle · Watch the song video](https://github.com/Furkiozknn/social-videos/blob/master/2026-11/2026-11-19-sarki-hamsi.mp4)** &nbsp;·&nbsp; [doğrudan dosya · direct file (MP4, 9.6 MB)](https://raw.githubusercontent.com/Furkiozknn/social-videos/master/2026-11/2026-11-19-sarki-hamsi.mp4)
+
+### Şarkı videosundan
+
+<table>
+  <tr>
+    <td width="33%"><a href="https://github.com/Furkiozknn/social-videos/blob/master/2026-11/2026-11-19-sarki-hamsi.mp4"><img src="docs/sarki-01-acilis.jpg" width="100%" alt="Şarkı videosunun açılışı: Turkish is easy… at sea? başlığı, sarı yağmurluklu balıkçı kız mavi beyaz teknede, önünde sudan bakan gümüş bir hamsi"></a><br><sub>Açılış · Opening</sub></td>
+    <td width="33%"><a href="https://github.com/Furkiozknn/social-videos/blob/master/2026-11/2026-11-19-sarki-hamsi.mp4"><img src="docs/sarki-02-soz.jpg" width="100%" alt="Şarkı sözü karesi: beyaz italik Boat? sorusu ve altın sarısı KAYIK! cevabı, balıkçı kız yakın planda"></a><br><sub>Boat? KAYIK!</sub></td>
+    <td width="33%"><a href="https://github.com/Furkiozknn/social-videos/blob/master/2026-11/2026-11-19-sarki-hamsi.mp4"><img src="docs/sarki-03-kapanis.jpg" width="100%" alt="Kapanış kartı: lacivert zemin, OYUN ŞARKISI 1/21 rozeti, HAMSİ başlığı, karakter ve oyun görüntüsü kartları, sarı OYNA düğmesi ve oyunun adresi"></a><br><sub>Kapanış kartı · End card</sub></td>
+  </tr>
+</table>
+
+## Özellikler · Features
 
 - **Purse-seine fishing & sonar:** Track underwater boid schools on the sonar with depth and species readouts; circle a school to deploy the net and haul before fish escape, pursuing calm hamsi and istavrit or fast, nervous and valuable palamut and lüfer.
 - **Boat classes:** Start in a sandal (rowboat), then buy a taka, a trawler (trol) and a gırgır (purse seiner) at the shipyard; each has its own speed, hold, net, tank, crew slots, storm tolerance, daily upkeep and look. The old hull is traded in at 60% and the rest can go on the loan (up to ₺240,000). The six upgrades carry over to the next boat, capped per class.
@@ -39,7 +62,7 @@
 - **Realistic boat handling & maritime world:** Inertial throttle, rudder bite that depends on forward speed, wave pitch and roll, tea-terraced coastline with harbour moles and lighthouse, circling gulls, and an authentic kemençe-style horon tune in 7/8 synthesized with Web Audio.
 - **Ultra-lean web performance:** A single `index.html` running Three.js r170 delivering 60 fps at 18–56 draw calls on Intel UHD 620 (tested at 500x900 on phone layout), verified by an automated `?auto` bot completing the full 30-day season with 0 JavaScript errors.
 
-## How to play
+## Nasıl oynanır · How to play
 
 > [!TIP]
 > **Goal:** Pay off the boat loan in a 30-day season and become reis of the harbour. Set the net (`Space`) just ahead of a school and steer a tight circle around it so the ring closes near where you started, then haul (`Space` again) and head home before the storm.
@@ -65,7 +88,8 @@
 
 </details>
 
-### Controls
+### Kontroller · Controls
+
 
 | Action | Keyboard | Touch |
 |---|---|---|
@@ -84,26 +108,10 @@
 
 - **Audio control:** `N` toggles music (`M` opens the map), `X` toggles sound effects; the speaker button in the top bar mutes music and effects together and is remembered.
 - **Touch:** Virtual throttle slider, rudder wheel, map, sound, language globe, speed toggle, and context Net / Dock buttons.
-- **Time & camera:** `T` cycles simulation speed (x1 / x2 / x3); drag to orbit the camera, mouse wheel to zoom.
+- **Time & camera:** `T` cycles simulation speed (x1 / x2 / x4); drag to orbit the camera, mouse wheel to zoom.
 - **Persistence:** Settings are saved in `localStorage` under `arena.hamsi.settings`, active run under `arena.hamsi.save`, and best result under `arena.hamsi.best`. Turkish is the default language.
 
-<details>
-<summary><b>URL flags for testing</b></summary>
-
-| Flag | Effect |
-|---|---|
-| `?auto` | A bot plays the whole 30-day season with the same controls and rules as a player (sonar data only) |
-| `?debug` | FPS, draw calls, triangles, state, and any JavaScript errors on screen |
-| `?sim=N` | Fast-forward N seconds before the first frame (starts a new run if needed) |
-| `?low` | No shadows, half the particles, no blur on panels |
-| `?lang=en` / `?lang=tr` | Language |
-| `?noassets` | Accepted for the arena convention; the game uses no external assets anyway |
-
-The live state is accessible on `window.hamsi` (`day`, `money`, `loan`, `boat`, `schools`, `net`, `weather`, the bot's `log` of days, `assets`, `fps`, `calls`); `window.hamsiSim(seconds)` fast-forwards.
-
-</details>
-
-## Screenshots
+## Ekran görüntüleri · Screenshots
 
 <table>
   <tr>
@@ -118,7 +126,10 @@ The live state is accessible on `window.hamsi` (`day`, `money`, `loan`, `boat`, 
   </tr>
 </table>
 
-## Redesign & Performance
+## Daha fazlası · More
+
+<details>
+<summary><b>Redesign &amp; performance</b></summary>
 
 **Art direction:** Moody maritime stylized. Black Sea slate `#24343F`, foam `#E6F0F2`, boat blue `#1E88E5`, tea-terrace green `#4C7A3A`, sodium harbour `#FFB74D`, with sonar green `#00E676` for the instruments. The HUD is a set of wet-weather instrument panels (dark steel, rivets, sonar-green hairlines, monospace readouts, segmented gauge bars).
 
@@ -139,7 +150,26 @@ The live state is accessible on `window.hamsi` (`day`, `money`, `loan`, `boat`, 
 
 ![Before and after](docs/redesign-before-after.png)
 
-## Running locally
+</details>
+
+<details>
+<summary><b>URL flags for testing</b></summary>
+
+| Flag | Effect |
+|---|---|
+| `?auto` | A bot plays the whole 30-day season with the same controls and rules as a player (sonar data only) |
+| `?debug` | FPS, draw calls, triangles, state, and any JavaScript errors on screen |
+| `?sim=N` | Fast-forward N seconds before the first frame (starts a new run if needed) |
+| `?low` | No shadows, half the particles, no blur on panels |
+| `?lang=en` / `?lang=tr` | Language |
+| `?noassets` | Accepted for the arena convention; the game uses no external assets anyway |
+
+The live state is accessible on `window.hamsi` (`day`, `money`, `loan`, `boat`, `schools`, `net`, `weather`, the bot's `log` of days, `assets`, `fps`, `calls`); `window.hamsiSim(seconds)` fast-forwards.
+
+</details>
+
+<details>
+<summary><b>Running locally</b></summary>
 
 Serve the folder over HTTP (ES modules do not load from `file://`):
 
@@ -148,6 +178,8 @@ python -m http.server 8000
 ```
 
 Then open <http://localhost:8000/>.
+
+</details>
 
 ## Made with Claude Code
 
