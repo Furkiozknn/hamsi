@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://furkiozknn.github.io/hamsi/">
-    <img src="docs/card.jpg" width="100%" alt="Hamsi: a 3D fishing and boat-management game on the Black Sea coast. A blue-and-white fishing boat closes a ring of net corks around a school of fish below green tea-terraced mountains. Click to play in your browser.">
+    <img src="docs/card-3d.jpg" width="100%" alt="Hamsi: a 3D fishing and boat-management game on the Black Sea coast. A blue-and-white fishing boat closes a ring of net corks around a school of fish below green tea-terraced mountains. Click to play in your browser.">
   </a>
 </p>
 
@@ -31,6 +31,13 @@
 
 ## Features
 
+<p align="center">
+  <img src="docs/features.jpg" width="100%" alt="Hamsi features: purse-seine fishing by circling a school found on the sonar; four boat classes (sandal, taka, trawler, gırgır); day and night fishing, one game day lasts 24 real minutes; weather, fish prices and a boat loan; a single index.html running Three.js at 60 fps.">
+</p>
+
+<details>
+<summary><b>Feature details</b></summary>
+
 - **Purse-seine fishing & sonar:** Track underwater boid schools on the sonar with depth and species readouts; circle a school to deploy the net and haul before fish escape, pursuing calm hamsi and istavrit or fast, nervous and valuable palamut and lüfer.
 - **Boat classes:** Start in a sandal (rowboat), then buy a taka, a trawler (trol) and a gırgır (purse seiner) at the shipyard; each has its own speed, hold, net, tank, crew slots, storm tolerance, daily upkeep and look. The old hull is traded in at 60% and the rest can go on the loan (up to ₺240,000). The six upgrades carry over to the next boat, capped per class.
 - **Fishing gear:** Besides the boat's own encircling net (voli on the sandal and taka, the big gırgır net on the purse seiner), the sandal and taka carry straight nets (hamsi-istavrit ağı, çinekop-lüfer ağı, uzatma palamut ağı) and the trawler tows a midwater (orta su) or bottom (dip) trawl. Straight nets are laid along your track, straight or curved, left to soak and lifted from either buoy; only the fish that swim through the wall inside its depth band are caught, with the mesh's species selectivity, so a 100 kg school on the sonar can give the whole 100 kg or 10 kg depending on where and how the net was laid. Trawls only fish at towing speed (about 2-5 kn).
@@ -39,7 +46,16 @@
 - **Realistic boat handling & maritime world:** Inertial throttle, rudder bite that depends on forward speed, wave pitch and roll, tea-terraced coastline with harbour moles and lighthouse, circling gulls, and an authentic kemençe-style horon tune in 7/8 synthesized with Web Audio.
 - **Ultra-lean web performance:** A single `index.html` running Three.js r170 delivering 60 fps at 18–56 draw calls on Intel UHD 620 (tested at 500x900 on phone layout), verified by an automated `?auto` bot completing the full 30-day season with 0 JavaScript errors.
 
+</details>
+
 ## How to play
+
+<p align="center">
+  <img src="docs/how-to-play.jpg" width="100%" alt="How to play Hamsi: buy fuel and ice and sail out; track a school on the sonar; press Space near the school, steer a full circle to close the cork ring, press Space to haul; dock inside the blue ring at the pier and sell. Keyboard controls are listed in the text below.">
+</p>
+
+<details>
+<summary><b>Goal and steps</b></summary>
 
 > [!TIP]
 > **Goal:** Pay off the boat loan in a 30-day season and become reis of the harbour. Set the net (`Space`) just ahead of a school and steer a tight circle around it so the ring closes near where you started, then haul (`Space` again) and head home before the storm.
@@ -49,6 +65,8 @@
 3. **Set and haul:** Press `Space` near the school, steer a full circle around it to close the cork ring, then press `Space` to haul.
 4. **Dock and sell:** Slow down inside the blue ring at the pier and press `Space`. Sell catch fresh, refuel, add ice, repair hull damage, pay loan installments, purchase upgrades or a bigger boat, then sail again, wait for dusk, or sleep till morning.
 5. **Win:** Complete daily goals for cash bonuses and pay off the loan in full within 30 days to become reis of the harbour.
+
+</details>
 
 <details>
 <summary><b>Fishing mechanics and economy</b></summary>
