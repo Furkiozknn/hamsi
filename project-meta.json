@@ -54,7 +54,11 @@
       "docs/gameplay.mp4"
     ]
   },
-  "tests": ["tools/smoke.mjs", "tools/gate.mjs", "test/duman.mjs"],
+  "test_files": [
+    "tools/smoke.mjs",
+    "tools/gate.mjs",
+    "test/duman.mjs"
+  ],
   "ci": {
     "workflows": [],
     "badge": null
