@@ -60,7 +60,7 @@
     "test/duman.mjs"
   ],
   "ci": {
-    "workflows": [],
+    "workflows": ["smoke.yml"],
     "badge": null
   },
   "docs": {
