@@ -321,6 +321,83 @@ body.touch #actions #bGear svg.ic{width:16px;height:16px}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important}#lens,#wcard.warn,canvas#gl.catch-flash,canvas#gl.screen-flash{animation:none!important;filter:none!important}} /* A11y: disable infinite animations */
 html[data-arena-reduced-motion] :is(#lens,#wcard.warn,canvas#gl.catch-flash,canvas#gl.screen-flash){animation:none!important;filter:none!important} /* the same when "Reduce motion" is on in the Arena panel */
 a.btn{text-decoration:none;color:inherit;display:inline-flex;align-items:center;justify-content:center}
+/* ---- stil-3d (23.11): the song video's warm 3D chibi world. Navy harbour night, sou'wester yellow, cream text,
+   soft clay shadows and round corners; the reis (young fisherwoman) and the hamsi from the video on the cards */
+:root{--sonar:#F6C431;--glass-b:rgba(246,196,49,.3);--good:#7fe3a0;--warn:#F6C431;--bad:#ff8a70;--ink:#F4F1E8;--dim:#b9c9cf;--sodium:#ffc94d;--r:16px;
+  --navy:#0E2A3A;--navy2:#173f55;--sea:#2f6f86;--yel:#F6C431;--yel2:#e0a91a;--cream:#F4F1E8}
+.glass{background:linear-gradient(180deg,rgba(28,72,94,.93),rgba(14,42,58,.95));border:1px solid rgba(246,196,49,.22);border-radius:18px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 -2px 0 rgba(0,0,0,.18),0 10px 26px rgba(3,14,22,.42)}
+body.lowq .glass{background:linear-gradient(180deg,rgba(28,72,94,.97),rgba(14,42,58,.98))}
+#hud .glass{border-radius:16px}
+.btn{border-radius:14px;border:0;background:linear-gradient(180deg,#3c86a6,#245d78);color:var(--cream);text-transform:none;letter-spacing:.02em;font-size:15px;font-weight:800;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 4px 0 #143a4e,0 7px 14px rgba(0,0,0,.25)}
+.btn:hover{background:linear-gradient(180deg,#4a96b6,#2a6986)}
+.btn:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 2px 0 #143a4e}
+.btn.primary{background:linear-gradient(180deg,#ffdc6a,#f0b923);color:#3b2a05;border:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 4px 0 #b07f0c,0 8px 16px rgba(240,185,35,.28)}
+.btn.primary:hover{background:linear-gradient(180deg,#ffe486,#f6c431)}
+.btn.warn{background:linear-gradient(180deg,#ff9a7a,#e0663f);color:#3a1306;box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 4px 0 #9c3b1e}
+.seg .btn.sel,.tabs .btn.sel{background:linear-gradient(180deg,#ffdc6a,#f0b923);color:#3b2a05;border:0}
+button.btn:focus-visible{outline:3px solid #fff3c4;outline-offset:2px}
+#topbar .brand{color:var(--cream);letter-spacing:.2em}
+#topbar .brand .brandFace{width:34px;height:34px;border-radius:50%;box-shadow:0 0 0 2px var(--yel),0 3px 6px rgba(0,0,0,.35);background:#173f55}
+.stat small,#goal small,.hbar .meta small,#sonar .cap{color:var(--yel);opacity:.9;letter-spacing:.12em}
+.stat b{color:var(--cream)}.stat b.pos{color:var(--yel)}
+.stat b,#gauges .spd b,#gauges output,.hbar .meta b,.kv span:nth-child(even),.item .pr,.set output{font-family:var(--head)}
+#wcard svg.ic,#gauges svg.ic,#gChip svg.ic{color:var(--yel)}
+#goal .gb,#gauges .bar,#netbar{border-radius:6px;background:rgba(0,0,0,.25);box-shadow:inset 0 1px 2px rgba(0,0,0,.35)}
+#goal .gb i{background:linear-gradient(90deg,#f0b923,#ffdc6a);border-radius:6px}
+#gauges .bar i{border-radius:6px;background-color:#6fd0e0;background-image:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,0))}
+#gauges .bar.low i{background-color:var(--bad)}
+#gauges .bar.fr i{background-image:linear-gradient(90deg,#ff8a70,#F6C431 50%,#7fe3a0)}
+#gauges .spd{border-bottom:1px solid rgba(246,196,49,.25)}
+#netbar i{background:linear-gradient(90deg,#f0b923,#ffdc6a);border-radius:6px}
+#actions .hint{border-radius:12px;font-family:var(--head);color:var(--cream);border-color:rgba(246,196,49,.3);background:rgba(14,42,58,.8)}
+.toast{border-radius:14px;background:rgba(14,42,58,.92);border-color:rgba(246,196,49,.4)}
+.toast.good{border-color:#7fe3a0;color:#e2ffe9}
+#tThr,#tWheel{background:rgba(14,42,58,.7);border-color:rgba(246,196,49,.3)}
+#tThr i{background:linear-gradient(180deg,#ffdc6a,#f0b923);border:2px solid #fff3c4;box-shadow:0 4px 0 #b07f0c}
+#tWheel svg{color:var(--yel)}
+.screen.dim{background:radial-gradient(ellipse at 50% 40%,rgba(14,42,58,.35),rgba(6,20,30,.72))}
+.screen.title{background:linear-gradient(180deg,rgba(14,42,58,.05),rgba(10,30,44,.55))}
+.card h1{color:var(--cream);letter-spacing:.3em;text-shadow:0 3px 0 #b07f0c,0 6px 14px rgba(0,0,0,.4)}
+.card h1::after{background:linear-gradient(90deg,transparent,var(--yel),transparent);box-shadow:none;height:3px;border-radius:2px}
+.card h2{color:var(--cream);letter-spacing:.08em}
+.card h3{color:var(--yel)}
+.card p{color:#e7eef0}
+.foot a,.card a{color:var(--yel);border-bottom-color:var(--yel)}
+.card a.btn{color:var(--cream)}
+.kv,.item,ul.feat li{border-radius:12px;background:rgba(255,255,255,.07);box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.item .dot{border-radius:50%;background:rgba(246,196,49,.14);color:var(--yel)}
+.dbar{border-radius:3px}.dbar i{background:linear-gradient(90deg,#f0b923,#ffdc6a)}
+.up{color:#7fe3a0}
+.hfoot{border-radius:0 0 18px 18px;background:rgba(12,36,50,.97);border-top:1px solid rgba(246,196,49,.25)}
+.stars svg.on{fill:var(--yel);stroke:#fff3c4}
+#mapc{border-radius:14px;border:1px solid rgba(246,196,49,.3);background:#0d2a3a}
+input[type=range]{accent-color:var(--yel)}
+/* title: the video's harbour frame between the waving reis and a leaping hamsi (same height as the old logo) */
+.hero{display:flex;align-items:flex-end;justify-content:center;gap:6px;height:130px;margin:0 auto 2px}
+.hero .heroPic{height:130px;width:auto;max-width:min(232px,52vw);object-fit:cover;border-radius:18px;box-shadow:0 0 0 3px var(--yel),0 8px 18px rgba(0,0,0,.4)}
+.hero .heroReis{height:118px;width:auto;filter:drop-shadow(0 6px 6px rgba(0,0,0,.35))}
+.hero .heroFish{height:62px;width:auto;align-self:flex-start;margin-top:8px;filter:drop-shadow(0 6px 6px rgba(0,0,0,.35));animation:fishHop 2.4s ease-in-out infinite}
+@keyframes fishHop{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-8px) rotate(5deg)}}
+/* faces on cards: a round portrait beside the heading, never over text or buttons */
+.cardHead{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:4px}
+.cardHead h2{margin:0}
+.cardFace{width:56px;height:56px;border-radius:50%;flex:none;box-shadow:0 0 0 3px var(--yel),0 5px 10px rgba(0,0,0,.35);background:#173f55}
+.hbar .cardFace{width:46px;height:46px}
+.hTitleRow{display:flex;align-items:center;gap:10px;min-width:0}.hbar .meta{margin-left:auto}
+@media (max-width:420px){.tabs .btn{font-size:13.5px;padding:8px 3px;letter-spacing:0}}
+.endPic{position:relative;height:118px;margin:-4px auto 8px;width:min(100%,330px)}
+.endPic .endBg{width:100%;height:100%;object-fit:cover;object-position:50% 22%;border-radius:16px;box-shadow:0 0 0 3px var(--yel),0 8px 16px rgba(0,0,0,.35)}
+.endPic .endReis{position:absolute;right:-30px;bottom:-6px;height:110px;width:auto;filter:drop-shadow(0 5px 6px rgba(0,0,0,.4))}
+#ending.lost .endReis{display:none}
+@media (max-width:420px){.endPic .endReis{right:-12px;height:92px}.endPic{width:min(100%,280px)}}
+@media (max-height:800px){
+  .hero{height:96px}.hero .heroPic{height:96px}.hero .heroReis{height:88px}.hero .heroFish{height:48px}
+  .endPic{height:84px}.endPic .endReis{height:84px}
+  .cardFace{width:44px;height:44px}
+}
+@media (max-height:560px){.hero{height:72px}.hero .heroPic{height:72px}.hero .heroReis{height:66px}.hero .heroFish{height:36px}.endPic{display:none}.cardFace{width:34px;height:34px}}
 </style>
 <script>/*ARENA-KIT:BEGIN v1.3.2 sha256:ce77e23fab7c*/
 /* ARENA-KIT v1 — shared layer for the 21 Claude Game Arena games.
@@ -1257,7 +1334,7 @@ window.ArenaCore = { version: VERSION, kalite, render, kabuk, his, kamera, test 
 
 <div id="hud" class="hidden">
   <div id="topbar" class="glass">
-    <div class="brand"><svg viewBox="0 0 40 34" aria-hidden="true"><use href="#logo-mini"/></svg><span>HAMSİ</span></div>
+    <div class="brand"><img class="brandFace" src="assets/3d/reis_yuz.webp" alt="" width="34" height="34"><span>HAMSİ</span></div>
     <div class="stat"><small><svg class="ic"><use href="#i-clock"/></svg><span data-i18n="day">Gün</span></small><b id="sDay">1/30</b></div>
     <div class="stat"><small><svg class="ic"><use href="#i-sun"/></svg><span data-i18n="time">Saat</span></small><b id="sClock">06:00</b></div>
     <div class="stat"><small><svg class="ic"><use href="#i-coin"/></svg><span data-i18n="money">Para</span></small><b id="sMoney" class="pos">0</b></div>
@@ -1293,7 +1370,7 @@ window.ArenaCore = { version: VERSION, kalite, render, kabuk, his, kamera, test 
 
 <div class="screen title show" id="title">
   <div class="card glass">
-    <svg id="logoBig" viewBox="0 0 220 130" aria-label="Hamsi"><use href="#logo-big"/></svg>
+    <div class="hero" aria-hidden="true"><img class="heroReis" src="assets/3d/reis_el.webp" alt=""><img class="heroPic" src="assets/3d/liman_kare.webp" alt=""><img class="heroFish" src="assets/3d/hamsi_zipla.webp" alt=""></div>
     <h1>HAMSİ</h1>
     <p class="sub" data-i18n="subtitle">Karadeniz'de hamsi avı ve balıkçı teknesi yönetimi</p>
     <p class="how" data-i18n="how">Sonarla balık sürüsünü bul, ağı sürünün çevresinde daire çizerek at, fırtınadan önce limana dön, balığı tazeyken sat. 30 günde krediyi öde ve limanın reisi ol.</p>
@@ -1312,18 +1389,18 @@ window.ArenaCore = { version: VERSION, kalite, render, kabuk, his, kamera, test 
 
 <div class="screen dim" id="harbor">
   <div class="card glass wide">
-    <div class="hbar"><h2 id="hTitle"></h2><div class="meta"><span><small data-i18n="day">Gün</small><b id="hDay"></b></span><span><small data-i18n="money">Para</small><b id="hMoney" style="color:var(--warn)"></b></span><span><small data-i18n="loan">Kredi</small><b id="hLoan" style="color:var(--bad)"></b></span></div></div>
+    <div class="hbar"><div class="hTitleRow"><img class="cardFace" src="assets/3d/hamsi_yuz.webp" alt=""><h2 id="hTitle"></h2></div><div class="meta"><span><small data-i18n="day">Gün</small><b id="hDay"></b></span><span><small data-i18n="money">Para</small><b id="hMoney" style="color:var(--warn)"></b></span><span><small data-i18n="loan">Kredi</small><b id="hLoan" style="color:var(--bad)"></b></span></div></div>
     <div class="tabs" role="tablist"><button class="btn sel" data-tab="market"></button><button class="btn" data-tab="upg"></button><button class="btn" data-tab="boat"></button><button class="btn" data-tab="yard"></button></div>
     <div id="hBody" class="list"></div>
     <div class="hfoot"><span class="smallnote" id="hNote"></span><div class="row"><button class="btn" id="hWait" data-i18n="waitdusk">Akşamı bekle (19:00)</button><button class="btn" id="hEnd" data-i18n="endday">Sabaha kadar uyu</button><button class="btn primary" id="hSail" data-i18n="sail">Denize çık</button></div></div>
   </div>
 </div>
 
-<div class="screen dim" id="summary"><div class="card glass"><h2 id="sumT"></h2><div id="sumBody"></div><div class="col"><button class="btn primary" id="sumNext"></button><button class="btn" id="sumShare" data-i18n="share">Paylaş</button></div></div></div>
+<div class="screen dim" id="summary"><div class="card glass"><div class="cardHead"><img class="cardFace" src="assets/3d/reis_yuz.webp" alt=""><h2 id="sumT"></h2></div><div id="sumBody"></div><div class="col"><button class="btn primary" id="sumNext"></button><button class="btn" id="sumShare" data-i18n="share">Paylaş</button></div></div></div>
 
-<div class="screen dim" id="ending"><div class="card glass"><h2 id="endT"></h2><p id="endSub"></p><div class="stars" id="endStars"></div><div id="endBody"></div><div class="row" style="margin-top:12px"><button class="btn primary" id="endAgain" data-i18n="again">Tekrar oyna</button><button class="btn" id="endShare" data-i18n="share">Paylaş</button><a class="btn" id="endOther" href="https://furkiozknn.github.io/" target="_blank" rel="noopener" data-i18n="another">Başka oyun</a><button class="btn" id="endMenu" data-i18n="menu">Ana menü</button></div></div></div>
+<div class="screen dim" id="ending"><div class="card glass"><div class="endPic" aria-hidden="true"><img class="endBg" src="assets/3d/final_kare.webp" alt=""><img class="endReis" src="assets/3d/reis_sevinc.webp" alt=""></div><h2 id="endT"></h2><p id="endSub"></p><div class="stars" id="endStars"></div><div id="endBody"></div><div class="row" style="margin-top:12px"><button class="btn primary" id="endAgain" data-i18n="again">Tekrar oyna</button><button class="btn" id="endShare" data-i18n="share">Paylaş</button><a class="btn" id="endOther" href="https://furkiozknn.github.io/" target="_blank" rel="noopener" data-i18n="another">Başka oyun</a><button class="btn" id="endMenu" data-i18n="menu">Ana menü</button></div></div></div>
 
-<div class="screen dim" id="pause"><div class="card glass"><h2 data-i18n="paused">Duraklatıldı</h2><div class="col"><button class="btn primary" id="pResume" data-i18n="resume">Devam</button><button class="btn" id="pRestart" data-i18n="restart">Yeniden başla</button><button class="btn" id="pSet" data-i18n="settings">Ayarlar</button><button class="btn" id="pMenu" data-i18n="menu">Ana menü</button></div></div></div>
+<div class="screen dim" id="pause"><div class="card glass"><div class="cardHead"><img class="cardFace" src="assets/3d/hamsi_yuz.webp" alt=""><h2 data-i18n="paused">Duraklatıldı</h2></div><div class="col"><button class="btn primary" id="pResume" data-i18n="resume">Devam</button><button class="btn" id="pRestart" data-i18n="restart">Yeniden başla</button><button class="btn" id="pSet" data-i18n="settings">Ayarlar</button><button class="btn" id="pMenu" data-i18n="menu">Ana menü</button></div></div></div>
 
 <div class="screen dim" id="settings"><div class="card glass"><h2 data-i18n="settings">Ayarlar</h2>
   <div class="set">
@@ -2526,12 +2603,19 @@ const starPts = (() => {
   const m = new THREE.Points(g, new THREE.PointsMaterial({ color: 0xdfe8ff, size: 2.2, sizeAttenuation: false, transparent: true, opacity: 0, fog: false, depthWrite: false }));
   m.renderOrder = -8; m.frustumCulled = false; m.visible = false; scene.add(m); return m;
 })();
+// stil-3d: clay-toy clouds (Ideogram cloud strip, assets/3d/bulut.webp) as billboards around the camera; cloudMesh keeps the
+// old interface (material.color tint, position follows the camera) so updateEnv barely changes
+const CLOUD_X = [[0.033, 0.165], [0.166, 0.305], [0.31, 0.417], [0.418, 0.543], [0.544, 0.668], [0.669, 0.818], [0.826, 0.968]];
+const CLOUD_MATS = [];
 const cloudMesh = (() => {
-  const list = []; const r = rng(5);
-  for (let i = 0; i < 6; i++) list.push(gSph(1, (i - 2.5) * 0.9, r() * 0.3, (r() - 0.5) * 0.8, '#ffffff', 1.3 + r() * 0.6, 0.55, 1.0 + r() * 0.4, 8));
-  const g = mergeGeometries(list); const m = new THREE.InstancedMesh(g, new THREE.MeshLambertMaterial({ vertexColors: true, fog: true }), 22);
-  const d = new THREE.Object3D(); for (let i = 0; i < 22; i++) { const a = r() * TAU, rd = 700 + r() * 2200; d.position.set(Math.cos(a) * rd, 330 + r() * 160, Math.sin(a) * rd); const s = 90 + r() * 120; d.scale.set(s, s * 0.6, s * 0.8); d.rotation.y = r() * 3; d.updateMatrix(); m.setMatrixAt(i, d.matrix); }
-  m.instanceMatrix.needsUpdate = true; m.frustumCulled = false; scene.add(m); return m;
+  const grp = new THREE.Group(); grp.material = { color: new THREE.Color(1, 1, 1) }; const r = rng(5);
+  const tex = new THREE.TextureLoader().load('assets/3d/bulut.webp');
+  tex.colorSpace = THREE.SRGBColorSpace;
+  CLOUD_X.forEach(([a, b]) => { const t = tex.clone(); t.repeat.set(b - a, 1); t.offset.set(a, 0); CLOUD_MATS.push(new THREE.SpriteMaterial({ map: t, fog: false, transparent: true, depthWrite: false })); });
+  tex.onUpdate = null;
+  for (let i = 0; i < 26; i++) { const k = i % CLOUD_X.length, [a, b] = CLOUD_X[k], ang = r() * TAU, rd = 1700 + r() * 1100, w = 120 + r() * 130;
+    const sp = new THREE.Sprite(CLOUD_MATS[k]); sp.position.set(Math.cos(ang) * rd, 120 + r() * 170, Math.sin(ang) * rd); sp.scale.set(w, w * 0.155 / (b - a), 1); sp.renderOrder = -7; sp.frustumCulled = false; grp.add(sp); }
+  scene.add(grp); return grp;
 })();
 
 /* ---------- mist layers: two scrolling rings around the camera and low banks along the coast */
@@ -2831,7 +2915,24 @@ const flagMesh = (() => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 
 const boatLightMat = new THREE.MeshBasicMaterial({ vertexColors: true, color: 0x222222 }), boatGlowMat = new THREE.SpriteMaterial({ map: SOFT, color: 0xffb74d, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 });
 const RIGS = []; let RIG = null; // one prebuilt rig (group) per boat class, only the current one is visible
 const mergedMesh = (L, mat) => new THREE.Mesh(mergeGeometries(L.map(g => (g.index ? g.toNonIndexed() : g)), false), mat);
-function crewMesh(i) { return lamMesh([gCyl(0.28, 0.32, 0.95, 8, 0, 0.7, 0, i === 1 ? '#e8742a' : '#f2c230'), gSph(0.24, 0, 1.42, 0, '#d9a77f'), gCyl(0.25, 0.25, 0.14, 8, 0, 1.62, 0, '#f2c230'), gCyl(0.38, 0.38, 0.05, 8, 0, 1.56, 0, '#f2c230'), gBox(0.18, 0.18, 0.5, 0.2, 0.9, 0.3, '#f2c230'), gBox(0.18, 0.18, 0.5, 0.2, 0.9, -0.3, '#f2c230')]); }
+// stil-3d: chibi figures from the song video (soft clay look): big head, rosy cheeks, sou'wester or knit cap, raincoat, boots.
+// Faces +x (the bow). kind 'reis' = the young fisherwoman captain (yellow hat and coat, dark braid); crew i = deckhands.
+const CLAY = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.62, metalness: 0 });
+function chibiMesh(kind) {
+  const reis = kind === 'reis', coat = reis ? '#f2c62e' : ['#ef7d2c', '#d9443a', '#3f86c4'][kind % 3], skin = '#f3c9a4', dark = '#2a2320';
+  const L = [gCyl(0.13, 0.15, 0.24, 10, 0.02, 0.12, 0.15, dark), gCyl(0.13, 0.15, 0.24, 10, 0.02, 0.12, -0.15, dark), // boots
+    gCyl(0.3, 0.4, 0.66, 14, 0, 0.55, 0, coat), gSph(0.31, 0, 0.86, 0, coat, 1, 0.55, 1, 14), // raincoat
+    gSph(0.11, 0.06, 0.66, 0.38, coat, 1, 1.9, 1, 10), gSph(0.11, 0.06, 0.66, -0.38, coat, 1, 1.9, 1, 10), gSph(0.08, 0.1, 0.45, 0.4, skin, 1, 1, 1, 8), gSph(0.08, 0.1, 0.45, -0.4, skin, 1, 1, 1, 8), // arms, hands
+    gSph(0.4, 0, 1.3, 0, skin, 1, 0.96, 1, 18), // head
+    gSph(0.055, 0.36, 1.3, 0.14, '#111', 0.6, 1.25, 1, 8), gSph(0.055, 0.36, 1.3, -0.14, '#111', 0.6, 1.25, 1, 8), // eyes
+    gSph(0.07, 0.33, 1.18, 0.23, '#f08f8f', 0.5, 0.7, 1, 8), gSph(0.07, 0.33, 1.18, -0.23, '#f08f8f', 0.5, 0.7, 1, 8), gSph(0.045, 0.4, 1.22, 0, '#eaa98a', 1, 1, 1, 8), // cheeks, nose
+    gBox(0.02, 0.025, 0.12, 0.385, 1.11, 0, '#a5463a')]; // smile
+  if (reis) L.push(gSph(0.43, -0.03, 1.47, 0, coat, 1, 0.72, 1, 18), gCyl(0.58, 0.66, 0.07, 22, -0.04, 1.37, 0, coat), // sou'wester
+    gSph(0.33, -0.12, 1.25, 0, dark, 0.8, 1, 1.12, 12), ...[0, 1, 2, 3].map(k => gSph(0.1 - k * 0.012, -0.34, 1.0 - k * 0.17, 0.18, '#3a2a22', 1, 1.15, 1, 8))); // hair, braid over the shoulder
+  else L.push(gSph(0.42, -0.02, 1.48, 0, kind % 2 ? '#2f5f8a' : '#c0392b', 1, 0.62, 1, 16), gCyl(0.42, 0.42, 0.12, 18, -0.02, 1.38, 0, '#f4f1e8')); // knit cap with a cream band
+  return new THREE.Mesh(mergeGeometries(L.map(g => (g.index ? g.toNonIndexed() : g)), false), CLAY);
+}
+function crewMesh(i) { return chibiMesh(i); }
 // wheelhouse block shared by taka / trawler / purse seiner (x = cabin centre); window lights go to LL
 function cabin(L, LL, x, roof, W) {
   L.push(gBox(2.8, 2.3, 2.7, x, 2.15, 0, '#f6f8fa'), gBox(3.3, 0.2, 3.2, x, 3.4, 0, roof), gBox(2.8, 0.1, 2.7, x, 1.02, 0, '#8a6a46'));
@@ -2853,12 +2954,12 @@ function makeRig(id) {
   const fenders = () => { for (let i = 0; i < 4; i++) L.push(gSph(0.22, -2 + i * 1.3, 0.55, 1.72, '#222', 1, 1.4, 1, 6), gSph(0.22, -2 + i * 1.3, 0.55, -1.72, '#222', 1, 1.4, 1, 6)); };
   const nav = (x, y) => LL.push(gSph(0.16, x, y, 1.55, '#ff3b30'), gSph(0.16, x, y, -1.55, '#2ee86a'));
   if (id === 'sandal') { // open wooden boat: thwarts, outboard, a pressure lamp on a pole for night fishing
-    L.push(buildHullGeometry({ top: '#2e7d4f', stripe: '#f2efe6', bottom: '#8a3b22', deck: '#9a6b3f', deck2: '#8a5d35' }));
+    L.push(buildHullGeometry({ top: '#3f7fb5', stripe: '#f3efe4', bottom: '#2d5f8f', deck: '#b58a5c', deck2: '#a57b4f' })); // stil-3d: the video's blue-and-white wooden boat
     for (const x of [-2.6, -0.4, 1.8]) L.push(gBox(0.5, 0.12, 3.1, x, 1.0, 0, '#c8a46e'));
     L.push(gBox(0.7, 0.9, 0.5, -4.9, 1.2, 0, '#2b2f33'), gBox(0.25, 1.4, 0.18, -5.0, 0.4, 0, '#2b2f33'), gBox(0.5, 0.35, 0.45, -4.85, 1.75, 0, '#c0392b'));
     L.push(gCyl(0.05, 0.05, 2.8, 5, 3.9, 2.4, 0, '#6b4a2b'), gSph(1, 0.6, 1.25, 0, '#2b5a46', 1.1, 0.4, 0.9, 8), gSph(0.25, 1.3, 1.3, 0.6, '#ff7a1c'));
     L.push(gCyl(0.05, 0.05, 3.2, 5, 0.6, 1.4, 1.65, '#c8a46e', { rz: 1.35 }), gCyl(0.05, 0.05, 3.2, 5, 0.6, 1.4, -1.65, '#c8a46e', { rz: 1.35 })); // oars
-    LL.push(gSph(0.24, 3.9, 3.85, 0, '#fff2c0')); rig.glow = [3.9, 3.9, 0]; rig.flag = [-4.4, 1.9, 0.6]; rig.slots = [[-1.6, 1.0, 0.7]];
+    LL.push(gSph(0.24, 3.9, 3.85, 0, '#fff2c0')); rig.glow = [3.9, 3.9, 0]; rig.flag = [-4.4, 1.9, 0.6]; rig.slots = [[-1.6, 1.0, 0.7]]; rig.reis = [-3.7, 0.95, 0];
   } else {
     const pal = id === 'taka' ? {} : id === 'trol' ? { top: '#c0392b', stripe: '#f6f8fa', bottom: '#2b2f33' } : { top: '#1d3557', stripe: '#f6f8fa', bottom: '#8a1c1c', deck: '#7d8a90', deck2: '#6c787e' };
     L.push(buildHullGeometry(pal)); fenders();
@@ -2867,7 +2968,7 @@ function makeRig(id) {
       L.push(gCyl(0.07, 0.1, 5.4, 6, 1.9, 3.7, 0, '#d8d4c8'), gBox(0.1, 0.1, 2.0, 1.9, 5.7, 0, '#d8d4c8'), gBox(0.2, 0.2, 0.2, 1.9, 6.5, 0, '#ffe08a'), gCyl(0.06, 0.07, 3.6, 6, 0.8, 3.2, 0, '#d8d4c8', { rz: 0.9 }));
       L.push(gSph(1, -3.3, 1.25, 0, '#2b5a46', 1.2, 0.5, 1.1, 8), gSph(0.28, -3.0, 1.6, 0.8, '#ff7a1c'), gSph(0.28, -3.6, 1.6, -0.6, '#ffffff'));
       L.push(gBox(0.8, 0.5, 0.7, 0.4, 1.3, 1.0, '#e0791f'), gBox(0.8, 0.5, 0.7, 0.4, 1.3, -1.0, '#e0791f'), gBox(0.8, 0.5, 0.7, 0.4, 1.78, 1.0, '#f2c230'));
-      LL.push(gSph(0.2, 1.9, 6.7, 0, '#ffffff')); nav(1.2, 2.0); rig.glow = [1.9, 5.0, 0]; rig.slots = [[-3.0, 1.05, 1.05], [1.8, 1.05, 0.9]];
+      LL.push(gSph(0.2, 1.9, 6.7, 0, '#ffffff')); nav(1.2, 2.0); rig.glow = [1.9, 5.0, 0]; rig.slots = [[-3.0, 1.05, 1.05], [1.8, 1.05, 0.9]]; rig.reis = [3.0, 1.05, -0.2];
     } else if (id === 'trol') { // trawler: wheelhouse forward, stern A-frame gantry, otter boards, winch drums
       cabin(L, LL, 1.6, '#2b2f33', W);
       L.push(gBox(0.3, 4.2, 0.3, -4.2, 3.0, 1.4, '#e0791f'), gBox(0.3, 4.2, 0.3, -4.2, 3.0, -1.4, '#e0791f'), gBox(0.35, 0.35, 3.2, -4.2, 5.1, 0, '#e0791f'));
@@ -2875,7 +2976,7 @@ function makeRig(id) {
       L.push(gCyl(0.55, 0.55, 0.9, 12, -1.5, 1.6, 0.8, '#2e6b46', { rx: Math.PI / 2 }), gCyl(0.55, 0.55, 0.9, 12, -1.5, 1.6, -0.8, '#2e6b46', { rx: Math.PI / 2 }));
       L.push(gCyl(0.07, 0.1, 4.6, 6, 3.6, 3.3, 0, '#d8d4c8'), gBox(0.1, 0.1, 1.8, 3.6, 5.1, 0, '#d8d4c8'), gSph(0.6, -3.4, 1.3, 0, '#7a6a3a', 1.4, 0.5, 1.2, 8));
       LL.push(gSph(0.2, 3.6, 5.7, 0, '#ffffff'), gSph(0.22, -4.2, 5.4, 0, '#ffd27a')); nav(2.6, 2.0); rig.glow = [-4.2, 5.2, 0]; rig.flag = [-4.6, 2.4, 0.4];
-      rig.slots = [[-2.6, 1.05, 1.05], [-3.3, 1.05, -1.0], [0.0, 1.05, 0.9]];
+      rig.slots = [[-2.6, 1.05, 1.05], [-3.3, 1.05, -1.0], [0.0, 1.05, 0.9]]; rig.reis = [0.0, 1.05, -0.9];
     } else { // gırgır: Black Sea purse seiner (Sürmene type). Long hull, high flared bow, two-deck superstructure FORWARD,
       // main mast right behind it with the boom and the power block over the long aft working deck, the net heaped aft,
       // and the gırgır botu (skiff) riding on the stern ramp: it is let go with the net's end when the net is set.
@@ -2899,7 +3000,7 @@ function makeRig(id) {
       for (const x of [-0.2, -2.6, -5.0]) { L.push(gCyl(0.05, 0.05, 2.6, 5, x, 2.4, 1.6, '#c9c5b8'), gCyl(0.05, 0.05, 2.6, 5, x, 2.4, -1.6, '#c9c5b8')); LL.push(gSph(0.18, x, 3.75, 1.6, '#fff2c0'), gSph(0.18, x, 3.75, -1.6, '#fff2c0')); }
       LL.push(gSph(0.22, 1.5, 8.0, 0, '#ffffff'), gSph(0.2, 1.5, 7.45, 1.6, '#ffd27a'), gSph(0.2, 1.5, 7.45, -1.6, '#ffd27a'), gSph(0.2, 4.9, 6.15, 0, '#ffffff')); nav(4.9, 2.7);
       rig.glow = [1.5, 7.0, 0]; rig.flag = [-6.9, 3.9, 0.6];
-      rig.slots = [[-2.2, 1.12, 1.2], [-3.0, 1.12, -1.3], [0.4, 1.12, 1.15]];
+      rig.slots = [[-2.2, 1.12, 1.2], [-3.0, 1.12, -1.3], [0.4, 1.12, 1.15]]; rig.reis = [6.2, 2.32, 0];
       rig.radar = lamMesh([gBox(0.22, 0.14, 1.4, 0, 0, 0, '#f6f8fa'), gBox(0.24, 0.08, 0.3, 0, -0.06, 0, '#1565C0')]); rig.radar.position.set(3.4, 5.15, 0);
       rig.pile = lamMesh([gBox(4.4, 0.9, 2.5, 0, 0.45, 0, '#244f3f'), gSph(1, -0.8, 0.85, 0.2, '#2b5a46', 1.6, 0.45, 1.1, 8), gSph(1, 1.0, 0.8, -0.2, '#2b5a46', 1.4, 0.4, 1.0, 8),
         ...Array.from({ length: 9 }, (_, i) => gSph(0.2, -2.0 + i * 0.5, 1.15, (i % 2 ? 0.5 : -0.5), '#ff7a1c'))]);
@@ -2908,11 +3009,12 @@ function makeRig(id) {
     }
     if (id === 'taka' || id === 'trol') { rig.radar = lamMesh([gBox(0.2, 0.12, 1.0, 0, 0, 0, '#f6f8fa')]); rig.radar.position.set(id === 'taka' ? -1.15 : 1.85, 3.84, 0); }
   }
-  const body = mergedMesh(L, new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide })); body.castShadow = true; rig.g.add(body);
+  const body = mergedMesh(L, new THREE.MeshStandardMaterial({ vertexColors: true, side: THREE.DoubleSide, roughness: 0.72, metalness: 0 })); body.castShadow = true; rig.g.add(body); // stil-3d: soft clay/toy shading
   if (rig.pile) rig.g.add(rig.pile); if (rig.skiff) rig.g.add(rig.skiff);
   rig.g.add(mergedMesh(LL, boatLightMat));
   if (rig.radar) rig.g.add(rig.radar);
   const glow = new THREE.Sprite(boatGlowMat); glow.position.set(...rig.glow); glow.scale.set(5.5, 5.5, 1); rig.g.add(glow);
+  if (rig.reis) { const r = chibiMesh('reis'); r.scale.setScalar(1.55); r.position.set(...rig.reis); r.userData.y0 = rig.reis[1]; r.castShadow = true; rig.g.add(r); rig.captain = r; }
   rig.slots.forEach((p, i) => { const m = crewMesh(i); m.position.set(...p); m.userData.y0 = p[1]; m.castShadow = true; m.visible = false; rig.g.add(m); rig.crew.push(m); });
   return rig;
 }
@@ -2928,6 +3030,7 @@ const _e = new THREE.Euler();
 function placeBoat(dt) {
   const b = G.boat; boatGroup.position.set(b.x, b.y + 0.12, b.z); _e.set(b.roll, -b.h, b.pitch, 'YZX'); boatGroup.rotation.copy(_e);
   if (!RIG) return; const nc = G.up.crew; RIG.crew.forEach((m, i) => { m.visible = i < nc; if (m.visible) { const hauling = G.net.phase === 'haul' || G.net.phase === 'set'; const ph = VT * 4 + i * 2; m.position.y = m.userData.y0 + (hauling ? Math.abs(Math.sin(ph)) * 0.12 : 0); m.rotation.x = hauling ? Math.sin(ph) * 0.35 : 0; m.rotation.z = hauling ? 0.15 : 0; } });
+  { const c = RIG.captain; if (c) { const hauling = G.net.phase === 'haul'; c.rotation.y = Math.sin(VT * 0.7) * 0.35; c.rotation.x = hauling ? Math.sin(VT * 4) * 0.25 : Math.sin(VT * 1.3) * 0.05; c.position.y = c.userData.y0 + Math.abs(Math.sin(VT * (hauling ? 4 : 1.6))) * 0.06; } }
   flagMesh.rotation.y = Math.PI / 2 + Math.sin(VT * 5) * 0.18; flagMesh.scale.x = 0.9 + Math.sin(VT * 7) * 0.08;
   const rm = RIG.radar; if (rm) { rm.visible = S.quality !== 'low'; if (rm.visible) rm.rotation.y = VT * 2.8; }
 }
@@ -2948,6 +3051,17 @@ for (const m of [gullB, gullL, gullR]) { m.frustumCulled = false; scene.add(m); 
 const gulls = Array.from({ length: GN }, (_, i) => ({ x: -30 + i * 3, y: 8, z: i * 2, a: i * 0.8, r: 13 + (i % 5) * 3.5, h: 5 + (i % 4) * 1.8, w: 0.58 + (i % 3) * 0.12, yaw: 0, ph: i * 1.3, vx: 0, vz: 0, grp: i < 6 ? 1 : i < 15 ? 0 : 2 }));
 const _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _q2 = new THREE.Quaternion(), _qw = new THREE.Quaternion(), _v = new THREE.Vector3(), _s = new THREE.Vector3(0.55, 0.55, 0.55), _sl = new THREE.Vector3(0.55, 0.55, -0.55), _ax = new THREE.Vector3(1, 0, 0), _ay = new THREE.Vector3(0, 1, 0);
 let gullTarget = null, gullSoundT = 0;
+// stil-3d: the video's hamsi leaps beside the boat (menu, harbour, and while the net is hauled); visual clock only, no random
+const hamsiLeap = (() => { const t = new THREE.TextureLoader().load('assets/3d/hamsi_zipla.webp'); t.colorSpace = THREE.SRGBColorSpace;
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true, depthWrite: false })); sp.scale.set(2.6, 1.62, 1); sp.visible = false; scene.add(sp); return sp; })();
+function updateHamsiLeap() {
+  const b = G.boat, on = G.mode === 'menu' || G.mode === 'dock' || G.net.phase === 'haul'; const per = 2.8, ph = (VT % per) / 1.3; // 1.3 s arc, then a pause
+  hamsiLeap.visible = on && ph < 1; if (!hamsiLeap.visible) return;
+  const n = Math.floor(VT / per), side = n % 2 ? 1 : -1, a = b.h + side * (1.1 + 0.25 * (n % 3)), d = 7 + (n % 4);
+  const x = b.x + Math.cos(a) * d + Math.cos(b.h) * (ph - 0.5) * 3, z = b.z + Math.sin(a) * d + Math.sin(b.h) * (ph - 0.5) * 3;
+  hamsiLeap.position.set(x, waveH(x, z) + 0.4 + Math.sin(ph * Math.PI) * 3.2, z); hamsiLeap.material.rotation = (0.5 - ph) * 1.4;
+  hamsiLeap.material.color.setScalar(lerp(1, 0.45, nightF()));
+}
 function updateGulls(dt) {
   const b = G.boat, nG = S.quality === 'low' ? 11 : GN; gullTarget = null;
   if (G.mode === 'play') { let best = null, bs = 0; for (const s of G.schools) { const d = Math.hypot(s.x - b.x, s.z - b.z); if (d < 160 && s.mem.length * s.kgPer > 250) { const sc = s.mem.length * s.kgPer / (d + 40); if (sc > bs) { bs = sc; best = s; } } } gullTarget = best; }
@@ -3124,15 +3238,15 @@ function updateEnv(dt) {
   const warm = (1 - sstep(0.1, 0.5, sinEl)) * (1 - 0.85 * dark);
   sun.color.setRGB(1, lerp(0.93, 0.68, warm), lerp(0.82, 0.42, warm)).lerp(SKY.tmp.setRGB(0.55, 0.66, 0.95), dark);
   sun.intensity = lerp(2.6, 0.5, over) * (0.45 + 0.55 * Math.max(0, sinEl)) * (1 - dark) + dark * 0.42 * (1 - 0.6 * over);
-  hemi.intensity = lerp(0.9, 0.78, over) * (1 - 0.7 * dark); hemi.color.setRGB(lerp(0.72, 0.6, over), lerp(0.82, 0.7, over), lerp(0.92, 0.8, over)).lerp(SKY.tmp.setRGB(0.32, 0.4, 0.62), dark); hemi.groundColor.setRGB(0.2, 0.3, 0.27).multiplyScalar(1 - 0.7 * dark);
-  SKY.zen.setRGB(0.2, 0.38, 0.55).lerp(SKY.tmp.setRGB(0.86, 0.56, 0.4), warm * 0.45).lerp(SKY.tmp.setRGB(0.36, 0.43, 0.49), over).lerp(SKY.tmp.setRGB(0.012, 0.022, 0.055), dark);
-  SKY.hor.setRGB(0.62, 0.72, 0.76).lerp(SKY.tmp.setRGB(1.0, 0.72, 0.42), warm * 0.8).lerp(SKY.tmp.setRGB(0.5, 0.56, 0.6), over * 0.9);
+  hemi.intensity = lerp(0.9, 0.78, over) * (1 - 0.7 * dark); hemi.color.setRGB(lerp(0.72, 0.6, over), lerp(0.82, 0.7, over), lerp(0.92, 0.8, over)).lerp(SKY.tmp.setRGB(0.32, 0.4, 0.62), dark); hemi.groundColor.setRGB(0.3, 0.32, 0.26).multiplyScalar(1 - 0.7 * dark);
+  SKY.zen.setRGB(0.22, 0.46, 0.72).lerp(SKY.tmp.setRGB(0.86, 0.56, 0.4), warm * 0.45).lerp(SKY.tmp.setRGB(0.36, 0.43, 0.49), over).lerp(SKY.tmp.setRGB(0.012, 0.022, 0.055), dark);
+  SKY.hor.setRGB(0.8, 0.83, 0.8).lerp(SKY.tmp.setRGB(1.0, 0.72, 0.42), warm * 0.8).lerp(SKY.tmp.setRGB(0.5, 0.56, 0.6), over * 0.9);
   if (w.fogMorning > 0.2) SKY.hor.lerp(SKY.tmp.setRGB(0.36, 0.45, 0.5), w.fogMorning * 0.55); // slate-blue mist, never milky white
   SKY.hor.lerp(SKY.tmp.setRGB(0.05, 0.075, 0.12), dark * 0.92);
   scene.fog.color.copy(SKY.hor); scene.fog.density = Math.min(w.fog + dark * 0.0012, 0.0072) * (1 + 0.3 * warm);
   SEA_U.uSky.value.copy(SKY.hor).lerp(SKY.zen, 0.4).multiplyScalar(0.88);
-  (IS_TOUCH ? waterBase.setRGB(0.032, 0.2, 0.32) : waterBase.setRGB(0.04, 0.14, 0.19)).multiplyScalar(lerp(1.05, 0.6, over) * (0.72 + 0.28 * Math.max(0, sinEl)) * lerp(1, 0.4, dark)); farSea.material.color.copy(waterBase).multiplyScalar(1.0);
-  cloudMesh.material.color.setRGB(lerp(1, 0.42, w.s), lerp(1, 0.44, w.s), lerp(1, 0.48, w.s)).multiplyScalar(lerp(1, 0.16, dark)); cloudMesh.position.set(camera.position.x, 0, camera.position.z);
+  (IS_TOUCH ? waterBase.setRGB(0.04, 0.21, 0.27) : waterBase.setRGB(0.05, 0.16, 0.18)).multiplyScalar(lerp(1.05, 0.6, over) * (0.72 + 0.28 * Math.max(0, sinEl)) * lerp(1, 0.4, dark)); farSea.material.color.copy(waterBase).multiplyScalar(1.0);
+  cloudMesh.material.color.setRGB(lerp(1, 0.42, w.s), lerp(1, 0.44, w.s), lerp(1, 0.48, w.s)).multiplyScalar(lerp(1, 0.16, dark)).lerp(SKY.hor, 0.18 + 0.3 * over); for (const m of CLOUD_MATS) m.color.copy(cloudMesh.material.color); cloudMesh.position.set(camera.position.x, 0, camera.position.z);
   foamCol.setRGB(0.9, 0.94, 0.95).multiplyScalar(lerp(1, 0.32, dark)); if (foam) { foam.m.material.color.setScalar(lerp(1, 0.35, dark)); spray.m.material.color.setScalar(lerp(1, 0.4, dark)); }
   starPts.position.copy(camera.position); starPts.material.opacity = dark * (1 - over) * 0.9; starPts.visible = starPts.material.opacity > 0.02;
   moonSprite.position.copy(camera.position).add(SKY_MOON); moonSprite.material.opacity = dark * (1 - 0.8 * over); moonSprite.visible = moonSprite.material.opacity > 0.03;
@@ -3173,7 +3287,7 @@ function hurtFlash() { const e = $('hurt'); if (!e) return; e.style.opacity = 1;
 function renderFrame(dt) {
   if (!renderer) return; if (!G.paused) VT += dt;
   if (G.mode !== 'play' && !G.paused) { WAVE_T += dt; WAVE_AMP = G.wx.wave; boatWaves(dt); }
-  updateCamera(dt); updateEnv(dt); updateOcean(camera.position.x, camera.position.z); placeBoat(dt); updateGulls(dt); updateSeaLife(dt); updateNet(); updateParticles(dt); updatePing(dt);
+  updateCamera(dt); updateEnv(dt); updateOcean(camera.position.x, camera.position.z); placeBoat(dt); updateHamsiLeap(); updateGulls(dt); updateSeaLife(dt); updateNet(); updateParticles(dt); updatePing(dt);
   { const lens = $('lens'); if (lens) { const o = G.mode === 'menu' ? 0 : G.wx.rain * 0.85; if (lens._o !== o) { lens._o = o; lens.style.opacity = o.toFixed(2); } } }
   if (G.wx.s > 0.6 && Math.random() < dt * 0.25) { if (!G.reduced) $('flash').style.opacity = 0.55; setTimeout(() => { $('flash').style.opacity = 0; }, 90); Snd.thunder(); }
   if (FX) FX.render(); else renderer.render(scene, camera);
@@ -3446,7 +3560,7 @@ function showEnding() {
   $('endBody').innerHTML = `<div class="kv"><span>${t('end_worth')}</span><span class="${worth >= 0 ? 'pos' : 'neg'}">${money(worth)}</span><span>${t('end_money')}</span><span>${money(G.money)}</span><span>${t('end_loan')}</span><span class="${G.loan > 0 ? 'neg' : 'pos'}">${money(G.loan)}</span><span>${t('end_boat')}</span><span>${money(boatValue())}</span><span>${t('end_kg')}</span><span>${Math.round(G.tot.catch)} kg</span><span>${t('end_days')}</span><span>${G.tot.storms}</span></div>${rec ? `<p class="rec">${t('end_best')}</p>` : ''}`;
   G.share = { title: 'Hamsi', lines: [t('share_end', { r: reis ? t('end_reis') : t('end_bank'), w: money(worth), st: stars })], url: ARENA_URL };
   if (reis) arenaAward('hamsi-reis', 'badge_reis'); if (stars === 3) arenaAward('hamsi-3star', 'badge_3star');
-  $('ending').classList.add('show'); Snd.bell(); refreshBest(); refreshUI(true);
+  $('ending').classList.toggle('lost', !reis); $('ending').classList.add('show'); Snd.bell(); refreshBest(); refreshUI(true);
 }
 function refreshBest() {
   const b = getBest(); $('tBest').textContent = b ? t('best', { r: b.reis ? t('rank2') : t('rank1'), s: money(b.worth) }) : t('nobest');
